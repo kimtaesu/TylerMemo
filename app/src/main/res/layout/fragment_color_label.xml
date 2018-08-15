@@ -10,12 +10,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <com.hucet.tyler.memo.common.AutofitRecyclerView
       android:id="@+id/label_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:columnWidth="50dp"
       tools:listitem="@layout/label_item">
 
-    </android.support.v7.widget.RecyclerView>
+    </com.hucet.tyler.memo.common.AutofitRecyclerView>
   </android.support.constraint.ConstraintLayout>
 </layout>

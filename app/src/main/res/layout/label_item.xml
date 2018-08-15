@@ -12,9 +12,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <View
       android:id="@+id/colorLabel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+      android:layout_width="50dp"
+      android:layout_height="70dp" />
   </android.support.constraint.ConstraintLayout>
 </layout>

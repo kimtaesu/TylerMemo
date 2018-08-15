@@ -21,6 +21,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import android.graphics.Color
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
@@ -42,6 +43,19 @@ abstract class LabelDao : BaseDao<Label> {
     abstract fun deleteAll()
 
     companion object {
-        fun populate(): List<Label> = listOf(Label("1", "2"))
+        fun populate(): List<Label> = listOf(
+                Label("RED", Color.parseColor("#F44336")),
+                Label("PINK", Color.parseColor("#E91E63")),
+                Label("PURPLE", Color.parseColor("#673AB7")),
+                Label("INDIGO", Color.parseColor("#3F51B5")),
+                Label("BLUE", Color.parseColor("#2196F3")),
+                Label("CYAN", Color.parseColor("#00BCD4")),
+                Label("TEAL", Color.parseColor("#009688")),
+                Label("GREEN", Color.parseColor("#4CAF50")),
+                Label("LIME", Color.parseColor("#CDDC39")),
+                Label("YELLOW", Color.parseColor("#FFEB3B")),
+                Label("BROWN", Color.parseColor("#795548")),
+                Label("GRAY", Color.parseColor("#9E9E9E"))
+        )
     }
 }

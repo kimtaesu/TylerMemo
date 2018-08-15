@@ -62,22 +62,27 @@ abstract class MemoDb : RoomDatabase() {
         fun getInstanceInMemory(context: Context): MemoDb {
             INSTANCE = Room.inMemoryDatabaseBuilder(context.applicationContext, MemoDb::class.java)
                     .allowMainThreadQueries()
-                    .addCallback(object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                            Executors.newSingleThreadScheduledExecutor().execute({
-                                getInstance(context).labelDao().insert(LabelDao.populate())
-                            })
-                        }
-                    })
+                    .populate(context)
                     .build()
             return INSTANCE!!
         }
 
         private fun buildDatabase(context: Context): MemoDb {
             return Room.databaseBuilder(context,
-                    MemoDb::class.java, "memo_db")
+                    MemoDb::class.java, "memo_db_2")
+                    .populate(context)
                     .build()
         }
     }
+}
+
+private fun <T : RoomDatabase> RoomDatabase.Builder<T>.populate(context: Context): RoomDatabase.Builder<T> {
+    return this.addCallback(object : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            Executors.newSingleThreadScheduledExecutor().execute({
+                MemoDb.getInstance(context).labelDao().insert(LabelDao.populate())
+            })
+        }
+    })
 }

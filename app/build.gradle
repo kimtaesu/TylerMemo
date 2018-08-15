@@ -77,6 +77,8 @@ dependencies {
     implementation deps.mosby3
     implementation deps.rxbinding
 
+    debugImplementation deps.stetho
+
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler
     kapt deps.room.compiler

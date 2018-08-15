@@ -1,6 +1,7 @@
 package com.hucet.tyler.memo.ui.label
 
 import android.databinding.DataBindingUtil
+import android.graphics.Color
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -37,6 +38,6 @@ class LabelAdapter constructor(appExecutors: AppExecutors)
     }
 
     override fun bind(binding: LabelItemBinding, item: Label) {
-        binding.label = item
+        binding.colorLabel.setBackgroundColor(item.color)
     }
 }
