@@ -1,14 +1,23 @@
 package com.hucet.tyler.memo.list
 
 import android.arch.lifecycle.MutableLiveData
+import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.*
+import android.support.test.espresso.assertion.ViewAssertions
+import android.support.test.espresso.assertion.ViewAssertions.*
+import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.bumptech.glide.load.engine.Resource
+import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.SingleFragmentActivity
 import com.hucet.tyler.memo.util.TestUtil
 import com.hucet.tyler.memo.utils.*
 import com.hucet.tyler.memo.vo.Memo
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,10 +40,13 @@ class MemoListFragmentTest {
 
     private lateinit var viewModel: MemoViewModel
     private lateinit var memoFragment: MemoListFragment
+
+    private lateinit var MemosLiveData: MutableLiveData<List<Memo>>
     @Before
     fun init() {
+        MemosLiveData = MutableLiveData()
         viewModel = mock {
-            on { fetchMemos } doReturn TestUtil.createMemosLiveData()
+            on { fetchMemos } doReturn MemosLiveData
         }
         memoFragment = MemoListFragment.newInstance()
         memoFragment.viewModelProvider = ViewModelUtil.createFor(viewModel)
@@ -44,6 +56,15 @@ class MemoListFragmentTest {
     }
 
     @Test
-    fun aa() {
+    fun memo_load() {
+        val memo = TestUtil.createMemo("foo", "bar")
+        MemosLiveData.postValue(listOf(memo))
+        onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("foo"))))
+        onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("bar"))))
     }
+
+    private fun listMatcher(): RecyclerViewMatcher {
+        return RecyclerViewMatcher(R.id.memo_list)
+    }
+
 }

@@ -55,7 +55,7 @@ class MemoListFragment : Fragment(), Injectable {
     }
 
     private fun initViews() {
-        list.apply {
+        memo_list.apply {
             adapter = this@MemoListFragment.adapter
             layoutManager = LinearLayoutManager(context)
         }

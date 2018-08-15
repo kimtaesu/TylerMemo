@@ -19,7 +19,7 @@ class MemoAdapter @Inject constructor(appExecutors: AppExecutors)
 
         val diff = object : DiffUtil.ItemCallback<Memo>() {
             override fun areItemsTheSame(oldItem: Memo?, newItem: Memo?): Boolean =
-                    oldItem?.subject == newItem?.subject
+                    oldItem?.id == newItem?.id
 
             override fun areContentsTheSame(oldItem: Memo?, newItem: Memo?): Boolean =
                     oldItem == newItem

@@ -19,7 +19,7 @@
       android:text="abc" />
 
     <android.support.v7.widget.RecyclerView
-      android:id="@+id/list"
+      android:id="@+id/memo_list"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       app:layout_constraintBottom_toBottomOf="parent"
