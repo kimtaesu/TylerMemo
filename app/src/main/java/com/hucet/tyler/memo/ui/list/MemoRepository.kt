@@ -1,11 +1,9 @@
-package com.hucet.tyler.memo.list
+package com.hucet.tyler.memo.ui.list
 
 import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.db.MemoDao
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.vo.Memo
-import com.hucet.tyler.memo.vo.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 

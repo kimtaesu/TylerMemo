@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.Provides
 import javax.inject.Singleton
 import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
 import com.hucet.tyler.memo.db.MemoDao
 import com.hucet.tyler.memo.db.MemoDb
 import dagger.Module
@@ -14,9 +15,7 @@ class RoomModule {
     @Singleton
     @Provides
     internal fun providesRoomDatabase(application: Application): MemoDb {
-        return Room
-                .databaseBuilder(application, MemoDb::class.java!!, "memo_db")
-                .build()
+        return MemoDb.getInstance(application)
     }
 
     @Singleton

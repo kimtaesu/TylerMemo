@@ -56,6 +56,7 @@ dependencies {
     implementation deps.support.design
     implementation deps.navigation.fragment_ktx
     implementation deps.room.runtime
+    implementation deps.room.rxjava2
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
     implementation deps.lifecycle.java8
@@ -74,6 +75,7 @@ dependencies {
     implementation deps.timber
 
     implementation deps.mosby3
+    implementation deps.rxbinding
 
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler

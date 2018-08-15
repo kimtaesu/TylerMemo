@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.list
+package com.hucet.tyler.memo.ui.list
 
 import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil
@@ -12,8 +12,7 @@ import com.hucet.tyler.memo.vo.Memo
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class MemoAdapter @Inject constructor(appExecutors: AppExecutors)
+class MemoAdapter constructor(appExecutors: AppExecutors)
     : DataBoundListAdapter<Memo, MemoItemBinding>(appExecutors, diff) {
     companion object {
 

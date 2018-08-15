@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.list
+package com.hucet.tyler.memo.ui.list
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider

@@ -17,16 +17,24 @@
 package com.hucet.tyler.memo.db
 
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
+import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.content.Context
+import android.support.annotation.VisibleForTesting
+import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
+import java.util.concurrent.Executors
+
 
 /**
  * Main database description.
  */
 @Database(
         entities = [
-            Memo::class
+            Memo::class,
+            Label::class
         ],
         version = 1,
         exportSchema = false
@@ -34,4 +42,42 @@ import com.hucet.tyler.memo.vo.Memo
 abstract class MemoDb : RoomDatabase() {
 
     abstract fun memoDao(): MemoDao
+
+    abstract fun labelDao(): LabelDao
+
+    companion object {
+
+        private var INSTANCE: MemoDb? = null
+
+        @Synchronized
+        fun getInstance(context: Context): MemoDb {
+            if (INSTANCE == null) {
+                INSTANCE = buildDatabase(context)
+            }
+            return INSTANCE!!
+        }
+
+        @VisibleForTesting
+        @Synchronized
+        fun getInstanceInMemory(context: Context): MemoDb {
+            INSTANCE = Room.inMemoryDatabaseBuilder(context.applicationContext, MemoDb::class.java)
+                    .allowMainThreadQueries()
+                    .addCallback(object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            Executors.newSingleThreadScheduledExecutor().execute({
+                                getInstance(context).labelDao().insert(LabelDao.populate())
+                            })
+                        }
+                    })
+                    .build()
+            return INSTANCE!!
+        }
+
+        private fun buildDatabase(context: Context): MemoDb {
+            return Room.databaseBuilder(context,
+                    MemoDb::class.java, "memo_db")
+                    .build()
+        }
+    }
 }
