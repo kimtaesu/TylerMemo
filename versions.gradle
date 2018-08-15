@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-
-
 /**
-* Shared file between builds so that they can all use the same dependencies and
-* maven repositories.
-**/
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
 ext.deps = [:]
 def versions = [:]
 versions.arch_core = "1.1.1"
@@ -130,16 +128,18 @@ deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 deps.junit = "junit:junit:$versions.junit"
 deps.mock_web_server = "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
 deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
-deps.rxkotlin  = "io.reactivex.rxjava2:rxkotlin:2.2.0"
+deps.rxkotlin = "io.reactivex.rxjava2:rxkotlin:2.2.0"
 deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
 deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 deps.mosby3 = 'com.hannesdorfmann.mosby3:mvi:3.1.0'
+deps.robolectric = "org.robolectric:robolectric:3.8"
+deps.mock_kotlin = 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
 
 ext.deps = deps
 
 def build_versions = [:]
-build_versions.min_sdk = 14
+build_versions.min_sdk = 21
 build_versions.target_sdk = 26
 build_versions.build_tools = "27.0.3"
 ext.build_versions = build_versions
@@ -167,4 +167,5 @@ def addRepos(RepositoryHandler handler) {
     handler.jcenter()
     handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
+
 ext.addRepos = this.&addRepos

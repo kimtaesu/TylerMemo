@@ -66,6 +66,7 @@ dependencies {
     implementation deps.kotlin.stdlib
 
     implementation deps.rxkotlin
+    implementation deps.rx_android
     implementation deps.timber
 
     implementation deps.mosby3
@@ -76,6 +77,7 @@ dependencies {
     kapt deps.lifecycle.compiler
 
     testImplementation deps.junit
+    testImplementation deps.robolectric
     testImplementation deps.mock_web_server
     testImplementation(deps.arch_core.testing, {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -83,13 +85,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
     testImplementation deps.mockito.core
+    testImplementation deps.mock_kotlin
 
     androidTestImplementation deps.navigation.testing_ktx
     androidTestImplementation deps.support.app_compat
     androidTestImplementation deps.support.recyclerview
     androidTestImplementation deps.support.cardview
     androidTestImplementation deps.support.design
-
     androidTestImplementation(deps.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

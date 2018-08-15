@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentMemoListBinding
+import com.hucet.tyler.memo.vo.Memo
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_memo_list.*
 import javax.inject.Inject
 
-class MemoListFragment : MviFragment<MemoListView, MemoListPresenter>() {
-
+class MemoListFragment : MviFragment<MemoListView, MemoListPresenter>(), MemoListView {
     companion object {
         fun newInstance(): MemoListFragment {
             return MemoListFragment()
@@ -57,9 +57,21 @@ class MemoListFragment : MviFragment<MemoListView, MemoListPresenter>() {
         }
         val i = listOf(
                 Memo("tt666t", "asㅗㅗdad"),
-                Memo("ttt1", "asdad3"),
-                Memo("ttt2", "asdad2")
+                Memo( "ttt1", "asdad3"),
+                Memo( "ttt2", "asdad2")
         )
         adapter.submitList(i)
     }
+
+    override fun render(state: MemoState) {
+        when {
+            state.memo == null -> {
+                fetchMemos()
+            }
+        }
+    }
+
+    private fun fetchMemos() {
+    }
+
 }

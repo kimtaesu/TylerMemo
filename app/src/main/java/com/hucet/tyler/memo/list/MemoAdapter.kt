@@ -1,18 +1,14 @@
 package com.hucet.tyler.memo.list
 
 import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.DataBoundListAdapter
-import com.hucet.tyler.memo.common.DataBoundViewHolder
 import com.hucet.tyler.memo.databinding.MemoItemBinding
 import com.hucet.tyler.memo.utils.AppExecutors
+import com.hucet.tyler.memo.vo.Memo
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,8 +37,7 @@ class MemoAdapter @Inject constructor(appExecutors: AppExecutors)
         }
     }
 
-    override fun bind(binding: MemoItemBinding, item: Memo) {
-        binding.subject.text = item.subject
-        binding.text.text = item.text
+    override fun bind(binding: MemoItemBinding, memo: Memo) {
+        binding.memo = memo
     }
 }
