@@ -31,5 +31,5 @@ import com.hucet.tyler.memo.vo.Memo
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
     @Query("select * from memo")
-    abstract fun all() : LiveData<List<Memo>>
+    abstract fun search() : LiveData<List<Memo>>
 }

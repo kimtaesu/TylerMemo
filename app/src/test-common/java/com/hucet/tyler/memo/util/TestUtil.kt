@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.hucet.tyler.memo.di
+package com.hucet.tyler.memo.util
 
-import dagger.Module
+import android.arch.lifecycle.MutableLiveData
+import com.hucet.tyler.memo.vo.Memo
 
-@Module(includes = [RoomModule::class, ViewModelModule::class])
-class AppModule {
+object TestUtil {
+    fun createMemosLiveData(): MutableLiveData<List<Memo>> {
+        return MutableLiveData<List<Memo>>().apply {
+            val items = (0..10).toList().map { Memo(it.toString(), it.toString()) }
+            postValue(items)
+        }
+    }
 }

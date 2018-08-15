@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.utils;
+package com.hucet.tyler.memo.util.rx;
 
 
 import org.junit.rules.TestRule;

@@ -9,7 +9,7 @@ apply plugin: 'kotlin-allopen'
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'com.android.example.github.testing.OpenClass'
+    annotation 'com.hucet.tyler.memo.OpenClass'
 }
 
 android {
@@ -38,6 +38,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
     }
 }
 
@@ -87,6 +91,7 @@ dependencies {
     testImplementation deps.mockito.core
     testImplementation deps.mock_kotlin
 
+    androidTestImplementation deps.mock_kotlin
     androidTestImplementation deps.navigation.testing_ktx
     androidTestImplementation deps.support.app_compat
     androidTestImplementation deps.support.recyclerview
@@ -135,7 +140,7 @@ task fullCoverageReport(type: JacocoReport) {
     ])
 }
 
-// we need all open to run tests which  a we enable only for debug builds.
+// we need search open to run tests which  a we enable only for debug builds.
 project.tasks.whenTaskAdded {
     if (it.name == "testReleaseUnitTest") {
         it.enabled = false
