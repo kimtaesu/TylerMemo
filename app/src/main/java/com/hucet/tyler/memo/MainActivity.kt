@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
-                    .add(android.R.id.content, ColorLabelFragment.newInstance())
+                    .add(android.R.id.content, MemoListFragment.newInstance())
                     .commit()
     }
 
