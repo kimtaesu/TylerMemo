@@ -80,9 +80,8 @@ private fun <T : RoomDatabase> RoomDatabase.Builder<T>.populate(context: Context
     return this.addCallback(object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            Executors.newSingleThreadScheduledExecutor().execute({
-                MemoDb.getInstance(context).labelDao().insert(LabelDao.populate())
-            })
+            Executors.newSingleThreadScheduledExecutor().execute {
+            }
         }
     })
 }

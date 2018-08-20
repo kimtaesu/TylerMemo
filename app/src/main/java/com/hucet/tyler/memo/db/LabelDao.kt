@@ -36,26 +36,9 @@ import java.util.*
 @Dao
 @OpenForTesting
 abstract class LabelDao : BaseDao<Label> {
-    @Query("select * from label")
+    @Query("select * from colorThemes")
     abstract fun all(): LiveData<List<Label>>
 
-    @Query("DELETE FROM label")
+    @Query("DELETE FROM colorThemes")
     abstract fun deleteAll()
-
-    companion object {
-        fun populate(): List<Label> = listOf(
-                Label("RED", Color.parseColor("#F44336")),
-                Label("PINK", Color.parseColor("#E91E63")),
-                Label("PURPLE", Color.parseColor("#673AB7")),
-                Label("INDIGO", Color.parseColor("#3F51B5")),
-                Label("BLUE", Color.parseColor("#2196F3")),
-                Label("CYAN", Color.parseColor("#00BCD4")),
-                Label("TEAL", Color.parseColor("#009688")),
-                Label("GREEN", Color.parseColor("#4CAF50")),
-                Label("LIME", Color.parseColor("#CDDC39")),
-                Label("YELLOW", Color.parseColor("#FFEB3B")),
-                Label("BROWN", Color.parseColor("#795548")),
-                Label("GRAY", Color.parseColor("#9E9E9E"))
-        )
-    }
 }

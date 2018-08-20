@@ -8,8 +8,8 @@ import android.arch.persistence.room.OnConflictStrategy
 @Dao
 interface BaseDao<T> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(vararg repos: T)
+    abstract fun insert(vararg items: T)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(repositories: List<T>)
+    abstract fun insert(items: List<T>)
 }

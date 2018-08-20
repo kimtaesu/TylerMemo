@@ -4,8 +4,8 @@
   <data>
 
     <variable
-      name="label"
-      type="com.hucet.tyler.memo.vo.Label" />
+      name="colorTheme"
+      type="com.hucet.tyler.memo.vo.ColorTheme" />
   </data>
 
   <android.support.constraint.ConstraintLayout
@@ -13,7 +13,7 @@
     android:layout_height="wrap_content">
 
     <View
-      android:id="@+id/colorLabel"
+      android:id="@+id/colorView"
       android:layout_width="50dp"
       android:layout_height="70dp" />
   </android.support.constraint.ConstraintLayout>

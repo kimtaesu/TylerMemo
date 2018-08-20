@@ -3,7 +3,6 @@ package com.hucet.tyler.memo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.hucet.tyler.memo.ui.label.ColorLabelFragment
 import com.hucet.tyler.memo.ui.list.MemoListFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector

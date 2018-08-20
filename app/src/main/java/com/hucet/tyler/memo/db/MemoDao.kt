@@ -17,11 +17,9 @@
 package com.hucet.tyler.memo.db
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.vo.Memo
 
 /**
@@ -30,6 +28,10 @@ import com.hucet.tyler.memo.vo.Memo
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
-    @Query("select * from memo")
-    abstract fun search() : LiveData<List<Memo>>
+    @Query("select * from memos")
+    abstract fun search(): LiveData<List<Memo>>
+
+    @Transaction
+    @Query("select * from memos")
+    abstract fun searchMemoView(): LiveData<List<MemoView>>
 }

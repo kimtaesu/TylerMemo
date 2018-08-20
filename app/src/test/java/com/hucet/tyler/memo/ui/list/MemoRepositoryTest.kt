@@ -3,11 +3,17 @@ package com.hucet.tyler.memo.ui.list
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
+import com.hucet.tyler.memo.vo.ColorTheme
+import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
+import org.hamcrest.CoreMatchers.hasItem
+import org.hamcrest.Matchers
+import org.hamcrest.collection.IsArrayContaining
 import org.junit.*
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
@@ -33,9 +39,13 @@ class MemoRepositoryTest {
 
     @Mock
     private lateinit var observer: Observer<List<Memo>>
-
     @Captor
     private lateinit var captor: ArgumentCaptor<List<Memo>>
+
+    @Mock
+    private lateinit var observerMemoView: Observer<List<MemoView>>
+    @Captor
+    private lateinit var captorMemoView: ArgumentCaptor<List<MemoView>>
 
     @Before
     fun setUp() {
@@ -51,12 +61,30 @@ class MemoRepositoryTest {
 
     @Test
     fun `insert memos to db`() {
-        val memos = listOf(Memo("test", "1"), Memo("test2", "12"))
-        repository.inserMemos(memos)
+        val memos = listOf(Memo("test", "1"),
+                Memo("test2", "12", ColorTheme("a", 1)))
+        repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
 
         verify(observer).onChanged(captor.capture())
-        Assert.assertEquals(captor.value, memos)
+        assertEquals(captor.value, memos)
+    }
+
+    @Test
+    fun `retrive memoviews from db`() {
+        val memos = listOf(
+                Memo("test", "1"),
+                Memo("test2", "12")
+        )
+
+        val label = Label("abc", 1)
+        repository.insertMemos(memos)
+        repository.insertLabels(label)
+        repository.searchMemoViews("").observeForever(observerMemoView)
+
+        verify(observerMemoView).onChanged(captorMemoView.capture())
+        assertEquals(captorMemoView.value.map { it.memo }, memos)
+        Assert.assertThat(captorMemoView.value.first().labels, hasItem(label))
     }
 }

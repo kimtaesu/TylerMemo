@@ -16,7 +16,7 @@
 
 package com.hucet.tyler.memo.di
 
-import com.hucet.tyler.memo.ui.label.ColorLabelFragment
+import com.hucet.tyler.memo.ui.label.ColorThemeFragment
 import com.hucet.tyler.memo.ui.list.MemoListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -27,6 +27,6 @@ abstract class FragmentBuildersModule {
     abstract fun contributeMemoListFragment(): MemoListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeColorLabelFragment(): ColorLabelFragment
+    abstract fun contributeColorLabelFragment(): ColorThemeFragment
 
 }

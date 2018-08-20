@@ -12,6 +12,7 @@ import com.hucet.tyler.memo.databinding.FragmentColorLabelBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.utils.Util
+import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Label
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
@@ -20,10 +21,10 @@ import kotlinx.android.synthetic.main.fragment_color_label.*
 import javax.inject.Inject
 
 
-class ColorLabelFragment : MviFragment<ColorLabelView, ColorLabelPresenter>(), Injectable, ColorLabelView {
+class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), Injectable, ColorThemeView {
     companion object {
-        fun newInstance(): ColorLabelFragment {
-            return ColorLabelFragment()
+        fun newInstance(): ColorThemeFragment {
+            return ColorThemeFragment()
         }
     }
 
@@ -33,7 +34,7 @@ class ColorLabelFragment : MviFragment<ColorLabelView, ColorLabelPresenter>(), I
     @Inject
     lateinit var presenter: ColorLabelPresenter
 
-    private val adapter: LabelAdapter by lazy { LabelAdapter(appExecutors) }
+    private val adapter: ColorThemeAdapter by lazy { ColorThemeAdapter(appExecutors) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -53,20 +54,18 @@ class ColorLabelFragment : MviFragment<ColorLabelView, ColorLabelPresenter>(), I
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         label_list.apply {
-            adapter = this@ColorLabelFragment.adapter
+            adapter = this@ColorThemeFragment.adapter
             addItemDecoration(SpacesItemDecoration(Util.dpToPx(context, 5.0f)))
         }
     }
 
     override fun createPresenter(): ColorLabelPresenter = presenter
 
-    private val createLabelPublishSubject = PublishSubject.create<Label>()
+    private val createLabelPublishSubject = PublishSubject.create<ColorTheme>()
 
-    override fun createdLabel(): Observable<Label> = createLabelPublishSubject
+    override fun createdLabel(): Observable<ColorTheme> = createLabelPublishSubject
 
-    override fun render(state: ColorLabelState) {
-        if (state.isNeedUpdate) {
-            adapter.submitList(state.labels)
-        }
+    override fun render(state: ColorThemeState) {
+        adapter.submitList(state.colorThemes)
     }
 }

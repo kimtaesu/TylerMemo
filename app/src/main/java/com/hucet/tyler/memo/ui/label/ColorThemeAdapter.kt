@@ -1,0 +1,37 @@
+package com.hucet.tyler.memo.ui.label
+
+import android.databinding.DataBindingUtil
+import android.support.v7.util.DiffUtil
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.hucet.tyler.memo.R
+import com.hucet.tyler.memo.common.DataBoundListAdapter
+import com.hucet.tyler.memo.databinding.ColorThemeItemBinding
+import com.hucet.tyler.memo.utils.AppExecutors
+import com.hucet.tyler.memo.vo.ColorTheme
+
+class ColorThemeAdapter constructor(appExecutors: AppExecutors)
+    : DataBoundListAdapter<ColorTheme, ColorThemeItemBinding>(appExecutors, diff) {
+    companion object {
+        val diff = object : DiffUtil.ItemCallback<ColorTheme>() {
+            override fun areItemsTheSame(oldItem: ColorTheme?, newItem: ColorTheme?): Boolean =
+                    oldItem == newItem
+
+            override fun areContentsTheSame(oldItem: ColorTheme?, newItem: ColorTheme?): Boolean =
+                    oldItem == newItem
+        }
+    }
+
+    override fun createBinding(parent: ViewGroup): ColorThemeItemBinding {
+        return DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.color_theme_item,
+                parent,
+                false
+        )
+    }
+
+    override fun bind(binding: ColorThemeItemBinding, item: ColorTheme) {
+        binding.colorView.setBackgroundColor(item.color)
+    }
+}
