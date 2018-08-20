@@ -1,9 +1,6 @@
 package com.hucet.tyler.memo.db
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
+import android.arch.persistence.room.*
 
 @Dao
 interface BaseDao<T> {
@@ -12,4 +9,10 @@ interface BaseDao<T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(items: List<T>)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(obj: List<T>)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(vararg obj: T)
 }

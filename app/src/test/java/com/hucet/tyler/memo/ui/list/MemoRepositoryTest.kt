@@ -6,8 +6,13 @@ import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.*
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.hamcrest.CoreMatchers.hasItem
+import org.hamcrest.Matcher
+import org.hamcrest.core.Is
+import org.hamcrest.core.Is.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
@@ -18,6 +23,7 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.hamcrest.CoreMatchers
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -68,6 +74,42 @@ class MemoRepositoryTest {
     }
 
     @Test
+    fun `en search subject memo`() {
+        val expect = Memo("abc", "qwe")
+        assertSearch(listOf(
+                expect,
+                Memo("sss", "asd")
+        ), listOf(expect), "b")
+    }
+
+    @Test
+    fun `en search text memo`() {
+        val expect = Memo("abc", "abc")
+        assertSearch(listOf(
+                expect,
+                Memo("sss", "asd")
+        ), listOf(expect), "bc")
+    }
+
+    @Test
+    fun `ko search subject memo`() {
+        val expect = Memo("하하", "ㅁㄴㅇ")
+        assertSearch(listOf(
+                expect,
+                Memo("sss", "asd")
+        ), listOf(expect), "하하")
+    }
+
+    private fun assertSearch(memos: List<Memo>, expect: List<Memo>, keyword: String) {
+        repository.insertMemos(memos)
+        repository.searchMemos(keyword).observeForever(observer)
+
+        verify(observer).onChanged(captor.capture())
+        Assert.assertThat(captor.value, `is`(expect))
+        Assert.assertThat(captor.value.size, `is`(expect.size))
+    }
+
+    @Test
     fun `retrive memoviews from db`() {
         val memos = listOf(
                 Memo("test", "1", MemoAttribute(false)),
@@ -79,13 +121,38 @@ class MemoRepositoryTest {
 
         repository.insertMemos(memos)
         repository.insertLabels(listOf(label))
-        repository.insertCheckItems(listOf(checkItem))
+
         repository.searchMemoViews("").observeForever(observerMemoView)
 
         verify(observerMemoView).onChanged(captorMemoView.capture())
 
         assertEquals(captorMemoView.value.map { it.memo }, memos)
         assertThat(captorMemoView.value[0].labels, hasItem(label))
+
+        // 추가적으로 INSERT CheckItem
+        repository.insertCheckItems(listOf(checkItem))
+        // observerMemoView 두번째 호출
+        verify(observerMemoView, times(2)).onChanged(captorMemoView.capture())
         assertThat(captorMemoView.value[1].checkItems, hasItem(checkItem))
+    }
+
+    @Test
+    fun `change color theme`() {
+        repository.insertMemos(listOf(Memo("test", "1", MemoAttribute(false))))
+
+        repository.searchMemos("").observeForever(observer)
+        verify(observer).onChanged(captor.capture())
+
+        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
+        val result = captor.value.first()
+
+        result.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
+
+        // 메모 Theme 변경 White -> Blue
+        repository.updateMemos(listOf(result))
+        // observer 두번째 호출
+        verify(observer, times(2)).onChanged(captor.capture())
+
+        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.BLUE.colorTheme))
     }
 }

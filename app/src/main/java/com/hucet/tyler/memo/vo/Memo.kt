@@ -15,7 +15,7 @@ data class Memo(
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         @Embedded
-        val colorTheme: ColorTheme = ColorTheme.default
+        var colorTheme: ColorTheme = ColorTheme.default.colorTheme
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = MEMO_ID)

@@ -28,8 +28,15 @@ import com.hucet.tyler.memo.vo.Memo
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
+
     @Query("select * from memos")
-    abstract fun search(): LiveData<List<Memo>>
+    abstract fun all(): LiveData<List<Memo>>
+
+    @Query("select * from memos")
+    abstract fun allMemoView(): LiveData<List<MemoView>>
+
+    @Query("select * from memos where subject LIKE  :keyword or text LIKE :keyword")
+    abstract fun search(keyword: String): LiveData<List<Memo>>
 
     @Transaction
     @Query("select * from memos")

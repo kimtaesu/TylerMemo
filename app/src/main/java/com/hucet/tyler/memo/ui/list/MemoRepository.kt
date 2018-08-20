@@ -20,10 +20,14 @@ class MemoRepository @Inject constructor(
     private val checkItemDao by lazy { db.checkItemDao() }
 
     fun searchMemos(keyword: String): LiveData<List<Memo>> {
-        return memoDao.search()
+        if (keyword.isEmpty())
+            return memoDao.all()
+        return memoDao.search("%$keyword%")
     }
 
     fun searchMemoViews(keyword: String): LiveData<List<MemoView>> {
+        if (keyword.isEmpty())
+            return memoDao.allMemoView()
         return memoDao.searchMemoView()
     }
 
@@ -37,5 +41,9 @@ class MemoRepository @Inject constructor(
 
     fun insertCheckItems(checkItems: List<CheckItem>) {
         checkItemDao.insert(checkItems)
+    }
+
+    fun updateMemos(memos: List<Memo>) {
+        memoDao.update(memos)
     }
 }
