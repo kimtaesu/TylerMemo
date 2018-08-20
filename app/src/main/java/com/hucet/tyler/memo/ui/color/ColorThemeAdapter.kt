@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.ui.label
+package com.hucet.tyler.memo.ui.color
 
 import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil

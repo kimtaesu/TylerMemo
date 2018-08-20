@@ -1,7 +1,6 @@
-package com.hucet.tyler.memo.ui.label
+package com.hucet.tyler.memo.ui.color
 
 import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Label
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Assert
@@ -10,14 +9,14 @@ import java.util.concurrent.CopyOnWriteArrayList
 class ColorThemeViewRobot constructor(
         presenter: ColorLabelPresenter
 ) {
-    private val renderEvents = CopyOnWriteArrayList<ColorThemeState>()
+    private val renderEvents = CopyOnWriteArrayList<LabelState>()
     private val createLabelSubject = PublishSubject.create<ColorTheme>()
 
     init {
-        presenter.attachView(object : ColorThemeView {
+        presenter.attachView(object : LabelView {
             override fun createdLabel(): Observable<ColorTheme> = createLabelSubject
 
-            override fun render(state: ColorThemeState) {
+            override fun render(state: LabelState) {
                 renderEvents.add(state)
             }
         })
@@ -27,7 +26,7 @@ class ColorThemeViewRobot constructor(
         createLabelSubject.onNext(colorTheme)
     }
 
-    fun assertViewStateRendered(`when`: () -> Unit, then: () -> List<ColorThemeState>): List<ColorThemeState> {
+    fun assertViewStateRendered(`when`: () -> Unit, then: () -> List<LabelState>): List<LabelState> {
         System.out.println("when")
         `when`()
         val expectStates = then()

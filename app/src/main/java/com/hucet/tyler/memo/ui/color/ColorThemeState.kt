@@ -1,7 +1,6 @@
-package com.hucet.tyler.memo.ui.label
+package com.hucet.tyler.memo.ui.color
 
 import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Label
 
 data class ColorThemeState(
         var colorThemes: List<ColorTheme> = emptyList()

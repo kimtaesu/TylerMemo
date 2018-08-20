@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.ui.label
+package com.hucet.tyler.memo.ui.color
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.hucet.tyler.memo.db.MemoDb
