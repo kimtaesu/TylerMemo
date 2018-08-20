@@ -5,10 +5,7 @@ import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.vo.*
 import com.nhaarman.mockito_kotlin.verify
 import org.hamcrest.CoreMatchers.hasItem
 import org.junit.*
@@ -61,7 +58,7 @@ class MemoRepositoryTest {
     @Test
     fun `insert memos to db`() {
         val memos = listOf(Memo("test", "1"),
-                Memo("test2", "12", ColorTheme("a", 1)))
+                Memo("test2", "12", MemoAttribute(false), ColorTheme("a", 1)))
         repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
@@ -73,8 +70,8 @@ class MemoRepositoryTest {
     @Test
     fun `retrive memoviews from db`() {
         val memos = listOf(
-                Memo("test", "1"),
-                Memo("test2", "12")
+                Memo("test", "1", MemoAttribute(false)),
+                Memo("test2", "12", MemoAttribute(false))
         )
 
         val label = Label("abc", 1)

@@ -6,10 +6,11 @@ import com.hucet.tyler.memo.vo.CheckItem
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_ID
+import com.hucet.tyler.memo.vo.MemoAttribute
 
 class MemoView {
     @Embedded
-    var memo: Memo = Memo("", "")
+    var memo: Memo = Memo("", "", MemoAttribute(false))
 
     @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = Label::class)
     var labels: List<Label>? = null

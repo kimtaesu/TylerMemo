@@ -13,6 +13,8 @@ data class Memo(
         val subject: String,
         val text: String,
         @Embedded
+        val attr: MemoAttribute = MemoAttribute(false),
+        @Embedded
         val colorTheme: ColorTheme = ColorTheme.default
 ) {
     @PrimaryKey(autoGenerate = true)
@@ -23,5 +25,9 @@ data class Memo(
         const val MEMO_TABLE = "memos"
         const val MEMO_ID = "memo_id"
     }
-
 }
+
+data class MemoAttribute(
+        val isPin: Boolean,
+        val createAt: Long = System.currentTimeMillis()
+)
