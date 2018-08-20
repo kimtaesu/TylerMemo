@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.vo.CheckItem
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class MemoRepository @Inject constructor(
 ) {
     private val memoDao by lazy { db.memoDao() }
     private val labelDao by lazy { db.labelDao() }
+    private val checkItemDao by lazy { db.checkItemDao() }
 
     fun searchMemos(keyword: String): LiveData<List<Memo>> {
         return memoDao.search()
@@ -29,8 +31,11 @@ class MemoRepository @Inject constructor(
         memoDao.insert(memos)
     }
 
-    fun insertLabels(label: Label) {
+    fun insertLabels(label: List<Label>) {
         labelDao.insert(label)
+    }
 
+    fun insertCheckItems(checkItems: List<CheckItem>) {
+        checkItemDao.insert(checkItems)
     }
 }

@@ -5,13 +5,12 @@ import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
+import com.hucet.tyler.memo.vo.CheckItem
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import com.nhaarman.mockito_kotlin.verify
 import org.hamcrest.CoreMatchers.hasItem
-import org.hamcrest.Matchers
-import org.hamcrest.collection.IsArrayContaining
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
@@ -79,12 +78,17 @@ class MemoRepositoryTest {
         )
 
         val label = Label("abc", 1)
+        val checkItem = CheckItem("ddd", true, 2)
+
         repository.insertMemos(memos)
-        repository.insertLabels(label)
+        repository.insertLabels(listOf(label))
+        repository.insertCheckItems(listOf(checkItem))
         repository.searchMemoViews("").observeForever(observerMemoView)
 
         verify(observerMemoView).onChanged(captorMemoView.capture())
+
         assertEquals(captorMemoView.value.map { it.memo }, memos)
-        Assert.assertThat(captorMemoView.value.first().labels, hasItem(label))
+        assertThat(captorMemoView.value[0].labels, hasItem(label))
+        assertThat(captorMemoView.value[1].checkItems, hasItem(checkItem))
     }
 }
