@@ -105,7 +105,7 @@ class MemoRepositoryTest {
     }
 
     @Test
-    fun `retrive memoviews from db`() {
+    fun `insert check items`() {
         val memos = listOf(
                 Memo("test", "1", MemoAttribute(false)),
                 Memo("test2", "12", MemoAttribute(false))
