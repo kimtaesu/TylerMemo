@@ -137,6 +137,8 @@ deps.robolectric = "org.robolectric:robolectric:3.8"
 deps.mock_kotlin = 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
 deps.rxbinding = 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
 deps.stetho = 'com.facebook.stetho:stetho:1.5.0'
+deps.flexbox = 'com.google.android:flexbox:1.0.0'
+
 ext.deps = deps
 
 def build_versions = [:]

@@ -2,15 +2,15 @@ package com.hucet.tyler.memo.ui.list
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
-import android.content.ContentValues.TAG
 import android.databinding.DataBindingUtil
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentMemoListBinding
@@ -18,11 +18,6 @@ import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import kotlinx.android.synthetic.main.fragment_memo_list.*
 import javax.inject.Inject
-import android.opengl.ETC1.getHeight
-import android.view.ViewTreeObserver
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.Unregistrar
 
 
 @OpenForTesting
@@ -41,8 +36,6 @@ class MemoListFragment : Fragment(), Injectable {
         viewModelProvider.create(MemoViewModel::class.java)
     }
 
-    private var keyboardEventUnregistrar: Unregistrar? = null
-
     @Inject
     lateinit var appExecutors: AppExecutors
 
@@ -60,28 +53,26 @@ class MemoListFragment : Fragment(), Injectable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        keyboardEventUnregistrar = KeyboardVisibilityEvent.registerEventListener(
-                activity!!
-        ) {
-
-        }
-
         initViews()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        keyboardEventUnregistrar?.unregister()
     }
 
     private fun initViews() {
         memo_list.apply {
             adapter = this@MemoListFragment.adapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = FlexboxLayoutManager(context).apply {
+                flexWrap = FlexWrap.WRAP
+                flexDirection = FlexDirection.ROW
+            }
         }
 
         viewModel.fetchMemos.observe(this, Observer {
             adapter.submitList(it)
         })
+
+        viewModel.showMemos("")
     }
 }

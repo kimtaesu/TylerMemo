@@ -76,7 +76,7 @@ dependencies {
 
     implementation deps.mosby3
     implementation deps.rxbinding
-
+    implementation deps.flexbox
     debugImplementation deps.stetho
 
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'

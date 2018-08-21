@@ -16,17 +16,16 @@ class MemoViewModel @Inject constructor(
 ) : ViewModel() {
     private val keywordName = MutableLiveData<String>()
 
-    private val memoResult = map(keywordName, {
+    private val memoResult = map(keywordName) {
         repository.searchMemos(it)
-    })
+    }
 
-    val fetchMemos = switchMap(memoResult, { it })
+    val fetchMemos = switchMap(memoResult) { it }
 
-    fun showMemos(keyword: String): Boolean {
+    fun showMemos(keyword: String) {
         if (keywordName.value == keyword) {
-            return false
+            return
         }
         keywordName.value = keyword
-        return true
     }
 }
