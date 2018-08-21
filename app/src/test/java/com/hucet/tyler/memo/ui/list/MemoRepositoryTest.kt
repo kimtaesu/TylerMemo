@@ -40,14 +40,9 @@ class MemoRepositoryTest {
     private lateinit var db: MemoDb
 
     @Mock
-    private lateinit var observer: Observer<List<Memo>>
+    private lateinit var observer: Observer<List<MemoView>>
     @Captor
-    private lateinit var captor: ArgumentCaptor<List<Memo>>
-
-    @Mock
-    private lateinit var observerMemoView: Observer<List<MemoView>>
-    @Captor
-    private lateinit var captorMemoView: ArgumentCaptor<List<MemoView>>
+    private lateinit var captor: ArgumentCaptor<List<MemoView>>
 
     @Before
     fun setUp() {
@@ -70,7 +65,7 @@ class MemoRepositoryTest {
         repository.searchMemos("").observeForever(observer)
 
         verify(observer).onChanged(captor.capture())
-        assertEquals(captor.value, memos)
+        assertEquals(captor.value.map { it.memo }, memos)
     }
 
     @Test
@@ -105,7 +100,7 @@ class MemoRepositoryTest {
         repository.searchMemos(keyword).observeForever(observer)
 
         verify(observer).onChanged(captor.capture())
-        Assert.assertThat(captor.value, `is`(expect))
+        Assert.assertThat(captor.value.map { it.memo }, `is`(expect))
         Assert.assertThat(captor.value.size, `is`(expect.size))
     }
 
@@ -122,18 +117,18 @@ class MemoRepositoryTest {
         repository.insertMemos(memos)
         repository.insertLabels(listOf(label))
 
-        repository.searchMemoViews("").observeForever(observerMemoView)
+        repository.searchMemos("").observeForever(observer)
 
-        verify(observerMemoView).onChanged(captorMemoView.capture())
+        verify(observer).onChanged(captor.capture())
 
-        assertEquals(captorMemoView.value.map { it.memo }, memos)
-        assertThat(captorMemoView.value[0].labels, hasItem(label))
+        assertEquals(captor.value.map { it.memo }, memos)
+        assertThat(captor.value[0].labels, hasItem(label))
 
         // 추가적으로 INSERT CheckItem
         repository.insertCheckItems(listOf(checkItem))
         // observerMemoView 두번째 호출
-        verify(observerMemoView, times(2)).onChanged(captorMemoView.capture())
-        assertThat(captorMemoView.value[1].checkItems, hasItem(checkItem))
+        verify(observer, times(2)).onChanged(captor.capture())
+        assertThat(captor.value[1].checkItems, hasItem(checkItem))
     }
 
     @Test
@@ -143,16 +138,39 @@ class MemoRepositoryTest {
         repository.searchMemos("").observeForever(observer)
         verify(observer).onChanged(captor.capture())
 
-        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
+        Assert.assertThat(captor.value.first().memo.colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
         val result = captor.value.first()
 
-        result.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
+        result.memo.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
 
         // 메모 Theme 변경 White -> Blue
-        repository.updateMemos(listOf(result))
+        repository.updateMemos(listOf(result.memo))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
-        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.BLUE.colorTheme))
+        Assert.assertThat(captor.value.first().memo.colorTheme, `is`(ColorTheme.Companion.Theme.BLUE.colorTheme))
+    }
+
+    @Test
+    fun `pin true 정렬 순위`() {
+        val expect = Memo("a", "2", MemoAttribute(true))
+        val memos = listOf(
+                Memo("test", "1", MemoAttribute(false)),
+                expect
+        )
+        repository.insertMemos(memos)
+
+        repository.searchMemos("").observeForever(observer)
+        verify(observer).onChanged(captor.capture())
+        Assert.assertThat(captor.value.first().memo, `is`(expect))
+
+        // Pin true 메모 추가
+        val expect2 = Memo("last", "last", MemoAttribute(true))
+        repository.insertMemos(listOf(expect2))
+        // observer 두번째 호출
+        verify(observer, times(2)).onChanged(captor.capture())
+
+        // 첫 번째는 마지막 추가한 메모
+        Assert.assertThat(captor.value.first().memo, `is`(expect2))
     }
 }

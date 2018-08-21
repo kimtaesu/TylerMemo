@@ -9,14 +9,14 @@ import java.util.concurrent.CopyOnWriteArrayList
 class ColorThemeViewRobot constructor(
         presenter: ColorLabelPresenter
 ) {
-    private val renderEvents = CopyOnWriteArrayList<LabelState>()
+    private val renderEvents = CopyOnWriteArrayList<ColorThemeState>()
     private val createLabelSubject = PublishSubject.create<ColorTheme>()
 
     init {
-        presenter.attachView(object : LabelView {
-            override fun createdLabel(): Observable<ColorTheme> = createLabelSubject
+        presenter.attachView(object : ColorThemeView {
+            override fun createdColor(): Observable<ColorTheme> = createLabelSubject
 
-            override fun render(state: LabelState) {
+            override fun render(state: ColorThemeState) {
                 renderEvents.add(state)
             }
         })
@@ -26,7 +26,7 @@ class ColorThemeViewRobot constructor(
         createLabelSubject.onNext(colorTheme)
     }
 
-    fun assertViewStateRendered(`when`: () -> Unit, then: () -> List<LabelState>): List<LabelState> {
+    fun assertViewStateRendered(`when`: () -> Unit, then: () -> List<ColorThemeState>): List<ColorThemeState> {
         System.out.println("when")
         `when`()
         val expectStates = then()

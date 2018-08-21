@@ -15,7 +15,8 @@ data class Memo(
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         @Embedded
-        var colorTheme: ColorTheme = ColorTheme.default.colorTheme
+        var colorTheme: ColorTheme = ColorTheme.default.colorTheme,
+        val createAt: Long = System.currentTimeMillis()
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = MEMO_ID)
@@ -27,7 +28,4 @@ data class Memo(
     }
 }
 
-data class MemoAttribute(
-        val isPin: Boolean,
-        val createAt: Long = System.currentTimeMillis()
-)
+data class MemoAttribute(val isPin: Boolean)

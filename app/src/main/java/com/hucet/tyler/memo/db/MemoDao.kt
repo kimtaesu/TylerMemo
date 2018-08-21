@@ -28,17 +28,10 @@ import com.hucet.tyler.memo.vo.Memo
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
-
-    @Query("select * from memos")
-    abstract fun all(): LiveData<List<Memo>>
-
-    @Query("select * from memos")
-    abstract fun allMemoView(): LiveData<List<MemoView>>
-
-    @Query("select * from memos where subject LIKE  :keyword or text LIKE :keyword")
-    abstract fun search(keyword: String): LiveData<List<Memo>>
+    @Query("select * from memos order by isPin desc, createAt desc")
+    abstract fun allMemo(): LiveData<List<MemoView>>
 
     @Transaction
-    @Query("select * from memos")
-    abstract fun searchMemoView(): LiveData<List<MemoView>>
+    @Query("select * from memos where subject LIKE  :keyword or text LIKE :keyword order by isPin desc, createAt desc")
+    abstract fun searchMemo(keyword: String): LiveData<List<MemoView>>
 }

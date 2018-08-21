@@ -19,16 +19,10 @@ class MemoRepository @Inject constructor(
     private val labelDao by lazy { db.labelDao() }
     private val checkItemDao by lazy { db.checkItemDao() }
 
-    fun searchMemos(keyword: String): LiveData<List<Memo>> {
+    fun searchMemos(keyword: String): LiveData<List<MemoView>> {
         if (keyword.isEmpty())
-            return memoDao.all()
-        return memoDao.search("%$keyword%")
-    }
-
-    fun searchMemoViews(keyword: String): LiveData<List<MemoView>> {
-        if (keyword.isEmpty())
-            return memoDao.allMemoView()
-        return memoDao.searchMemoView()
+            return memoDao.allMemo()
+        return memoDao.searchMemo("%$keyword%")
     }
 
     fun insertMemos(memos: List<Memo>) {
