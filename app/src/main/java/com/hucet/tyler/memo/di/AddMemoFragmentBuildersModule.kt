@@ -16,28 +16,15 @@
 
 package com.hucet.tyler.memo.di
 
-import android.app.Application
-import com.hucet.tyler.memo.MyApplication
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjectionModule
-import javax.inject.Singleton
+import com.hucet.tyler.memo.ui.add.AddMemoFragment
+import com.hucet.tyler.memo.ui.color.ColorThemeFragment
+import com.hucet.tyler.memo.ui.memo.MemoListFragment
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
-@Singleton
-@Component(
-    modules = [
-        AndroidInjectionModule::class,
-        AppModule::class,
-        ActivityModule::class]
-)
-interface AppComponent {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): AppComponent
-    }
-
-    fun inject(app: MyApplication)
+@Module
+abstract class AddMemoFragmentBuildersModule {
+    @ContributesAndroidInjector
+    abstract fun contributeAddMemoFragment(): AddMemoFragment
 }
+

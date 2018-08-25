@@ -22,7 +22,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class FragmentBuildersModule {
+abstract class MainFragmentBuildersModule {
     @ContributesAndroidInjector
     abstract fun contributeMemoListFragment(): MemoListFragment
 

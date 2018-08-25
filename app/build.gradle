@@ -50,6 +50,10 @@ jacoco {
 }
 
 dependencies {
+    debugImplementation deps.leakcanary.debug
+    releaseImplementation deps.leakcanary.release
+    debugImplementation deps.leakcanary.fragment
+
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
     implementation deps.support.cardview
@@ -77,6 +81,9 @@ dependencies {
     implementation deps.mosby3
     implementation deps.rxbinding
     implementation deps.flexbox
+
+    implementation deps.firebase.remoteConfig
+    implementation 'com.google.firebase:firebase-core:16.0.0'
     debugImplementation deps.stetho
 
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
@@ -95,7 +102,7 @@ dependencies {
     })
     testImplementation deps.mockito.core
     testImplementation deps.mock_kotlin
-
+    testImplementation deps.atsl.monitor
     androidTestImplementation deps.mock_kotlin
     androidTestImplementation deps.navigation.testing_ktx
     androidTestImplementation deps.support.app_compat
@@ -151,3 +158,5 @@ project.tasks.whenTaskAdded {
         it.enabled = false
     }
 }
+
+apply plugin: 'com.google.gms.google-services'

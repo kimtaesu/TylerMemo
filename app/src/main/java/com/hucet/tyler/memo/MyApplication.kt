@@ -3,7 +3,10 @@ package com.hucet.tyler.memo
 import android.app.Activity
 import android.app.Application
 import com.facebook.stetho.Stetho
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hucet.tyler.memo.di.AppInjector
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import timber.log.Timber
@@ -15,16 +18,48 @@ class MyApplication : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        AppInjector.init(this)
+        initLeakCanary()
+        initStetho()
+        fetchRemoteConfig()
+        initTimber()
+    }
+
+    private fun initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+        // Normal app init code...
+
+    }
+
+    private fun initTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        AppInjector.init(this)
-        initStetho()
     }
 
     private fun initStetho() {
         if (BuildConfig.DEBUG)
             Stetho.initializeWithDefaults(this);
     }
+
+    private fun fetchRemoteConfig() {
+        FirebaseRemoteConfig.getInstance().apply {
+            setConfigSettings(FirebaseRemoteConfigSettings.Builder()
+                    .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                    .build())
+            setDefaults(R.xml.default_remote_config)
+        }.run {
+            val cacheExpirationSecond = if (BuildConfig.DEBUG) 0L else 60 * 60 * 12 // 12 hours
+            fetch(cacheExpirationSecond).addOnCompleteListener { task ->
+                if (task.isSuccessful) activateFetched()
+            }
+        }
+    }
+
     override fun activityInjector() = dispatchingAndroidInjector
 }

@@ -17,12 +17,16 @@
 package com.hucet.tyler.memo.di
 
 import com.hucet.tyler.memo.MainActivity
+import com.hucet.tyler.memo.ui.add.AddMemoActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Suppress("unused")
 @Module
-abstract class MainActivityModule {
-    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+abstract class ActivityModule {
+    @ContributesAndroidInjector(modules = [MainFragmentBuildersModule::class])
     abstract fun contributeMainActivity(): MainActivity
+
+    @ContributesAndroidInjector(modules = [AddMemoFragmentBuildersModule::class])
+    abstract fun contributeAddMemoActivity(): AddMemoActivity
 }

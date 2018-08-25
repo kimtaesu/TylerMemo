@@ -10,6 +10,7 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.SpacesItemDecoration
 import com.hucet.tyler.memo.databinding.FragmentColorLabelBinding
 import com.hucet.tyler.memo.di.Injectable
+import com.hucet.tyler.memo.di.ManualInjectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.utils.Util
 import com.hucet.tyler.memo.vo.ColorTheme
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_color_label.*
 import javax.inject.Inject
 
 
-class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), Injectable, ColorThemeView {
+class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), ManualInjectable, ColorThemeView {
     companion object {
         fun newInstance(): ColorThemeFragment {
             return ColorThemeFragment()

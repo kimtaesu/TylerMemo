@@ -1,11 +1,21 @@
 package com.hucet.tyler.memo.ui.color
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
+import com.hannesdorfmann.mosby3.mvp.MvpView
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.vo.ColorTheme
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+interface ColorThemeView : MvpView {
+
+    fun createdColor(): Observable<ColorTheme>
+
+    fun render(state: ColorThemeState)
+}
 
 @Singleton
 class ColorLabelPresenter @Inject constructor(
@@ -40,3 +50,7 @@ class ColorLabelPresenter @Inject constructor(
 private sealed class PartialStateChanges {
     class CreatedLabel(val color: ColorTheme) : PartialStateChanges()
 }
+
+data class ColorThemeState(
+        var colorThemes: List<ColorTheme> = emptyList()
+)
