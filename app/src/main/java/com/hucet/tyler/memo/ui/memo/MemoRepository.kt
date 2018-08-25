@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.ui.list
+package com.hucet.tyler.memo.ui.memo
 
 import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting

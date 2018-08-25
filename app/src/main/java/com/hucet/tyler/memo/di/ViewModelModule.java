@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.hucet.tyler.memo.common.ViewModelFactory;
-import com.hucet.tyler.memo.ui.list.MemoViewModel;
+import com.hucet.tyler.memo.ui.memo.MemoViewModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

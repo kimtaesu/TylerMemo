@@ -1,11 +1,15 @@
 package com.hucet.tyler.memo
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.hucet.tyler.memo.ui.list.MemoListFragment
+import android.support.v7.app.AppCompatActivity
+import com.hucet.tyler.memo.ui.add.AddMemoActivity
+import com.hucet.tyler.memo.ui.add.AddMemoFragment
+import com.hucet.tyler.memo.ui.memo.MemoListFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -14,12 +18,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.activity_main)
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
-                    .add(android.R.id.content, MemoListFragment.newInstance())
+                    .add(R.id.content, MemoListFragment.newInstance())
                     .commit()
+        add_memo.setOnClickListener {
+            startActivity(AddMemoActivity.createIntent(this))
+        }
     }
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector

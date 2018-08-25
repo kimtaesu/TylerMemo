@@ -17,7 +17,7 @@
 package com.hucet.tyler.memo.di
 
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
-import com.hucet.tyler.memo.ui.list.MemoListFragment
+import com.hucet.tyler.memo.ui.memo.MemoListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

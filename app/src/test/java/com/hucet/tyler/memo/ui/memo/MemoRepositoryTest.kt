@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.ui.list
+package com.hucet.tyler.memo.ui.memo
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
@@ -6,12 +6,9 @@ import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.*
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.hamcrest.CoreMatchers.hasItem
-import org.hamcrest.Matcher
-import org.hamcrest.core.Is
 import org.hamcrest.core.Is.*
 import org.junit.*
 import org.junit.Assert.*
@@ -23,7 +20,6 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import org.hamcrest.CoreMatchers
 
 
 @RunWith(RobolectricTestRunner::class)
