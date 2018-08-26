@@ -2,6 +2,7 @@ package com.hucet.tyler.memo.ui.add
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -10,12 +11,16 @@ import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateInterpolator
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.ui.memo.MemoListFragment
+import com.hucet.tyler.memo.ui.color.ColorThemeFragment
+import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_simple_toolbar.*
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.activity_add_memo.*
+import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
 
 interface OnColorChangedListener {
@@ -40,20 +45,45 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_simple_toolbar)
+        setContentView(R.layout.activity_add_memo)
         setSupportActionBar(toolbar)
         setToolbarColor(memo?.colorTheme ?: ColorTheme.default.colorTheme)
         if (savedInstanceState == null)
+
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.content, AddMemoFragment.newInstance())
                     .commit()
+
+        add_memo_toolbox.label.setOnClickListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
+            val memoId = fragment?.getMemoId()
+            if (memoId != null) {
+                startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memoId))
+            } else {
+                TODO("fragment?.getMemoId() == null")
+            }
+        }
+
+        add_memo_toolbox.color_theme.setOnClickListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
+            if (fragment !is ColorThemeFragment) {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
+                        .replace(R.id.container_tools, ColorThemeFragment.newInstance {
+                            onColorChanged(it)
+                        })
+                        .addToBackStack(AddMemoFragment.TOOL_BOX_BACK_STACK_TAG)
+                        .commit()
+            }
+        }
     }
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun onColorChanged(colorTheme: ColorTheme) {
         setToolbarColor(colorTheme)
+        add_memo_toolbox.color_theme.setColorFilter(colorTheme.color.whiteInverseColor)
         animateRevealShow(toolbar)
     }
 
@@ -74,3 +104,6 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColor
         anim.start()
     }
 }
+
+private val Int.whiteInverseColor: Int
+    get() = if (this == Color.WHITE) Color.BLACK else this
