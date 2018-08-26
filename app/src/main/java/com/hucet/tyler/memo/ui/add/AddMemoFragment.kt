@@ -1,10 +1,7 @@
 package com.hucet.tyler.memo.ui.add
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +11,12 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
 import com.hucet.tyler.memo.di.ManualInjectable
 import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.ui.color.ColorThemeFragment
-import com.hucet.tyler.memo.ui.label.MakeLabelViewModel
-import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_add_memo.*
-import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -53,8 +46,8 @@ class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInje
 
     override fun typingText(): Observable<CharSequence> = RxTextView.textChanges(add_memo_text)
 
-    private val saveMemoSubject = PublishSubject.create<MemoView>()
-    override fun saveMemo(): Observable<MemoView> = saveMemoSubject
+    private val saveMemoSubject = PublishSubject.create<Memo>()
+    override fun saveMemo(): Observable<Memo> = saveMemoSubject
 
     //    private var liveData: LiveData<MemoView>? = null
     private var memoId: Long? = null
@@ -85,29 +78,28 @@ class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInje
 
     override fun render(state: AddMemoState) {
         Timber.d("render =============" +
-                "memo: ${state.memoView?.memo}\n" +
-                "memo_id: ${state.memoView?.memo?.id}\n" +
-                "labels: ${state.memoView?.labels}\n" +
-                "checklist: ${state.memoView?.checkItems}")
-        memoId = state.memoView?.memo?.id
+                "memo: ${state.memo}\n" +
+                "memo_id: ${state.memo?.id}\n"
+        )
+        memoId = state.memo?.id
         when {
             !state.isInitSavedMemo -> {
-                state.memoView?.run {
+                state.memo?.run {
                     saveMemoSubject.onNext(this)
                 }
             }
 //            state.isInitSavedMemo -> {
 //                if (liveData == null) {
-//                    memoId = state.memoView?.memo?.id
-//                    liveData = viewModel.findMemoViewById(state.memoView?.memo?.id!!)
+//                    memoId = state.memo?.memo?.id
+//                    liveData = viewModel.findMemoViewById(state.memo?.memo?.id!!)
 //                    Timber.d("hasObservers ${liveData?.hasActiveObservers()}")
 //                    if (liveData?.hasObservers() == false) {
 //                        liveData?.observe(this, Observer {
 //                            Timber.d("Observer ==========" +
-//                                    "memo: ${state.memoView?.memo}\n" +
-//                                    "memo_id: ${state.memoView?.memo?.id}\n" +
-//                                    "labels: ${state.memoView?.labels}\n" +
-//                                    "checklist: ${state.memoView?.checkItems}")
+//                                    "memo: ${state.memo?.memo}\n" +
+//                                    "memo_id: ${state.memo?.memo?.id}\n" +
+//                                    "labels: ${state.memo?.labels}\n" +
+//                                    "checklist: ${state.memo?.checkItems}")
 //                        })
 //                    }
 //                }

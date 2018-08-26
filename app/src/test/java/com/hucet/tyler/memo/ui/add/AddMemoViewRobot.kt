@@ -1,5 +1,6 @@
 package com.hucet.tyler.memo.ui.add
 
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Observable
@@ -15,11 +16,17 @@ class AddMemoViewRobot constructor(
 
     init {
         presenter.attachView(object : AddMemoView {
+            override fun saveMemo(): Observable<MemoView> {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun typingText(): Observable<CharSequence> {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun render(state: AddMemoState) {
                 renderEvents.add(state)
             }
-
-            override fun createMemo(): Observable<Memo> = createMemoSubject
         })
     }
 

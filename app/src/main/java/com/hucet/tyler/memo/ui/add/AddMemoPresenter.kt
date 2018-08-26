@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface AddMemoView : MvpView {
-    fun saveMemo(): Observable<MemoView>
+    fun saveMemo(): Observable<Memo>
     fun typingText(): Observable<CharSequence>
     fun render(state: AddMemoState)
 }
@@ -29,7 +29,7 @@ class AddMemoPresenter @Inject constructor(
         val saveMemo = intent(AddMemoView::saveMemo)
                 .observeOn(Schedulers.io())
                 .map {
-                    repository.insertMemo(it.memo)
+                    repository.insertMemo(it)
                 }
                 .map {
                     PartialStateChanges.SaveMemo(it)
@@ -45,15 +45,15 @@ class AddMemoPresenter @Inject constructor(
                                  partialChanges: PartialStateChanges): AddMemoState {
         return when (partialChanges) {
             is PartialStateChanges.SaveMemo -> {
-                previousState.memoView?.memo?.id = partialChanges.memoId
+                previousState.memo?.id = partialChanges.memoId
                 previousState.copy(isInitSavedMemo = true)
             }
             is PartialStateChanges.ChangedColorTheme -> {
-                previousState.memoView?.memo?.colorTheme = partialChanges.colorTheme
+                previousState.memo?.colorTheme = partialChanges.colorTheme
                 previousState
             }
             is PartialStateChanges.TypingText -> {
-                previousState.memoView?.memo?.text = partialChanges.text
+                previousState.memo?.text = partialChanges.text
                 previousState
             }
         }
@@ -68,6 +68,6 @@ private sealed class PartialStateChanges {
 
 
 data class AddMemoState(
-        var memoView: MemoView? = MemoView(),
+        var memo: Memo? = Memo.empty(),
         val isInitSavedMemo: Boolean = false
 )

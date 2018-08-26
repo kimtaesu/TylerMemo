@@ -2,6 +2,8 @@ package com.hucet.tyler.memo.ui.add
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.hucet.tyler.memo.db.MemoDb
+import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.Memo
 import org.junit.After
@@ -25,11 +27,13 @@ class AddMemoPresenterTest {
     private lateinit var presenter: AddMemoPresenter
 
     private lateinit var db: MemoDb
+    private lateinit var repository: MemoRepository
     private lateinit var robot: AddMemoViewRobot
     @Before
     fun setUp() {
         db = MemoDb.getInstanceInMemory(RuntimeEnvironment.application)
-        presenter = AddMemoPresenter(db)
+        repository = MemoRepository(db)
+        presenter = AddMemoPresenter(repository)
         robot = AddMemoViewRobot(presenter)
     }
 
@@ -40,7 +44,7 @@ class AddMemoPresenterTest {
 
     @Test
     fun `Create memo events`() {
-        val expectMemo = Memo("", "")
+        val expectMemo = Memo("123", "av")
         val robot = AddMemoViewRobot(presenter)
         robot.assertViewStateRendered({
             //            when

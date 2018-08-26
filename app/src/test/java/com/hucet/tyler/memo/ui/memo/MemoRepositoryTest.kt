@@ -56,7 +56,7 @@ class MemoRepositoryTest {
     @Test
     fun `insert memos to db`() {
         val memos = listOf(Memo("test", "1"),
-                Memo("test2", "12", MemoAttribute(false), ColorTheme("a", 1)))
+                Memo("test2", "12", MemoAttribute(false), ColorTheme("a", 1, 1)))
         repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
