@@ -17,8 +17,6 @@ import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_add_memo.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
@@ -32,7 +30,9 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColor
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
-        fun createIntent(c: Context?, memo: Memo? = null): Intent {
+        val TOOL_BOX_BACK_STACK_TAG = AddMemoActivity.javaClass.simpleName
+
+        fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, AddMemoActivity::class.java).apply {
                 putExtra(ArgKeys.KEY_MEMO.name, memo)
             }
@@ -40,29 +40,22 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColor
     }
 
     private val memo by lazy {
-        intent?.getParcelableExtra(ArgKeys.KEY_MEMO.name) as? Memo
+        intent?.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_memo)
         setSupportActionBar(toolbar)
-        setToolbarColor(memo?.colorTheme ?: ColorTheme.default.colorTheme)
+        setToolbarColor(memo.colorTheme)
         if (savedInstanceState == null)
-
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content, AddMemoFragment.newInstance())
+                    .add(R.id.content, AddMemoFragment.newInstance(memo))
                     .commit()
 
         add_memo_toolbox.label.setOnClickListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
-            val memoId = fragment?.getMemoId()
-            if (memoId != null) {
-                startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memoId))
-            } else {
-                TODO("fragment?.getMemoId() == null")
-            }
+            startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memo.id))
         }
 
         add_memo_toolbox.color_theme.setOnClickListener {
@@ -73,7 +66,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColor
                         .replace(R.id.container_tools, ColorThemeFragment.newInstance {
                             onColorChanged(it)
                         })
-                        .addToBackStack(AddMemoFragment.TOOL_BOX_BACK_STACK_TAG)
+                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
                         .commit()
             }
         }

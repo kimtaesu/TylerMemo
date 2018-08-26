@@ -26,15 +26,7 @@ class AddMemoPresenter @Inject constructor(
                 .map {
                     PartialStateChanges.TypingText(it.toString())
                 }
-        val saveMemo = intent(AddMemoView::saveMemo)
-                .observeOn(Schedulers.io())
-                .map {
-                    repository.insertMemo(it)
-                }
-                .map {
-                    PartialStateChanges.SaveMemo(it)
-                }
-        val allIntentsObservable = Observable.merge(typingText, saveMemo).observeOn(AndroidSchedulers.mainThread())
+        val allIntentsObservable = typingText.observeOn(AndroidSchedulers.mainThread())
 
 
         subscribeViewState(
@@ -44,14 +36,6 @@ class AddMemoPresenter @Inject constructor(
     private fun viewStateReducer(previousState: AddMemoState,
                                  partialChanges: PartialStateChanges): AddMemoState {
         return when (partialChanges) {
-            is PartialStateChanges.SaveMemo -> {
-                previousState.memo?.id = partialChanges.memoId
-                previousState.copy(isInitSavedMemo = true)
-            }
-            is PartialStateChanges.ChangedColorTheme -> {
-                previousState.memo?.colorTheme = partialChanges.colorTheme
-                previousState
-            }
             is PartialStateChanges.TypingText -> {
                 previousState.memo?.text = partialChanges.text
                 previousState
@@ -62,12 +46,9 @@ class AddMemoPresenter @Inject constructor(
 
 private sealed class PartialStateChanges {
     class TypingText(val text: String) : PartialStateChanges()
-    class SaveMemo(val memoId: Long) : PartialStateChanges()
-    class ChangedColorTheme(val colorTheme: ColorTheme) : PartialStateChanges()
 }
 
 
 data class AddMemoState(
-        var memo: Memo? = Memo.empty(),
-        val isInitSavedMemo: Boolean = false
+        var memo: Memo? = Memo.empty()
 )
