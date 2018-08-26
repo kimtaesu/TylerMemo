@@ -1,21 +1,18 @@
 package com.hucet.tyler.memo.ui.add
 
-import android.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import android.databinding.DataBindingUtil
+import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
 import com.hucet.tyler.memo.di.ManualInjectable
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
+import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
@@ -25,9 +22,11 @@ import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInjectable, AddMemoView {
 
+class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInjectable, AddMemoView {
     companion object {
+        val TOOL_BOX_BACK_STACK_TAG = AddMemoFragment.javaClass.simpleName
+
         fun newInstance(): AddMemoFragment {
             return AddMemoFragment()
         }
@@ -40,6 +39,11 @@ class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInje
 
     private val createMemoSubject = PublishSubject.create<Memo>()
     override fun createMemo(): Observable<Memo> = createMemoSubject
+
+    private val changeColorThemeSubject = PublishSubject.create<ColorTheme>()
+
+    override fun changeColorTheme(): Observable<ColorTheme> = changeColorThemeSubject
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -73,38 +77,29 @@ class AddMemoFragment : MviFragment<AddMemoView, AddMemoPresenter>(), ManualInje
                 if (fragment !is ColorThemeFragment) {
                     supportFragmentManager.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                            .replace(R.id.container_tools, ColorThemeFragment.newInstance(), "loginFragment")
-                            .addToBackStack("loginFragment")
+                            .replace(R.id.container_tools, ColorThemeFragment.newInstance {
+                                changeColorThemeSubject.onNext(it)
+                            })
+                            .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
                             .commit()
-                } else {
-                    supportFragmentManager.popBackStack("loginFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                    supportFragmentManager.beginTransaction()
-//                            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-//                            .replace(R.id.container_tools, Fragment()).commitAllowingStateLoss()
-//
-//                    val exitFade = Fade()
-//                    exitFade.duration = 1000
-//                    fragment.setExitTransition(exitFade)
-//                    fragment.returnTransition = exitFade
-//
-//                    val f = Fragment()
-//                    val enterFade = Fade()
-//                    enterFade.setStartDelay(2000)
-//                    enterFade.setDuration(100)
-//                    f.setEnterTransition(enterFade)
-//                    supportFragmentManager.beginTransaction()
-//                            .replace(R.id.container_tools, f).commitAllowingStateLoss()
                 }
             }
         }
     }
 
     override fun render(state: AddMemoState) {
-        Timber.d("state ${state}")
+        Timber.d("state $state")
         when {
-            state.createdMemo -> {
+            state.createdMemo != null -> {
                 activity?.finish()
+            }
+            state.changedColorTheme != null -> {
+                add_memo_toolbox.color_theme.setColorFilter(state.changedColorTheme.color.whiteInverseColor)
+                (activity as? OnColorChangedListener)?.onColorChanged(state.changedColorTheme)
             }
         }
     }
 }
+
+private val Int.whiteInverseColor: Int
+    get() = if (this == Color.WHITE) Color.BLACK else this

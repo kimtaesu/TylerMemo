@@ -4,8 +4,11 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
 import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_TABLE
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(
         tableName = MEMO_TABLE
 )
@@ -17,7 +20,7 @@ data class Memo(
         @Embedded
         var colorTheme: ColorTheme = ColorTheme.default.colorTheme,
         val createAt: Long = System.currentTimeMillis()
-) {
+) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = MEMO_ID)
     var id: Int = 0
@@ -27,5 +30,5 @@ data class Memo(
         const val MEMO_ID = "memo_id"
     }
 }
-
-data class MemoAttribute(val isPin: Boolean)
+@Parcelize
+data class MemoAttribute(val isPin: Boolean) : Parcelable

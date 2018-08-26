@@ -12,6 +12,7 @@ import javax.inject.Singleton
 
 interface ColorThemeView : MvpView {
 
+    fun changedColor(): Observable<ColorTheme>
     fun createdColor(): Observable<ColorTheme>
 
     fun render(state: ColorThemeState)
