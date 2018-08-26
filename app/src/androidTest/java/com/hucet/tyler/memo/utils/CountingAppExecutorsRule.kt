@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 
 /**
- * A Junit rule that registers an espresso idling resource which counts search tasks that are submitted
+ * A Junit rule that registers an espresso idling resource which counts searchView tasks that are submitted
  * via [AppExecutors].
  */
 class CountingAppExecutorsRule : TestWatcher() {

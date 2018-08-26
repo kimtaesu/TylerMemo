@@ -22,7 +22,7 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 /**
- * A JUnit rule that registers an idling resource for search fragment views that use data binding.
+ * A JUnit rule that registers an idling resource for searchView fragment views that use data binding.
  */
 class DataBindingIdlingResourceRule(
     activityTestRule: ActivityTestRule<*>

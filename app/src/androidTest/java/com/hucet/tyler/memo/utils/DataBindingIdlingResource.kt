@@ -25,7 +25,7 @@ import android.view.View
 import java.util.UUID
 
 /**
- * An espresso idling resource implementation that reports idle status for search data binding
+ * An espresso idling resource implementation that reports idle status for searchView data binding
  * layouts.
  * <b/>
  * Since this application only uses fragments, the resource only checks the fragments instead
@@ -69,7 +69,7 @@ class DataBindingIdlingResource(
     }
 
     /**
-     * Find search binding classes in search currently available fragments.
+     * Find searchView binding classes in searchView currently available fragments.
      */
     private fun getBindings(): List<ViewDataBinding> {
         return (activityTestRule.activity as? FragmentActivity)

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="label"
+            type="String"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:padding="@dimen/label_root_padding"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/make_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_add"
+            tools:src="@drawable/googleg_standard_color_18" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:singleLine="true"
+            android:text="@{label}"
+            app:layout_constraintBottom_toBottomOf="@+id/make_add"
+            app:layout_constraintStart_toEndOf="@+id/make_add"
+            app:layout_constraintTop_toTopOf="@+id/make_add"
+            tools:text="'label' 만들기" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -5,6 +5,18 @@
     android:layout_height="wrap_content">
 
     <ImageButton
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:tint="@color/cardview_dark_background"
+        app:layout_constraintBottom_toBottomOf="@+id/color_theme"
+        app:layout_constraintEnd_toStartOf="@+id/color_theme"
+        app:layout_constraintTop_toTopOf="@+id/color_theme"
+        app:srcCompat="@drawable/ic_label_outline" />
+
+    <ImageButton
         android:id="@+id/color_theme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

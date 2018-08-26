@@ -47,7 +47,7 @@ class AddMemoPresenterTest {
             robot.createMemoIntent(expectMemo)
         }, {
             //            then
-            listOf(AddMemoState(), AddMemoState(addMemo = expectMemo))
+            listOf(AddMemoState(), AddMemoState(memo = expectMemo))
         })
     }
 

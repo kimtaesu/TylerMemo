@@ -48,7 +48,6 @@ class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), M
 
     private val adapter: ColorThemeAdapter by lazy {
         ColorThemeAdapter(appExecutors, { v: View ->
-            v.color_view
             color_list.getChildAdapterPosition(v)
         }, {
             colorChangedListener?.invoke(it)

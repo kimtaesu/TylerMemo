@@ -2,7 +2,8 @@ package com.hucet.tyler.memo.ui.add
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import com.hannesdorfmann.mosby3.mvp.MvpView
-import com.hucet.tyler.memo.db.MemoDb
+import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Observable
@@ -12,56 +13,61 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface AddMemoView : MvpView {
-    fun createMemo(): Observable<Memo>
-    fun changeColorTheme(): Observable<ColorTheme>
+    fun saveMemo(): Observable<MemoView>
+    fun typingText(): Observable<CharSequence>
     fun render(state: AddMemoState)
 }
 
 @Singleton
-class AddMemoPresenter @Inject constructor(private val db: MemoDb) : MviBasePresenter<AddMemoView, AddMemoState>() {
+class AddMemoPresenter @Inject constructor(
+        private val repository: MemoRepository) : MviBasePresenter<AddMemoView, AddMemoState>() {
     override fun bindIntents() {
-        val createMemo = intent(AddMemoView::createMemo)
+        val typingText = intent(AddMemoView::typingText)
+                .map {
+                    PartialStateChanges.TypingText(it.toString())
+                }
+        val saveMemo = intent(AddMemoView::saveMemo)
                 .observeOn(Schedulers.io())
                 .map {
-                    db.memoDao().insert(listOf(it))
-                    it
+                    repository.insertMemo(it.memo)
                 }
                 .map {
-                    PartialStateChanges.CreatedMemo(it)
+                    PartialStateChanges.SaveMemo(it)
                 }
-        val changedColorTheme = intent(AddMemoView::changeColorTheme)
-                .observeOn(Schedulers.io())
-                .map {
-                    PartialStateChanges.ChangedColorTheme(it)
-                }
-        val allIntentsObservable = Observable.merge(createMemo, changedColorTheme).observeOn(AndroidSchedulers.mainThread())
+        val allIntentsObservable = Observable.merge(typingText, saveMemo).observeOn(AndroidSchedulers.mainThread())
 
 
         subscribeViewState(
-                allIntentsObservable.scan(AddMemoState(), this::viewStateReducer).distinctUntilChanged(), AddMemoView::render)
+                allIntentsObservable.scan(AddMemoState(), this::viewStateReducer), AddMemoView::render)
     }
 
     private fun viewStateReducer(previousState: AddMemoState,
                                  partialChanges: PartialStateChanges): AddMemoState {
         return when (partialChanges) {
-            is PartialStateChanges.CreatedMemo -> {
-                previousState.copy(createdMemo = partialChanges.memo, changedColorTheme = null)
+            is PartialStateChanges.SaveMemo -> {
+                previousState.memoView?.memo?.id = partialChanges.memoId
+                previousState.copy(isInitSavedMemo = true)
             }
             is PartialStateChanges.ChangedColorTheme -> {
-                previousState.copy(createdMemo = null, changedColorTheme = partialChanges.colorTheme)
+                previousState.memoView?.memo?.colorTheme = partialChanges.colorTheme
+                previousState
+            }
+            is PartialStateChanges.TypingText -> {
+                previousState.memoView?.memo?.text = partialChanges.text
+                previousState
             }
         }
     }
 }
 
 private sealed class PartialStateChanges {
-    class CreatedMemo(val memo: Memo) : PartialStateChanges()
+    class TypingText(val text: String) : PartialStateChanges()
+    class SaveMemo(val memoId: Long) : PartialStateChanges()
     class ChangedColorTheme(val colorTheme: ColorTheme) : PartialStateChanges()
 }
 
 
 data class AddMemoState(
-        val createdMemo: Memo? = null,
-
-        val changedColorTheme: ColorTheme? = null
+        var memoView: MemoView? = MemoView(),
+        val isInitSavedMemo: Boolean = false
 )

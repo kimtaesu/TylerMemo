@@ -3,6 +3,7 @@ package com.hucet.tyler.memo
 import android.app.Activity
 import android.app.Application
 import com.facebook.stetho.Stetho
+import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hucet.tyler.memo.di.AppInjector
@@ -48,6 +49,7 @@ class MyApplication : Application(), HasActivityInjector {
     }
 
     private fun fetchRemoteConfig() {
+        FirebaseApp.initializeApp(this)
         FirebaseRemoteConfig.getInstance().apply {
             setConfigSettings(FirebaseRemoteConfigSettings.Builder()
                     .setDeveloperModeEnabled(BuildConfig.DEBUG)

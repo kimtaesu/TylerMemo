@@ -34,4 +34,7 @@ abstract class MemoDao : BaseDao<Memo> {
     @Transaction
     @Query("select * from memos where subject LIKE  :keyword or text LIKE :keyword order by isPin desc, createAt desc")
     abstract fun searchMemo(keyword: String): LiveData<List<MemoView>>
+
+    @Query("select * from memos where memo_id = :id")
+    abstract fun findMemo(id: Long): LiveData<MemoView>
 }

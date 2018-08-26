@@ -17,12 +17,10 @@
 package com.hucet.tyler.memo.db
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import android.graphics.Color
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Maybe
@@ -36,9 +34,10 @@ import java.util.*
 @Dao
 @OpenForTesting
 abstract class LabelDao : BaseDao<Label> {
-    @Query("select * from colorThemes")
+    @Query("select * from labels order by label asc")
     abstract fun all(): LiveData<List<Label>>
 
-    @Query("DELETE FROM colorThemes")
-    abstract fun deleteAll()
+    @Transaction
+    @Query("select * from labels where label LIKE  :keyword order by label asc")
+    abstract fun searchLabels(keyword: String): LiveData<List<Label>>
 }

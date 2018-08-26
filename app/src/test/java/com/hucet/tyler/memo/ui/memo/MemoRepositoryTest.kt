@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.*
 import com.nhaarman.mockito_kotlin.times

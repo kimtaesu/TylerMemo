@@ -45,7 +45,7 @@ object EspressoTestUtil {
                         v: View,
                         savedInstanceState: Bundle?
                     ) {
-                        // traverse search views, if any is a progress bar, replace its animation
+                        // traverse searchView views, if any is a progress bar, replace its animation
                         traverseViews(v)
                     }
                 }, true

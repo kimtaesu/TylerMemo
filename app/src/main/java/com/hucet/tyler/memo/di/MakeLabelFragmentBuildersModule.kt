@@ -16,21 +16,16 @@
 
 package com.hucet.tyler.memo.di
 
-import com.hucet.tyler.memo.MainActivity
-import com.hucet.tyler.memo.ui.add.AddMemoActivity
-import com.hucet.tyler.memo.ui.label.MakeLabelActivity
+import com.hucet.tyler.memo.ui.add.AddMemoFragment
+import com.hucet.tyler.memo.ui.color.ColorThemeFragment
+import com.hucet.tyler.memo.ui.label.MakeLabelFragment
+import com.hucet.tyler.memo.ui.memo.MemoListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Suppress("unused")
 @Module
-abstract class ActivityModule {
-    @ContributesAndroidInjector(modules = [MainFragmentBuildersModule::class])
-    abstract fun contributeMainActivity(): MainActivity
-
-    @ContributesAndroidInjector(modules = [AddMemoFragmentBuildersModule::class])
-    abstract fun contributeAddMemoActivity(): AddMemoActivity
-
-    @ContributesAndroidInjector(modules = [MakeLabelFragmentBuildersModule::class])
-    abstract fun contributeMakeLabelActivity(): MakeLabelActivity
+abstract class MakeLabelFragmentBuildersModule {
+    @ContributesAndroidInjector
+    abstract fun contributeMakeLabelFragment(): MakeLabelFragment
 }
+

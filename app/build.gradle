@@ -155,7 +155,7 @@ task fullCoverageReport(type: JacocoReport) {
     ])
 }
 
-// we need search open to run tests which  a we enable only for debug builds.
+// we need searchView open to run tests which  a we enable only for debug builds.
 project.tasks.whenTaskAdded {
     if (it.name == "testReleaseUnitTest") {
         it.enabled = false

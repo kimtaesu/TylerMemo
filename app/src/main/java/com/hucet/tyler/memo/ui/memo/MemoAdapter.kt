@@ -23,15 +23,13 @@ class MemoAdapter constructor(appExecutors: AppExecutors)
         }
     }
 
-    override fun createBinding(parent: ViewGroup): MemoItemBinding {
-        return DataBindingUtil.inflate<MemoItemBinding>(
+    override fun createBinding(parent: ViewGroup, viewType: Int): MemoItemBinding {
+        return DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.memo_item,
                 parent,
                 false
-        ).let {
-            it
-        }
+        )
     }
 
     override fun bind(binding: MemoItemBinding, memoView: MemoView) {

@@ -56,10 +56,6 @@ class MemoListFragment : Fragment(), Injectable {
         initViews()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     private fun initViews() {
         memo_list.apply {
             adapter = this@MemoListFragment.adapter

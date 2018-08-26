@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.ui.memo
+package com.hucet.tyler.memo.repository
 
 import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
@@ -25,6 +25,10 @@ class MemoRepository @Inject constructor(
         return memoDao.searchMemo("%$keyword%")
     }
 
+    fun insertMemo(memo: Memo): Long? {
+        return memoDao.insert(memo).firstOrNull()
+    }
+
     fun insertMemos(memos: List<Memo>) {
         memoDao.insert(memos)
     }
@@ -39,5 +43,10 @@ class MemoRepository @Inject constructor(
 
     fun updateMemos(memos: List<Memo>) {
         memoDao.update(memos)
+    }
+
+    fun findMemoById(id: Long): LiveData<MemoView> {
+
+        return memoDao.findMemo(id)
     }
 }

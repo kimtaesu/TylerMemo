@@ -26,7 +26,7 @@ data class Label(
     var id: Int = 0
 
     companion object {
-        const val LABEL_TABLE = "colorThemes"
+        const val LABEL_TABLE = "labels"
         const val LABEL_ID = "label_id"
     }
 }

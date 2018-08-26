@@ -5,6 +5,7 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
+import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_TABLE
 import kotlinx.android.parcel.Parcelize
 
@@ -14,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
 )
 data class Memo(
         val subject: String,
-        val text: String,
+        var text: String,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         @Embedded
@@ -23,12 +24,15 @@ data class Memo(
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = MEMO_ID)
-    var id: Int = 0
+    var id: Long = 0
 
     companion object {
         const val MEMO_TABLE = "memos"
         const val MEMO_ID = "memo_id"
+        fun empty(): Memo = Memo("", "")
+
     }
 }
+
 @Parcelize
 data class MemoAttribute(val isPin: Boolean) : Parcelable

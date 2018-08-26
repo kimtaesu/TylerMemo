@@ -1,7 +1,6 @@
 package com.hucet.tyler.memo.ui.color
 
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
@@ -29,7 +28,7 @@ class ColorThemeAdapter constructor(appExecutors: AppExecutors,
         }
     }
 
-    override fun createBinding(parent: ViewGroup): ColorThemeItemBinding {
+    override fun createBinding(parent: ViewGroup, viewType: Int): ColorThemeItemBinding {
         val binding: ColorThemeItemBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.color_theme_item,

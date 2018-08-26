@@ -38,11 +38,11 @@ abstract class DataBoundListAdapter<T, V : ViewDataBinding>(
         .build()
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder<V> {
-        val binding = createBinding(parent)
+        val binding = createBinding(parent, viewType)
         return DataBoundViewHolder(binding)
     }
 
-    protected abstract fun createBinding(parent: ViewGroup): V
+    protected abstract fun createBinding(parent: ViewGroup, viewType: Int): V
 
     override fun onBindViewHolder(holder: DataBoundViewHolder<V>, position: Int) {
         bind(holder.binding, getItem(position))

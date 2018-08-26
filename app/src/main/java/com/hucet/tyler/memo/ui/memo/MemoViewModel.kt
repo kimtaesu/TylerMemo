@@ -8,6 +8,7 @@ import javax.inject.Singleton
 import android.arch.lifecycle.Transformations.map
 import android.arch.lifecycle.Transformations.switchMap
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.repository.MemoRepository
 
 @OpenForTesting
 @Singleton
