@@ -25,8 +25,4 @@ import dagger.android.ContributesAndroidInjector
 abstract class MainFragmentBuildersModule {
     @ContributesAndroidInjector
     abstract fun contributeMemoListFragment(): MemoListFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeColorLabelFragment(): ColorThemeFragment
-
 }

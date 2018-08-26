@@ -36,5 +36,22 @@
       android:orientation="horizontal"
       app:layout_constraintGuide_percent="0.1" />
 
+    <FrameLayout
+      android:id="@+id/container_tools"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toTopOf="@+id/add_memo_toolbox"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"></FrameLayout>
+
+    <com.hucet.tyler.memo.ui.add.AddMemoToolbox
+      android:id="@+id/add_memo_toolbox"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
+
+    </com.hucet.tyler.memo.ui.add.AddMemoToolbox>
   </android.support.constraint.ConstraintLayout>
 </layout>

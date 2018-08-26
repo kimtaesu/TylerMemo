@@ -2,22 +2,21 @@ package com.hucet.tyler.memo.ui.color
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout.HORIZONTAL
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.common.SpacesItemDecoration
-import com.hucet.tyler.memo.databinding.FragmentColorLabelBinding
-import com.hucet.tyler.memo.di.Injectable
+import com.hucet.tyler.memo.databinding.FragmentColorThemeBinding
 import com.hucet.tyler.memo.di.ManualInjectable
 import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.utils.Util
 import com.hucet.tyler.memo.vo.ColorTheme
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_color_label.*
+import kotlinx.android.synthetic.main.fragment_color_theme.*
 import javax.inject.Inject
 
 
@@ -42,9 +41,9 @@ class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), M
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DataBindingUtil.inflate<FragmentColorLabelBinding>(
+        val binding = DataBindingUtil.inflate<FragmentColorThemeBinding>(
                 inflater,
-                R.layout.fragment_color_label,
+                R.layout.fragment_color_theme,
                 container,
                 false
         )
@@ -53,9 +52,9 @@ class ColorThemeFragment : MviFragment<ColorThemeView, ColorLabelPresenter>(), M
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        label_list.apply {
+        color_list.apply {
+            layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
             adapter = this@ColorThemeFragment.adapter
-            addItemDecoration(SpacesItemDecoration(Util.dpToPx(context, 5.0f)))
         }
     }
 

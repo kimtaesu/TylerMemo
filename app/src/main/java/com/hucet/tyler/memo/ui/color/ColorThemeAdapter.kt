@@ -1,6 +1,8 @@
 package com.hucet.tyler.memo.ui.color
 
 import android.databinding.DataBindingUtil
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,6 +34,7 @@ class ColorThemeAdapter constructor(appExecutors: AppExecutors)
     }
 
     override fun bind(binding: ColorThemeItemBinding, item: ColorTheme) {
-        binding.colorView.setBackgroundColor(item.color)
+        binding.colorView.background.setColorFilter(item.color, PorterDuff.Mode.DARKEN)
+        binding.colorLabel.text = item.label
     }
 }

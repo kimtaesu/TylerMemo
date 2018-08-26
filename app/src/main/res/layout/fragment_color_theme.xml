@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools">
 
   <data>
@@ -8,15 +9,12 @@
 
   <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <com.hucet.tyler.memo.common.AutofitRecyclerView
-      android:id="@+id/label_list"
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/color_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:columnWidth="50dp"
-      tools:listitem="@layout/color_theme_item">
-
-    </com.hucet.tyler.memo.common.AutofitRecyclerView>
+      tools:listitem="@layout/color_theme_item"></android.support.v7.widget.RecyclerView>
   </android.support.constraint.ConstraintLayout>
 </layout>
