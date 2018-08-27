@@ -86,10 +86,12 @@ dependencies {
     implementation deps.flexbox
 
     implementation deps.firebase.remoteConfig
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation deps.firebase.core
     debugImplementation deps.stetho
 
-    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+    implementation deps.kotlin.coroutines_core
+    implementation deps.kotlin.coroutines_android
+
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler
     kapt deps.room.compiler
