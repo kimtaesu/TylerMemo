@@ -5,6 +5,7 @@ import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.vo.CheckItem
+import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import javax.inject.Inject
@@ -48,5 +49,10 @@ class MemoRepository @Inject constructor(
     fun findMemoById(id: Long): LiveData<MemoView> {
 
         return memoDao.findMemo(id)
+    }
+
+    fun updateColorTheme(colorTheme: ColorTheme, memoId: Long) {
+        val (label, color, textColor) = colorTheme
+        return memoDao.updateColorTheme(label, color, textColor, memoId)
     }
 }

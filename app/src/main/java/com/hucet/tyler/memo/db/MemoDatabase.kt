@@ -73,7 +73,7 @@ abstract class MemoDb : RoomDatabase() {
 
         private fun buildDatabase(context: Context): MemoDb {
             return Room.databaseBuilder(context,
-                    MemoDb::class.java, "memo_db_4")
+                    MemoDb::class.java, "memo_db_5")
                     .populate(context)
                     .build()
         }

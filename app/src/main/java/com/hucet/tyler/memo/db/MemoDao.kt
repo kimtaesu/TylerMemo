@@ -32,9 +32,12 @@ abstract class MemoDao : BaseDao<Memo> {
     abstract fun allMemo(): LiveData<List<MemoView>>
 
     @Transaction
-    @Query("select * from memos where subject LIKE  :keyword or text LIKE :keyword order by isPin desc, createAt desc")
+    @Query("select * from memos where text LIKE :keyword order by isPin desc, createAt desc")
     abstract fun searchMemo(keyword: String): LiveData<List<MemoView>>
 
     @Query("select * from memos where memo_id = :id")
     abstract fun findMemo(id: Long): LiveData<MemoView>
+
+    @Query("update memos set label = :label, color = :color, textColor = :textColor where memo_id = :memoId")
+    abstract fun updateColorTheme(label: String, color: Int, textColor: Int, memoId: Long)
 }

@@ -14,12 +14,11 @@ import kotlinx.android.parcel.Parcelize
         tableName = MEMO_TABLE
 )
 data class Memo(
-        val subject: String,
-        var text: String,
+        val text: String,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         @Embedded
-        var colorTheme: ColorTheme = ColorTheme.default.colorTheme,
+        val colorTheme: ColorTheme = ColorTheme.default.colorTheme,
         val createAt: Long = System.currentTimeMillis()
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
@@ -29,7 +28,7 @@ data class Memo(
     companion object {
         const val MEMO_TABLE = "memos"
         const val MEMO_ID = "memo_id"
-        fun empty(): Memo = Memo("", "")
+        fun empty(): Memo = Memo("")
 
     }
 }

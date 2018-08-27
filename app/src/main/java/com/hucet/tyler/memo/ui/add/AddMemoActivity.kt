@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
+import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.utils.RevealAnimationUtils
@@ -16,6 +17,8 @@ import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_add_memo.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
@@ -28,6 +31,9 @@ interface ColorThemeView {
 class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var repository: MemoRepository
 
     companion object {
         val TOOL_BOX_BACK_STACK_TAG = AddMemoActivity.javaClass.simpleName
@@ -67,15 +73,20 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                         .commit()
             }
         }
+
+
     }
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun onColorChanged(colorTheme: ColorTheme) {
-        memo.colorTheme = colorTheme
-        setToolbarColor(colorTheme)
-        add_memo_toolbox.color_theme.setColorFilter(colorTheme.color.whiteInverseColor)
-        RevealAnimationUtils.animateRevealShow(toolbar)
+        Observable
+                .defer {
+                    repository.updateColorTheme(colorTheme, memo.id)
+                    Observable.just(true)
+                }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
     }
 
     override fun onClose() {
