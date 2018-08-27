@@ -27,9 +27,9 @@ interface SearchView {
 
 class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, SearchView {
     companion object {
-        fun createIntent(c: Context?, memoId: Long): Intent {
+        fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, MakeLabelActivity::class.java).apply {
-                putExtra(ArgKeys.KEY_MEMO_ID.name, memoId)
+                putExtra(ArgKeys.KEY_MEMO.name, memo)
             }
         }
     }
@@ -40,8 +40,8 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
     @Inject
     lateinit var repository: MemoRepository
 
-    private val memoId by lazy {
-        intent.getLongExtra(ArgKeys.KEY_MEMO_ID.name, UNKNOWN_ID)
+    private val memo by lazy {
+        intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,10 +49,7 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
         setSupportActionBar(toolbar)
         DataBindingUtil.setContentView<ActivityMakeLabelBinding>(this, R.layout.activity_make_label)
         if (savedInstanceState == null) {
-            if (memoId != UNKNOWN_ID)
-                supportFragmentManager.beginTransaction().add(R.id.content, MakeLabelFragment.newInstance(memoId)).commit()
-            else
-                TODO("memoId != UNKNOWN_ID")
+            supportFragmentManager.beginTransaction().add(R.id.content, MakeLabelFragment.newInstance(memo)).commit()
         }
     }
 

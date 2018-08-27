@@ -28,7 +28,4 @@ object TestUtil {
         }
     }
 
-    fun createMemo(subject: String, text: String): Memo {
-        return Memo(subject, text)
-    }
 }

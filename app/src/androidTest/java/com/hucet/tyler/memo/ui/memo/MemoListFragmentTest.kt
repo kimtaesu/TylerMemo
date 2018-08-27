@@ -8,6 +8,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.SingleFragmentActivity
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.TestUtil
 import com.hucet.tyler.memo.utils.*
 import com.hucet.tyler.memo.vo.Memo
@@ -36,7 +37,7 @@ class MemoListFragmentTest {
     private lateinit var viewModel: MemoViewModel
     private lateinit var memoFragment: MemoListFragment
 
-    private lateinit var MemosLiveData: MutableLiveData<List<Memo>>
+    private lateinit var MemosLiveData: MutableLiveData<List<MemoView>>
     @Before
     fun init() {
         MemosLiveData = MutableLiveData()
@@ -52,8 +53,8 @@ class MemoListFragmentTest {
 
     @Test
     fun memo_load() {
-        val memo = TestUtil.createMemo("foo", "bar")
-        MemosLiveData.postValue(listOf(memo))
+        val memoView = MemoView().apply { memo = Memo("foo", "bar") }
+        MemosLiveData.postValue(listOf(memoView))
         onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("foo"))))
         onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("bar"))))
     }
