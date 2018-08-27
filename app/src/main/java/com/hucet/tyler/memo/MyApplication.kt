@@ -6,6 +6,7 @@ import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.hucet.tyler.memo.debug.OptionalTree
 import com.hucet.tyler.memo.di.AppInjector
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
@@ -38,8 +39,9 @@ class MyApplication : Application(), HasActivityInjector {
     }
 
     private fun initTimber() {
+        System.setProperty("kotlinx.coroutines.debug", if (BuildConfig.DEBUG) "on" else "off")
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(OptionalTree(threadName = true))
         }
     }
 

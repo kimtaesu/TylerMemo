@@ -25,6 +25,7 @@ android {
     }
     buildTypes {
         debug {
+            aaptOptions.cruncherEnabled = false
             testCoverageEnabled !project.hasProperty('android.injected.invoked.from.ide')
         }
         release {
