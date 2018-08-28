@@ -47,7 +47,6 @@ class MemoRepository @Inject constructor(
     }
 
     fun findMemoById(id: Long): LiveData<MemoView> {
-
         return memoDao.findMemo(id)
     }
 

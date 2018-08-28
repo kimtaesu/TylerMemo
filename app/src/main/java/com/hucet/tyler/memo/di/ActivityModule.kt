@@ -16,7 +16,7 @@
 
 package com.hucet.tyler.memo.di
 
-import com.hucet.tyler.memo.MainActivity
+import com.hucet.tyler.memo.ui.main.MainActivity
 import com.hucet.tyler.memo.ui.add.AddMemoActivity
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import dagger.Module

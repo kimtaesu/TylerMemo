@@ -23,7 +23,7 @@ import com.hucet.tyler.memo.vo.MemoAttribute
 object TestUtil {
     fun createMemosLiveData(): MutableLiveData<List<Memo>> {
         return MutableLiveData<List<Memo>>().apply {
-            val items = (0..10).toList().map { Memo(it.toString(), it.toString(), MemoAttribute(false)) }
+            val items = (0..10).toList().map { Memo(it.toString(), MemoAttribute(false)) }
             postValue(items)
         }
     }

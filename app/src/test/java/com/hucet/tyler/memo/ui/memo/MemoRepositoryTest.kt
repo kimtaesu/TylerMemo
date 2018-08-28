@@ -55,8 +55,8 @@ class MemoRepositoryTest {
 
     @Test
     fun `insert memos to db`() {
-        val memos = listOf(Memo("test", "1"),
-                Memo("test2", "12", MemoAttribute(false), ColorTheme("a", 1, 1)))
+        val memos = listOf(Memo("1"),
+                Memo("12", MemoAttribute(false), ColorTheme("a", 1, 1)))
         repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
@@ -66,29 +66,20 @@ class MemoRepositoryTest {
     }
 
     @Test
-    fun `en search subject memo`() {
-        val expect = Memo("abc", "qwe")
-        assertSearch(listOf(
-                expect,
-                Memo("sss", "asd")
-        ), listOf(expect), "b")
-    }
-
-    @Test
     fun `en search text memo`() {
-        val expect = Memo("abc", "abc")
+        val expect = Memo("abc")
         assertSearch(listOf(
                 expect,
-                Memo("sss", "asd")
+                Memo("asd")
         ), listOf(expect), "bc")
     }
 
     @Test
-    fun `ko search subject memo`() {
-        val expect = Memo("하하", "ㅁㄴㅇ")
+    fun `ko search text memo`() {
+        val expect = Memo("하하")
         assertSearch(listOf(
                 expect,
-                Memo("sss", "asd")
+                Memo("asd")
         ), listOf(expect), "하하")
     }
 
@@ -104,8 +95,8 @@ class MemoRepositoryTest {
     @Test
     fun `insert check items`() {
         val memos = listOf(
-                Memo("test", "1", MemoAttribute(false)),
-                Memo("test2", "12", MemoAttribute(false))
+                Memo( "1", MemoAttribute(false)),
+                Memo( "2", MemoAttribute(false))
         )
 
         val label = Label("abc", 1)
@@ -130,7 +121,7 @@ class MemoRepositoryTest {
 
     @Test
     fun `change color theme`() {
-        repository.insertMemos(listOf(Memo("test", "1", MemoAttribute(false))))
+        repository.insertMemos(listOf(Memo("1", MemoAttribute(false))))
 
         repository.searchMemos("").observeForever(observer)
         verify(observer).onChanged(captor.capture())
@@ -138,10 +129,8 @@ class MemoRepositoryTest {
         Assert.assertThat(captor.value.first().memo.colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
         val result = captor.value.first()
 
-        result.memo.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
-
         // 메모 Theme 변경 White -> Blue
-        repository.updateMemos(listOf(result.memo))
+        repository.updateMemos(listOf(result.memo.copy(colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme)))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
@@ -150,9 +139,9 @@ class MemoRepositoryTest {
 
     @Test
     fun `pin true 정렬 순위`() {
-        val expect = Memo("a", "2", MemoAttribute(true))
+        val expect = Memo( "2", MemoAttribute(true))
         val memos = listOf(
-                Memo("test", "1", MemoAttribute(false)),
+                Memo("1", MemoAttribute(false)),
                 expect
         )
         repository.insertMemos(memos)
@@ -162,7 +151,7 @@ class MemoRepositoryTest {
         Assert.assertThat(captor.value.first().memo, `is`(expect))
 
         // Pin true 메모 추가
-        val expect2 = Memo("last", "last", MemoAttribute(true))
+        val expect2 = Memo( "last", MemoAttribute(true))
         repository.insertMemos(listOf(expect2))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())

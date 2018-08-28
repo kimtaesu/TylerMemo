@@ -90,14 +90,17 @@ dependencies {
     implementation deps.firebase.core
     debugImplementation deps.stetho
 
-    implementation deps.kotlin.coroutines_core
-    implementation deps.kotlin.coroutines_android
+//    implementation deps.kotlin.coroutines_core
+//    implementation deps.kotlin.coroutines_android
 
     kapt deps.dagger.android_support_compiler
     kapt deps.dagger.compiler
     kapt deps.room.compiler
     kapt deps.lifecycle.compiler
 
+    testImplementation('org.amshove.kluent:kluent:1.41') {
+        exclude group: 'org.mockito'
+    }
     testImplementation deps.junit
     testImplementation deps.robolectric
     testImplementation deps.mock_web_server

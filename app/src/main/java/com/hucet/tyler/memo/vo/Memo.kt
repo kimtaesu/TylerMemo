@@ -31,6 +31,10 @@ data class Memo(
         fun empty(): Memo = Memo("")
 
     }
+
+    override fun toString(): String {
+        return "id=$id, ${super.toString()}"
+    }
 }
 
 @Parcelize
