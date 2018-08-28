@@ -4,19 +4,21 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.repository.LabelRepository
+import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 @OpenForTesting
 class MakeLabelViewModel @Inject constructor(
-        private val repository: LabelRepository,
+        private val repository: MemoRepository,
         private val appExecutors: AppExecutors
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
@@ -36,6 +38,7 @@ class MakeLabelViewModel @Inject constructor(
 
     fun bindSearch(searchView: Observable<CharSequence>) {
         searchView
+                .observeOn(Schedulers.io())
                 .map { it.toString() }
                 .subscribe {
                     if (keywordName.value != it) {
@@ -45,14 +48,17 @@ class MakeLabelViewModel @Inject constructor(
                 .also { compositeDisposable.add(it) }
     }
 
-    fun createLabel(keyword: String, id: Long) {
-        appExecutors.diskIO().execute {
-            repository.insertLabel(Label(keyword, id))
-        }
+    fun createLabel(keyword: String, id: Long, consumer: Consumer<in Unit>) {
+        Observable
+                .fromCallable { repository.insertLabel(Label(keyword, id)) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer)
+                .also { compositeDisposable.add(it) }
     }
 
     override fun onCleared() {
-        super.onCleared()
         compositeDisposable.dispose()
+        super.onCleared()
     }
 }

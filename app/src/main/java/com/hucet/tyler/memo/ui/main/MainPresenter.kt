@@ -36,11 +36,9 @@ class MainPresenter @Inject constructor(
                 .flatMap<MainState> {
                     val memo = Memo.empty()
                     val memoId = repository.insertMemo(memo) ?: throw IllegalArgumentException()
-                    Observable.fromCallable {
-                        MainState.CreatedMemo(memo.apply {
-                            id = memoId
-                        })
-                    }
+                    memo.id = memoId
+
+                    Observable.just(MainState.CreatedMemo(memo))
                 }
                 .onErrorReturn { MainState.FailCreateMemo(context.getString(R.string.fail_create_memo_msg)) }
 

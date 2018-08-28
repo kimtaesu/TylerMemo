@@ -54,7 +54,7 @@ class MainPresenterTest {
             val memo = (result[0] as MainState.CreatedMemo).memo
             //            then
             result.size `should equal` 1
-            memo.id.toInt() shouldBeGreaterThan 0
+            memo.id shouldBeGreaterThan 0
             memo.text `should equal` expectMemo.text
 
         })

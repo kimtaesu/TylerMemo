@@ -15,7 +15,9 @@ import com.hucet.tyler.memo.databinding.FragmentMakeLabelBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.vo.Memo
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_make_label.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -52,7 +54,9 @@ class MakeLabelFragment : Fragment(), Injectable {
                 {
                 },
                 {
-                    viewModel.createLabel(it, memo.id)
+                    viewModel.createLabel(it, memo.id, Consumer {
+
+                    })
                 })
     }
 
@@ -81,6 +85,9 @@ class MakeLabelFragment : Fragment(), Injectable {
         }
 
         viewModel.fetchLabels.observe(this, Observer {
+            Timber.d("========== Observer ==========\n" +
+                    "labels: ${it?.second}")
+
             val keyword = it?.first ?: ""
             val items = it?.second ?: emptyList()
             if (items.isEmpty() && !keyword.isEmpty())

@@ -1,14 +1,15 @@
-package com.hucet.tyler.memo.ui.memo
+package com.hucet.tyler.memo.repository
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.*
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import org.amshove.kluent.`should equal`
+import org.amshove.kluent.shouldContain
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.core.Is.*
 import org.junit.*
@@ -93,30 +94,39 @@ class MemoRepositoryTest {
     }
 
     @Test
-    fun `insert check items`() {
+    fun `insert integration obsever`() {
         val memos = listOf(
-                Memo( "1", MemoAttribute(false)),
-                Memo( "2", MemoAttribute(false))
+                Memo("1", MemoAttribute(false)),
+                Memo("2", MemoAttribute(false))
         )
 
         val label = Label("abc", 1)
         val checkItem = CheckItem("ddd", true, 2)
 
-        repository.insertMemos(memos)
-        repository.insertLabels(listOf(label))
-
+        // search memo observer 등록
         repository.searchMemos("").observeForever(observer)
+        verify(observer, times(1)).onChanged(captor.capture())
 
-        verify(observer).onChanged(captor.capture())
-
-        assertEquals(captor.value.map { it.memo }, memos)
-        assertThat(captor.value[0].labels, hasItem(label))
-
-        // 추가적으로 INSERT CheckItem
-        repository.insertCheckItems(listOf(checkItem))
-        // observerMemoView 두번째 호출
+//        Insert a memo
+        repository.insertMemos(memos)
+//      첫번재 observer 호출
         verify(observer, times(2)).onChanged(captor.capture())
-        assertThat(captor.value[1].checkItems, hasItem(checkItem))
+
+//        Insert a label
+        repository.insertLabel(label)
+//      두번째 observer 호출
+        verify(observer, times(3)).onChanged(captor.capture())
+
+        captor.value.map { it.memo } `should equal` memos
+        captor.value[0].labels!! shouldContain label
+
+//        Insert a check item
+        repository.insertCheckItems(listOf(checkItem))
+
+//      세번째 observer 호출
+        verify(observer, times(4)).onChanged(captor.capture())
+
+        captor.value[1].checkItems!! shouldContain checkItem
     }
 
     @Test
@@ -139,7 +149,7 @@ class MemoRepositoryTest {
 
     @Test
     fun `pin true 정렬 순위`() {
-        val expect = Memo( "2", MemoAttribute(true))
+        val expect = Memo("2", MemoAttribute(true))
         val memos = listOf(
                 Memo("1", MemoAttribute(false)),
                 expect
@@ -151,7 +161,7 @@ class MemoRepositoryTest {
         Assert.assertThat(captor.value.first().memo, `is`(expect))
 
         // Pin true 메모 추가
-        val expect2 = Memo( "last", MemoAttribute(true))
+        val expect2 = Memo("last", MemoAttribute(true))
         repository.insertMemos(listOf(expect2))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())

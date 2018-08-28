@@ -59,7 +59,7 @@ class ColorThemeFragment : Fragment(), Injectable {
             adapter = this@ColorThemeFragment.adapter
         }
         close.setOnClickListener {
-            (activity as? ColorThemeView)?.onClose()
+            (activity as? ColorThemeView)?.onColorClose()
         }
         adapter.submitList(ColorTheme.generate())
     }

@@ -9,12 +9,15 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
+import com.hucet.tyler.memo.UNKNOWN_ID
+import com.hucet.tyler.memo.common.toMemo
 import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.vo.toBundle
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
@@ -25,7 +28,7 @@ import javax.inject.Inject
 
 interface ColorThemeView {
     fun onColorChanged(colorTheme: ColorTheme)
-    fun onClose()
+    fun onColorClose()
 }
 
 class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView {
@@ -39,13 +42,13 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         val TOOL_BOX_BACK_STACK_TAG = AddMemoActivity.javaClass.simpleName
         fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, AddMemoActivity::class.java).apply {
-                putExtra(ArgKeys.KEY_MEMO.name, memo)
+                putExtras(memo.toBundle())
             }
         }
     }
 
     private val memo by lazy {
-        intent?.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
+        intent.toMemo()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +59,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content, AddMemoFragment.newInstance(memo.id))
+                    .replace(R.id.content, AddMemoFragment.newInstance(memo.id))
                     .commit()
 
         add_memo_toolbox.label.setOnClickListener {
@@ -89,7 +92,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                 .subscribe()
     }
 
-    override fun onClose() {
+    override fun onColorClose() {
         supportFragmentManager.popBackStack(TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 

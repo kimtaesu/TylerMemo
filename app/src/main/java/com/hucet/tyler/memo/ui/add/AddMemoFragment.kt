@@ -68,7 +68,7 @@ class AddMemoFragment : Fragment(), Injectable {
         add_memo_text.hint = RandomGreetingHintGenerator.generate()
 
         viewModel.findMemoViewById(memoId).observe(this, Observer {
-            Timber.d("========== Observer ==========" +
+            Timber.d("========== Observer ==========\n" +
                     "memo: ${it?.memo}\n" +
                     "memo_id: ${it?.memo?.id}\n" +
                     "labels: ${it?.labels}\n" +

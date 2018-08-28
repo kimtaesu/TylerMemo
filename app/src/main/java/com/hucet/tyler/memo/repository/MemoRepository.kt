@@ -8,6 +8,7 @@ import com.hucet.tyler.memo.vo.CheckItem
 import com.hucet.tyler.memo.vo.ColorTheme
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +35,15 @@ class MemoRepository @Inject constructor(
         memoDao.insert(memos)
     }
 
-    fun insertLabels(label: List<Label>) {
+    fun searchLabels(keyword: String): LiveData<List<Label>> {
+        Timber.d("thread: ${Thread.currentThread().name}")
+        if (keyword.isEmpty())
+            return labelDao.all()
+        return labelDao.searchLabels("%$keyword%")
+    }
+
+    fun insertLabel(label: Label) {
+        Timber.d("insertLabel ${label}")
         labelDao.insert(label)
     }
 
