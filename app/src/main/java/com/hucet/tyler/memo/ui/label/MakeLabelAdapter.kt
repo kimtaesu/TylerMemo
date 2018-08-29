@@ -14,23 +14,26 @@ import com.hucet.tyler.memo.ListClickListener
 import com.hucet.tyler.memo.common.DataBoundViewHolder
 import com.hucet.tyler.memo.databinding.LabelItemBinding
 import com.hucet.tyler.memo.databinding.MakeLabelItemBinding
+import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.vo.Label
 import timber.log.Timber
 
+typealias ITEM = CheckableLabelView
+
 class MakeLabelAdapter constructor(appExecutors: AppExecutors,
                                    private val getItemPosition: (View) -> Int,
-                                   private val onClickListener: ListClickListener<Label>,
+                                   private val onClickListener: ListClickListener<ITEM>,
                                    private val onNewLabelClickListener: ListClickListener<String>)
-    : DataBoundListAdapter<Label, ViewDataBinding>(appExecutors, diff) {
+    : DataBoundListAdapter<ITEM, ViewDataBinding>(appExecutors, diff) {
 
     private var makeLabelKeyword: String? = null
 
     companion object {
-        val diff = object : DiffUtil.ItemCallback<Label>() {
-            override fun areItemsTheSame(oldItem: Label?, newItem: Label?): Boolean =
-                    oldItem?.id == newItem?.id
+        val diff = object : DiffUtil.ItemCallback<ITEM>() {
+            override fun areItemsTheSame(oldItem: ITEM?, newItem: ITEM?): Boolean =
+                    oldItem?.label_id == newItem?.label_id
 
-            override fun areContentsTheSame(oldItem: Label?, newItem: Label?): Boolean =
+            override fun areContentsTheSame(oldItem: ITEM?, newItem: ITEM?): Boolean =
                     oldItem == newItem
         }
     }
@@ -65,7 +68,7 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
         }
     }
 
-    override fun bind(binding: ViewDataBinding, item: Label) {
+    override fun bind(binding: ViewDataBinding, item: ITEM) {
         // ignore
         // use onBindViewHolder
     }
@@ -73,13 +76,14 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
     override fun onBindViewHolder(holder: DataBoundViewHolder<ViewDataBinding>, position: Int) {
         when (holder.binding) {
             is LabelItemBinding -> {
-                holder.binding.labelTitle.text = getItem(position).label
+                holder.binding.checkedLabel = getItem(position)
             }
             is MakeLabelItemBinding -> {
                 Timber.d("makeLabelKeyword ${makeLabelKeyword?.makeNewLabelString(holder.binding.root.context)}")
                 holder.binding.label = makeLabelKeyword?.makeNewLabelString(holder.binding.root.context)
             }
         }
+
     }
 
     override fun getItemViewType(position: Int): Int {

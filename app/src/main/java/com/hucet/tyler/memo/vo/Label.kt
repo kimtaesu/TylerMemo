@@ -13,13 +13,13 @@ import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_ID
         foreignKeys = [(ForeignKey(
                 entity = Memo::class,
                 parentColumns = [MEMO_ID],
-                childColumns = [MEMO_ID]
+                childColumns = [(Label.FOREIGN_MEMO_ID)]
         ))]
 )
 data class Label(
         val label: String,
-        @ColumnInfo(name = MEMO_ID)
-        val memoId: Long
+        @ColumnInfo(name = FOREIGN_MEMO_ID)
+        val memoId: Long?
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = LABEL_ID)
@@ -28,5 +28,6 @@ data class Label(
     companion object {
         const val LABEL_TABLE = "labels"
         const val LABEL_ID = "label_id"
+        const val FOREIGN_MEMO_ID = "f_memo_id"
     }
 }

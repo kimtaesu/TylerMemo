@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="checkedLabel"
+            type="com.hucet.tyler.memo.vo.CheckableLabelView" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -28,6 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:text="@{checkedLabel.label}"
             app:layout_constraintBaseline_toBaselineOf="@+id/checkBox"
             app:layout_constraintEnd_toStartOf="@+id/checkBox"
             app:layout_constraintHorizontal_bias="0.0"
@@ -38,6 +42,8 @@
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="@{checkedLabel.isChecked}"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

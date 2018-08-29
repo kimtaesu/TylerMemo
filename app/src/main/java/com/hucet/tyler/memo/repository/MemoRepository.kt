@@ -35,18 +35,6 @@ class MemoRepository @Inject constructor(
         memoDao.insert(memos)
     }
 
-    fun searchLabels(keyword: String): LiveData<List<Label>> {
-        Timber.d("thread: ${Thread.currentThread().name}")
-        if (keyword.isEmpty())
-            return labelDao.all()
-        return labelDao.searchLabels("%$keyword%")
-    }
-
-    fun insertLabel(label: Label) {
-        Timber.d("insertLabel ${label}")
-        labelDao.insert(label)
-    }
-
     fun insertCheckItems(checkItems: List<CheckItem>) {
         checkItemDao.insert(checkItems)
     }

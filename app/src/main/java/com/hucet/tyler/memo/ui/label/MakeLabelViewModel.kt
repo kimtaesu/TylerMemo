@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.repository.LabelRepository
 import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.vo.Label
@@ -18,14 +19,13 @@ import javax.inject.Singleton
 @Singleton
 @OpenForTesting
 class MakeLabelViewModel @Inject constructor(
-        private val repository: MemoRepository,
-        private val appExecutors: AppExecutors
+        private val repository: LabelRepository
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     private val keywordName = MutableLiveData<String>()
 
     private val labelResult = Transformations.map(keywordName) {
-        repository.searchLabels(it)
+        repository.searchCheckedLabels(it)
     }
 
     private val labels = Transformations.switchMap(labelResult) {
@@ -57,8 +57,13 @@ class MakeLabelViewModel @Inject constructor(
                 .also { compositeDisposable.add(it) }
     }
 
+    fun updateLabel(label: Label) {
+
+    }
+
     override fun onCleared() {
         compositeDisposable.dispose()
         super.onCleared()
     }
+
 }

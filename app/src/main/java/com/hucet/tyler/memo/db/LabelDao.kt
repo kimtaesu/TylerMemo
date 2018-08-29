@@ -21,6 +21,8 @@ import android.arch.persistence.room.*
 import android.graphics.Color
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.utils.SqlQuery
+import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.vo.Label
 import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Maybe
@@ -31,13 +33,39 @@ import java.util.*
 /**
  * Interface for database access on Repo related operations.
  */
+
 @Dao
 @OpenForTesting
 abstract class LabelDao : BaseDao<Label> {
-    @Query("select * from labels order by label asc")
+    @Query("""select *
+        from labels
+         ${SqlQuery.ORDER_BY_DESC}
+         """)
     abstract fun all(): LiveData<List<Label>>
 
     @Transaction
-    @Query("select * from labels where label LIKE  :keyword order by label asc")
+    @Query("""
+        select *
+            from labels
+            where label LIKE  :keyword
+            ${SqlQuery.ORDER_BY_DESC}
+        """
+    )
     abstract fun searchLabels(keyword: String): LiveData<List<Label>>
+
+    @Transaction
+    @Query("""
+        select label_id, label,
+        (
+           SELECT count(memo_id)
+             FROM memos
+            WHERE memo_id = f_memo_id
+            limit 1
+       ) as isChecked
+            from labels
+            where label LIKE  :keyword
+            ${SqlQuery.ORDER_BY_DESC}
+        """
+    )
+    abstract fun searchCheckedLabels(keyword: String): LiveData<List<CheckableLabelView>>
 }
