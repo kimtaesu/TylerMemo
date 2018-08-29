@@ -3,15 +3,14 @@ package com.hucet.tyler.memo.repository
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
+import com.hucet.tyler.memo.db.model.*
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
-import com.hucet.tyler.memo.vo.*
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldContain
-import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.core.Is.*
 import org.junit.*
 import org.junit.Assert.*

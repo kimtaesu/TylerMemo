@@ -23,9 +23,10 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import android.support.annotation.VisibleForTesting
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.CheckItem
+import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.MemoLabelJoin
 import java.util.concurrent.Executors
 
 
@@ -36,7 +37,8 @@ import java.util.concurrent.Executors
         entities = [
             Memo::class,
             Label::class,
-            CheckItem::class
+            CheckItem::class,
+            MemoLabelJoin::class
         ],
         version = 1,
         exportSchema = false
@@ -48,6 +50,8 @@ abstract class MemoDb : RoomDatabase() {
     abstract fun labelDao(): LabelDao
 
     abstract fun checkItemDao(): CheckItemDao
+
+    abstract fun memoLabelJoinDao(): MemoLabelJoinDao
 
     companion object {
 

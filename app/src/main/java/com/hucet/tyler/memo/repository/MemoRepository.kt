@@ -4,11 +4,9 @@ import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
-import timber.log.Timber
+import com.hucet.tyler.memo.db.model.CheckItem
+import com.hucet.tyler.memo.db.model.ColorTheme
+import com.hucet.tyler.memo.db.model.Memo
 import javax.inject.Inject
 import javax.inject.Singleton
 

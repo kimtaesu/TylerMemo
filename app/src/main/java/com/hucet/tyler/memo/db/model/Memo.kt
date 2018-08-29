@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.vo
+package com.hucet.tyler.memo.db.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
@@ -7,8 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Bundle
 import android.os.Parcelable
 import com.hucet.tyler.memo.ArgKeys
-import com.hucet.tyler.memo.UNKNOWN_ID
-import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_TABLE
+import com.hucet.tyler.memo.db.model.Memo.Companion.MEMO_TABLE
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

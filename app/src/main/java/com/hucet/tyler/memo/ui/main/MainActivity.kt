@@ -5,16 +5,12 @@ import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.hannesdorfmann.mosby3.mvi.MviActivity
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.ui.add.AddMemoActivity
 import com.hucet.tyler.memo.ui.memo.MemoListFragment
-import com.hucet.tyler.memo.vo.Memo
 import com.jakewharton.rxbinding2.view.RxView
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber

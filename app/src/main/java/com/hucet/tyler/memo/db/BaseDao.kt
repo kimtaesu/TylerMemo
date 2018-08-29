@@ -1,7 +1,6 @@
 package com.hucet.tyler.memo.db
 
 import android.arch.persistence.room.*
-import com.hucet.tyler.memo.vo.Memo
 
 @Dao
 interface BaseDao<T> {

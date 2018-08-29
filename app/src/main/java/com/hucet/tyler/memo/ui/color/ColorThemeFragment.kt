@@ -13,7 +13,7 @@ import com.hucet.tyler.memo.databinding.FragmentColorThemeBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.ui.add.ColorThemeView
 import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.vo.ColorTheme
+import com.hucet.tyler.memo.db.model.ColorTheme
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_color_theme.*
 import javax.inject.Inject

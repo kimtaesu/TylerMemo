@@ -5,9 +5,7 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.repository.LabelRepository
-import com.hucet.tyler.memo.repository.MemoRepository
-import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.vo.Label
+import com.hucet.tyler.memo.db.model.Label
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -50,15 +48,11 @@ class MakeLabelViewModel @Inject constructor(
 
     fun createLabel(keyword: String, id: Long, consumer: Consumer<in Unit>) {
         Observable
-                .fromCallable { repository.insertLabel(Label(keyword, id)) }
+                .fromCallable { repository.insertLabel(Label(keyword)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer)
                 .also { compositeDisposable.add(it) }
-    }
-
-    fun updateLabel(label: Label) {
-
     }
 
     override fun onCleared() {

@@ -7,7 +7,7 @@
 
         <variable
             name="memo"
-            type="com.hucet.tyler.memo.vo.Memo" />
+            type="com.hucet.tyler.memo.db.model.Memo" />
     </data>
 
     <android.support.v7.widget.CardView

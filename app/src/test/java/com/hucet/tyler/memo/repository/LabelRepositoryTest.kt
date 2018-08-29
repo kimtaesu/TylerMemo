@@ -5,8 +5,8 @@ import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.CheckableLabelView
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.db.model.Memo
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

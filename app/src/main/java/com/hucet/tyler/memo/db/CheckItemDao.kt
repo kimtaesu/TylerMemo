@@ -18,18 +18,9 @@ package com.hucet.tyler.memo.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import android.graphics.Color
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
-import java.util.*
+import com.hucet.tyler.memo.db.model.CheckItem
 
 /**
  * Interface for database access on Repo related operations.

@@ -17,8 +17,8 @@
 package com.hucet.tyler.memo.util
 
 import android.arch.lifecycle.MutableLiveData
-import com.hucet.tyler.memo.vo.Memo
-import com.hucet.tyler.memo.vo.MemoAttribute
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.MemoAttribute
 
 object TestUtil {
     fun createMemosLiveData(): MutableLiveData<List<Memo>> {

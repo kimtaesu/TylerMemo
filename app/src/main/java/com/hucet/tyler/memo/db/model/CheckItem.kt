@@ -1,11 +1,11 @@
-package com.hucet.tyler.memo.vo
+package com.hucet.tyler.memo.db.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
-import com.hucet.tyler.memo.vo.CheckItem.Companion.CHECK_ITEM_TABLE
-import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_ID
+import com.hucet.tyler.memo.db.model.CheckItem.Companion.CHECK_ITEM_TABLE
+import com.hucet.tyler.memo.db.model.Memo.Companion.MEMO_ID
 
 @Entity(
         tableName = CHECK_ITEM_TABLE,
@@ -25,6 +25,7 @@ data class CheckItem(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = CHECK_ITEM_ID)
     var id: Int = 0
+
     companion object {
         const val CHECK_ITEM_TABLE = "check_items"
         const val CHECK_ITEM_ID = "check_item_id"

@@ -167,5 +167,9 @@ project.tasks.whenTaskAdded {
         it.enabled = false
     }
 }
-
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 apply plugin: 'com.google.gms.google-services'

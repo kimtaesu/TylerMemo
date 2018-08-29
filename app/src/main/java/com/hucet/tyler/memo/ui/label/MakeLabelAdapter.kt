@@ -15,7 +15,6 @@ import com.hucet.tyler.memo.common.DataBoundViewHolder
 import com.hucet.tyler.memo.databinding.LabelItemBinding
 import com.hucet.tyler.memo.databinding.MakeLabelItemBinding
 import com.hucet.tyler.memo.vo.CheckableLabelView
-import com.hucet.tyler.memo.vo.Label
 import timber.log.Timber
 
 typealias ITEM = CheckableLabelView

@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.vo
+package com.hucet.tyler.memo.db.model
 
 import android.graphics.Color
 import android.os.Parcelable

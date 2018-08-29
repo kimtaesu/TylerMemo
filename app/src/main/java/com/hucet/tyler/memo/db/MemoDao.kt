@@ -20,7 +20,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Memo
 
 /**
  * Interface for database access on Repo related operations.

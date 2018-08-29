@@ -9,9 +9,8 @@ import android.support.test.runner.AndroidJUnit4
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.SingleFragmentActivity
 import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.util.TestUtil
 import com.hucet.tyler.memo.utils.*
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Memo
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import org.junit.Before

@@ -4,11 +4,10 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Memo
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.*
-import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment

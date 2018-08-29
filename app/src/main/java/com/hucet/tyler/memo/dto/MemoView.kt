@@ -2,11 +2,10 @@ package com.hucet.tyler.memo.dto
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
-import com.hucet.tyler.memo.vo.Memo.Companion.MEMO_ID
-import com.hucet.tyler.memo.vo.MemoAttribute
+import com.hucet.tyler.memo.db.model.CheckItem
+import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.Memo.Companion.MEMO_ID
 
 class MemoView {
     @Embedded

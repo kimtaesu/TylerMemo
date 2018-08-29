@@ -14,8 +14,7 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentMakeLabelBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Memo
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_make_label.*
 import timber.log.Timber

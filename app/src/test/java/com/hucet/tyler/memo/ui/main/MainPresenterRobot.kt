@@ -1,11 +1,7 @@
 package com.hucet.tyler.memo.ui.main
 
-import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Memo
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Assert
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MainPresenterRobot constructor(
