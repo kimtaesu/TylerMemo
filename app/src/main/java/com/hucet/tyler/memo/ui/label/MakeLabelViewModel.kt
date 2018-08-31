@@ -35,7 +35,15 @@ class MakeLabelViewModel @Inject constructor(
     }
 
     val fetchLabels = Transformations.map(labels) {
-        labelSearch.value to it
+        val search = labelSearch.value
+
+        val keyword = search?.keyword
+        val items = it ?: emptyList()
+        val newKeyword = if (items.firstOrNull { it.label == keyword } == null && keyword?.isEmpty() == false)
+            keyword
+        else
+            null
+        it to newKeyword
     }
 
     fun bindSearch(searchView: Observable<CharSequence>, memoId: Long) {

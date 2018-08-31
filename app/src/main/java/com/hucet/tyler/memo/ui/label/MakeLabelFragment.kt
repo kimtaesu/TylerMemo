@@ -90,15 +90,8 @@ class MakeLabelFragment : Fragment(), Injectable {
             Timber.d("========== Observer ==========\n" +
                     "labels: $it")
             it?.run {
-                val (labelSearch, labels) = it
-                val keyword = labelSearch?.keyword
-                val items = labels ?: emptyList()
-                if (items.isEmpty() && keyword?.isEmpty() == false)
-                    adapter.setMakeLabelVisible(keyword)
-                else
-                    adapter.setMakeLabelVisible(null)
-
-                adapter.submitList(items)
+                adapter.setMakeLabelVisible(second)
+                adapter.submitList(it.first)
             }
         })
     }
