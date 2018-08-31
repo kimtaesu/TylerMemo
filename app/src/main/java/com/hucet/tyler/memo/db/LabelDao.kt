@@ -30,7 +30,8 @@ import com.hucet.tyler.memo.db.model.Label
 @Dao
 @OpenForTesting
 abstract class LabelDao : BaseDao<Label> {
-    @Query("""select *
+    @Query("""
+        select *
         from labels
          ${SqlQuery.ORDER_BY_DESC}
          """)
@@ -45,4 +46,5 @@ abstract class LabelDao : BaseDao<Label> {
         """
     )
     abstract fun searchLabels(keyword: String): LiveData<List<Label>>
+
 }

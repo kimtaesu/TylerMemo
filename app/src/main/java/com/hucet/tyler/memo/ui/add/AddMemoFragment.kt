@@ -63,7 +63,6 @@ class AddMemoFragment : Fragment(), Injectable {
             Timber.d("========== Observer ==========\n" +
                     "memo: ${it?.memo}\n" +
                     "memo_id: ${it?.memo?.id}\n" +
-                    "labels: ${it?.labels}\n" +
                     "checklist: ${it?.checkItems}")
         })
     }

@@ -29,8 +29,8 @@ class MemoRepository @Inject constructor(
         return memoDao.insert(memo).firstOrNull()
     }
 
-    fun insertMemos(memos: List<Memo>) {
-        memoDao.insert(memos)
+    fun insertMemos(memos: List<Memo>): List<Long> {
+        return memoDao.insert(memos)
     }
 
     fun insertCheckItems(checkItems: List<CheckItem>) {

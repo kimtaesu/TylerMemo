@@ -52,11 +52,13 @@ class MakeLabelFragment : Fragment(), Injectable {
                     label_list.getChildAdapterPosition(it)
                 },
                 {
+                    if (it.isChecked)
+                        viewModel.deleteMemoLabel(memo.id, it.label_id)
+                    else
+                        viewModel.createMemoLabel(memo.id, it.label_id)
                 },
                 {
-                    viewModel.createLabel(it, memo.id, Consumer {
-
-                    })
+                    viewModel.createLabel(it, memo.id)
                 })
     }
 
@@ -81,21 +83,23 @@ class MakeLabelFragment : Fragment(), Injectable {
             adapter = this@MakeLabelFragment.adapter
         }
         (activity as? SearchView)?.run {
-            viewModel.bindSearch(this.searchView().throttleLast(500, TimeUnit.MILLISECONDS))
+            viewModel.bindSearch(this.searchView().throttleLast(500, TimeUnit.MILLISECONDS), memo.id)
         }
 
         viewModel.fetchLabels.observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
-                    "labels: ${it?.second}")
+                    "labels: $it")
+            it?.run {
+                val (labelSearch, labels) = it
+                val keyword = labelSearch?.keyword
+                val items = labels ?: emptyList()
+                if (items.isEmpty() && keyword?.isEmpty() == false)
+                    adapter.setMakeLabelVisible(keyword)
+                else
+                    adapter.setMakeLabelVisible(null)
 
-            val keyword = it?.first ?: ""
-            val items = it?.second ?: emptyList()
-            if (items.isEmpty() && !keyword.isEmpty())
-                adapter.setMakeLabelVisible(keyword)
-            else
-                adapter.setMakeLabelVisible(null)
-
-            adapter.submitList(items)
+                adapter.submitList(items)
+            }
         })
     }
 }

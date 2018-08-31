@@ -23,7 +23,7 @@ class MemoLabelRepository @Inject constructor(
         memoLabelJoinDao.insert(memoLabelJoin)
     }
 
-    fun searchCheckedLabels(keyword: String, memoId: Long): LiveData<List<CheckableLabelView>> {
+    fun searchCheckedLabels(memoId: Long, keyword: String = ""): LiveData<List<CheckableLabelView>> {
         return memoLabelJoinDao.searchCheckedLabels(keyword.fullTextSql(), memoId)
     }
 
@@ -33,5 +33,9 @@ class MemoLabelRepository @Inject constructor(
 
     fun getMemoByLabel(labelId: Long): LiveData<List<Memo>> {
         return memoLabelJoinDao.getMemoByLabel(labelId)
+    }
+
+    fun deleteById(memoId: Long, labelId: Long) {
+        memoLabelJoinDao.deleteById(memoId, labelId)
     }
 }

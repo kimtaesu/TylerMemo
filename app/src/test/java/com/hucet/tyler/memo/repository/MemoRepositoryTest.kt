@@ -101,7 +101,6 @@ class MemoRepositoryTest {
                 Memo("2", MemoAttribute(false))
         )
 
-        val label = Label("abc", 1)
         val checkItem = CheckItem("ddd", true, 2)
 
         // search memo observer 등록

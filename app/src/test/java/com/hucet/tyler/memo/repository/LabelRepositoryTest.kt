@@ -7,6 +7,8 @@ import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.utils.TestUtils
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -54,30 +56,5 @@ class LabelRepositoryTest {
     @After
     fun closeDb() {
         db.close()
-    }
-
-    @Test
-    fun `CheckableLabelView checked true`() {
-        val memoRepository = MemoRepository(db).apply {
-            for (i in 0 until 5) {
-                insertMemo(Memo("${i}"))
-            }
-        }
-
-        val memo = Memo("label checked")
-        val id = memoRepository.insertMemo(memo)
-
-        repository.searchCheckedLabels("").observeForever(observer)
-
-        repository.insertLabel(Label("1", id))
-        repository.insertLabel(Label("2", id))
-        repository.insertLabel(Label("3", null))
-
-        verify(observer, times(4)).onChanged(captor.capture())
-
-        captor.value.find { it.label == "1" }!!.isChecked `should equal` true
-        captor.value.find { it.label == "2" }!!.isChecked `should equal` true
-        captor.value.find { it.label == "3" }!!.isChecked `should equal` false
-
     }
 }

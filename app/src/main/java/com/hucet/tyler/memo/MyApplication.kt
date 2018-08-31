@@ -14,40 +14,14 @@ import dagger.android.HasActivityInjector
 import timber.log.Timber
 import javax.inject.Inject
 
-class MyApplication : Application(), HasActivityInjector {
+open class MyApplication : Application(), HasActivityInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
-        initLeakCanary()
-        initStetho()
         fetchRemoteConfig()
-        initTimber()
-    }
-
-    private fun initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
-        // Normal app init code...
-
-    }
-
-    private fun initTimber() {
-        System.setProperty("kotlinx.coroutines.debug", if (BuildConfig.DEBUG) "on" else "off")
-        if (BuildConfig.DEBUG) {
-            Timber.plant(OptionalTree(threadName = true))
-        }
-    }
-
-    private fun initStetho() {
-        if (BuildConfig.DEBUG)
-            Stetho.initializeWithDefaults(this);
     }
 
     private fun fetchRemoteConfig() {

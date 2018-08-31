@@ -19,7 +19,6 @@ package com.hucet.tyler.memo.db
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.utils.SqlQuery
 import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
@@ -33,15 +32,28 @@ import com.hucet.tyler.memo.db.model.MemoLabelJoin
 @OpenForTesting
 abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
     @Transaction
+//    @Query("""
+//        select label_id, label,
+//        (
+//           SELECT count(memo_id)
+//             FROM memos
+//            WHERE memo_id = :memoId
+//            limit 1
+//       ) as isChecked
+//            from labels
+//            where label LIKE  :keyword
+//        """
+//    )
+//    abstract fun searchCheckedLabels(keyword: String, memoId: Long): LiveData<List<CheckableLabelView>>
+
     @Query("""
-        select label_id, label,
-        (
-           SELECT count(memo_id)
-             FROM memos
-            WHERE memo_id = :memoId
-            limit 1
+        select l.label_id, l.label, (
+            SELECT count(m.label_id)
+            FROM memo_label_join as m
+            WHERE m.memo_id = :memoId and l.label_id = m.label_id
+            Limit 1
        ) as isChecked
-            from labels
+            from labels as l
             where label LIKE  :keyword
         """
     )
@@ -64,5 +76,8 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
         WHERE memo_label_join.label_id = :labelId
     """)
     abstract fun getMemoByLabel(labelId: Long): LiveData<List<Memo>>
+
+    @Query("delete from memo_label_join where memo_id = :memoId and label_id = :labelId")
+    abstract fun deleteById(memoId: Long, labelId: Long)
 
 }

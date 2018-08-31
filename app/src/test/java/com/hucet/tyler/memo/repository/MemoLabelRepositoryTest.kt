@@ -7,8 +7,8 @@ import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
+import com.hucet.tyler.memo.utils.TestUtils
 import com.hucet.tyler.memo.vo.CheckableLabelView
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -62,27 +62,46 @@ class MemoLabelRepositoryTest {
     }
 
     @Test
-    fun `check label`() {
+    fun `CheckableLabelView checked true associate with memo id`() {
+        val chechedMemoId = 1L
         val observer = mock<Observer<List<CheckableLabelView>>>()
+        val labelRepository = TestUtils.generateLabels(db, 2)
+        TestUtils.generateMemo(db, 2)
+        reset(observer)
 
-        repository.searchCheckedLabels("", 1).observeForever(observer)
-        generateMemoLabels()
-        repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
-        repository.insertMemoLabelJoin(MemoLabelJoin(1, 2))
+        repository.searchCheckedLabels(chechedMemoId).observeForever(observer)
+        repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, 1))
 
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 2))
-        repository.insertMemoLabelJoin(MemoLabelJoin(3, 2))
+        verify(observer, times(2)).onChanged(checkLabelCaptor.capture())
 
-        verify(observer, times(11)).onChanged(checkLabelCaptor.capture())
+        checkLabelCaptor.value.size shouldEqual 2
+        checkLabelCaptor.value[0].isChecked shouldEqual true
+        checkLabelCaptor.value[1].isChecked shouldEqual false
 
-        println(checkLabelCaptor.value)
+
+        val labelId = labelRepository.insertLabel(Label("label_3"))
+        verify(observer, times(3)).onChanged(checkLabelCaptor.capture())
+
+        labelId?.run {
+            repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, labelId))
+        }
+
+        verify(observer, times(4)).onChanged(checkLabelCaptor.capture())
+
+        checkLabelCaptor.value.size shouldEqual 3
+        checkLabelCaptor.value[0].isChecked shouldEqual true
+        checkLabelCaptor.value[1].isChecked shouldEqual false
+        checkLabelCaptor.value[2].isChecked shouldEqual true
     }
 
     @Test
-    fun `label 조회`() {
+    fun `get labels by memo id`() {
         val observer = mock<Observer<List<Label>>>()
+        TestUtils.generateLabels(db)
+        TestUtils.generateMemo(db)
+        reset(observer)
 
-        generateMemoLabels()
+
         repository.getLabelByMemo(1).observeForever(observer)
 
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
@@ -99,10 +118,13 @@ class MemoLabelRepositoryTest {
     }
 
     @Test
-    fun `memo 조회`() {
+    fun `get memos by label id`() {
         val observer = mock<Observer<List<Memo>>>()
+        TestUtils.generateLabels(db)
+        TestUtils.generateMemo(db)
+        reset(observer)
 
-        generateMemoLabels()
+
         repository.getMemoByLabel(1).observeForever(observer)
 
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
@@ -116,19 +138,5 @@ class MemoLabelRepositoryTest {
         memoCaptor.value.size shouldEqual 2
         memoCaptor.value[0].id shouldEqual 1
         memoCaptor.value[1].id shouldEqual 3
-    }
-
-
-    private fun generateMemoLabels() {
-        val memoRepository = MemoRepository(db).apply {
-            for (i in 0 until 5) {
-                insertMemo(Memo("${i + 1}"))
-            }
-        }
-        val labelRepository = LabelRepository(db).apply {
-            for (i in 0 until 5) {
-                insertLabel(Label("${i + 1}"))
-            }
-        }
     }
 }

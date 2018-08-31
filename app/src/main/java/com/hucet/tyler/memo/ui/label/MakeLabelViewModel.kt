@@ -4,8 +4,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.repository.LabelRepository
 import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.repository.LabelRepository
+import com.hucet.tyler.memo.repository.MemoLabelRepository
+import com.hucet.tyler.memo.utils.AppExecutors
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -17,13 +20,14 @@ import javax.inject.Singleton
 @Singleton
 @OpenForTesting
 class MakeLabelViewModel @Inject constructor(
-        private val repository: LabelRepository
+        private val memoLabelRepository: MemoLabelRepository,
+        private val labelRepository: LabelRepository
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
-    private val keywordName = MutableLiveData<String>()
+    private val labelSearch = MutableLiveData<LabelSearch>()
 
-    private val labelResult = Transformations.map(keywordName) {
-        repository.searchCheckedLabels(it)
+    private val labelResult = Transformations.map(labelSearch) {
+        memoLabelRepository.searchCheckedLabels(it.memoId, it.keyword)
     }
 
     private val labels = Transformations.switchMap(labelResult) {
@@ -31,27 +35,52 @@ class MakeLabelViewModel @Inject constructor(
     }
 
     val fetchLabels = Transformations.map(labels) {
-        keywordName.value to it
+        labelSearch.value to it
     }
 
-    fun bindSearch(searchView: Observable<CharSequence>) {
+    fun bindSearch(searchView: Observable<CharSequence>, memoId: Long) {
         searchView
                 .observeOn(Schedulers.io())
                 .map { it.toString() }
                 .subscribe {
-                    if (keywordName.value != it) {
-                        keywordName.postValue(it)
+                    if (labelSearch.value?.keyword != it) {
+                        labelSearch.postValue(LabelSearch(it, memoId))
                     }
                 }
                 .also { compositeDisposable.add(it) }
     }
 
-    fun createLabel(keyword: String, id: Long, consumer: Consumer<in Unit>) {
+    fun createLabel(keyword: String, memoId: Long) {
         Observable
-                .fromCallable { repository.insertLabel(Label(keyword)) }
+                .fromCallable {
+                    val labelId = labelRepository.insertLabel(Label(keyword))
+                    labelId?.run {
+                        memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer)
+                .subscribe()
+                .also { compositeDisposable.add(it) }
+    }
+
+    fun createMemoLabel(memoId: Long, labelId: Long) {
+        Observable
+                .fromCallable {
+                    memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+                .also { compositeDisposable.add(it) }
+    }
+
+    fun deleteMemoLabel(memoId: Long, labelId: Long) {
+        Observable
+                .fromCallable { memoLabelRepository.deleteById(memoId, labelId) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
                 .also { compositeDisposable.add(it) }
     }
 
