@@ -12,8 +12,8 @@ import com.hucet.tyler.memo.common.DataBoundListAdapter
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.ListClickListener
 import com.hucet.tyler.memo.common.DataBoundViewHolder
-import com.hucet.tyler.memo.databinding.LabelItemBinding
-import com.hucet.tyler.memo.databinding.MakeLabelItemBinding
+import com.hucet.tyler.memo.databinding.MakeLabelExistItemBinding
+import com.hucet.tyler.memo.databinding.MakeLabelNewItemBinding
 import com.hucet.tyler.memo.vo.CheckableLabelView
 import timber.log.Timber
 
@@ -39,8 +39,8 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
 
     override fun createBinding(parent: ViewGroup, viewType: Int): ViewDataBinding {
         return when (viewType) {
-            R.layout.make_label_item -> {
-                DataBindingUtil.inflate<MakeLabelItemBinding>(
+            R.layout.make_label_new_item -> {
+                DataBindingUtil.inflate<MakeLabelNewItemBinding>(
                         LayoutInflater.from(parent.context),
                         viewType,
                         parent,
@@ -52,7 +52,7 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
                 }
             }
             else -> {
-                DataBindingUtil.inflate<LabelItemBinding>(
+                DataBindingUtil.inflate<MakeLabelExistItemBinding>(
                         LayoutInflater.from(parent.context),
                         viewType,
                         parent,
@@ -74,10 +74,10 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
 
     override fun onBindViewHolder(holder: DataBoundViewHolder<ViewDataBinding>, position: Int) {
         when (holder.binding) {
-            is LabelItemBinding -> {
+            is MakeLabelExistItemBinding -> {
                 holder.binding.checkedLabel = getItem(position)
             }
-            is MakeLabelItemBinding -> {
+            is MakeLabelNewItemBinding -> {
                 Timber.d("makeLabelKeyword ${makeLabelKeyword?.makeNewLabelString(holder.binding.root.context)}")
                 holder.binding.label = makeLabelKeyword?.makeNewLabelString(holder.binding.root.context)
             }
@@ -87,9 +87,9 @@ class MakeLabelAdapter constructor(appExecutors: AppExecutors,
 
     override fun getItemViewType(position: Int): Int {
         return if (hasExtraRow() && position == itemCount - 1) {
-            R.layout.make_label_item
+            R.layout.make_label_new_item
         } else {
-            R.layout.label_item
+            R.layout.make_label_exist_item
         }
     }
 
