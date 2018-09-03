@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="label"
-            type="com.hucet.tyler.memo.db.model.Label" />
-    </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.chip.Chip
+        <com.github.okdroid.checkablechipview.CheckableChipView
+            android:id="@+id/chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="labels" />
+            android:layout_marginTop="24dp"
+            android:color="@color/colorAccent"
+            android:text=""
+            app:ccv_checkedTextColor="?android:textColorPrimaryInverse"
+            app:ccv_outlineColor="@color/colorAccent"
+            app:ccv_outlineCornerRadius="6dp"
+            app:ccv_outlineWidth="2dp" />
     </android.support.constraint.ConstraintLayout>
 </layout>

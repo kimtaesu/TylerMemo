@@ -28,7 +28,7 @@ interface ColorThemeView {
     fun onColorClose()
 }
 
-class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView {
+class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView, AddMemoNavigation {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -60,7 +60,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                     .commit()
 
         add_memo_toolbox.label.setOnClickListener {
-            startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memo))
+            navigateMakeLabel()
         }
 
         add_memo_toolbox.color_theme.setOnClickListener {
@@ -73,8 +73,6 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                         .commit()
             }
         }
-
-
     }
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
@@ -96,6 +94,10 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
     private fun setToolbarColor(colorTheme: ColorTheme) {
         toolbar.setBackgroundColor(colorTheme.color)
         toolbar.setTitleTextColor(colorTheme.textColor)
+    }
+
+    override fun navigateMakeLabel() {
+        startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memo))
     }
 }
 

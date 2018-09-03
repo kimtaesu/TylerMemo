@@ -88,6 +88,9 @@ dependencies {
 
     implementation deps.firebase.remoteConfig
     implementation deps.firebase.core
+
+    implementation 'com.github.okdroid:checkablechipview:1.0.2'
+
     debugImplementation deps.stetho
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 //    implementation deps.kotlin.coroutines_core

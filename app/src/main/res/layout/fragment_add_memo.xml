@@ -11,6 +11,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <EditText
             android:id="@+id/add_memo_text"
             android:layout_width="0dp"
@@ -23,6 +24,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/add_memo_label_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_memo_text">
+
+        </android.support.v7.widget.RecyclerView>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"

@@ -8,11 +8,14 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
 import com.hucet.tyler.memo.di.Injectable
+import com.hucet.tyler.memo.utils.AppExecutors
 import kotlinx.android.synthetic.main.fragment_add_memo.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,6 +34,19 @@ class AddMemoFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelProvider: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var appExecutors: AppExecutors
+
+    private val adapter by lazy {
+        LabelAdapter(appExecutors,
+                {
+                    add_memo_label_list.getChildAdapterPosition(it)
+                },
+                {
+                    (activity as? AddMemoNavigation)?.navigateMakeLabel()
+                })
+    }
 
     private val viewModel: AddMemoViewModel by lazy {
         viewModelProvider.create(AddMemoViewModel::class.java)
@@ -61,10 +77,16 @@ class AddMemoFragment : Fragment(), Injectable {
 
         viewModel.findMemoViewById(memoId).observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
-                    "memo: ${it?.memo}\n" +
-                    "memo_id: ${it?.memo?.id}\n" +
-                    "checklist: ${it?.checkItems}")
+                    "labels: ${it}")
+            adapter.submitList(it)
         })
+
+        add_memo_label_list.apply {
+            adapter = this@AddMemoFragment.adapter
+            layoutManager = FlexboxLayoutManager(context).apply {
+                flexWrap = FlexWrap.WRAP
+            }
+        }
     }
 }
 

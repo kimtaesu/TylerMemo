@@ -2,17 +2,18 @@ package com.hucet.tyler.memo.db.model
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
 import com.hucet.tyler.memo.db.model.Label.Companion.LABEL_TABLE
-import com.hucet.tyler.memo.db.model.Memo.Companion.MEMO_ID
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(
         tableName = LABEL_TABLE
 )
 data class Label(
         val label: String
-) {
+) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = LABEL_ID)
     var id: Int = 0
