@@ -18,14 +18,14 @@ data class Memo(
         val text: String,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
-        @Embedded
-        val colorTheme: ColorTheme = ColorTheme.default.colorTheme,
         val createAt: Long = System.currentTimeMillis()
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = MEMO_ID)
     var id: Long = 0
 
+    @Embedded
+    var colorTheme: ColorTheme = ColorTheme.default.colorTheme
 
     companion object {
         const val MEMO_TABLE = "memos"

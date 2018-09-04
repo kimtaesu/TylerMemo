@@ -2,6 +2,7 @@ package com.hucet.tyler.memo.repository
 
 import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.common.fullTextSql
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.db.model.CheckItem
@@ -22,7 +23,7 @@ class MemoRepository @Inject constructor(
     fun searchMemos(keyword: String): LiveData<List<MemoView>> {
         if (keyword.isEmpty())
             return memoDao.allMemo()
-        return memoDao.searchMemo("%$keyword%")
+        return memoDao.searchMemo(keyword.fullTextSql())
     }
 
     fun insertMemo(memo: Memo): Long? {

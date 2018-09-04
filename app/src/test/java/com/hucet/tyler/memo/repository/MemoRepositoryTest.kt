@@ -58,7 +58,7 @@ class MemoRepositoryTest {
     @Test
     fun `insert memos to db`() {
         val memos = listOf(Memo("1"),
-                Memo("12", MemoAttribute(false), ColorTheme("a", 1, 1)))
+                Memo("12", MemoAttribute(false)))
         repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
@@ -133,8 +133,9 @@ class MemoRepositoryTest {
         Assert.assertThat(captor.value.first().memo.colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
         val result = captor.value.first()
 
+        result.memo.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
         // 메모 Theme 변경 White -> Blue
-        repository.updateMemos(listOf(result.memo.copy(colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme)))
+        repository.updateMemos(listOf(result.memo))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())
 

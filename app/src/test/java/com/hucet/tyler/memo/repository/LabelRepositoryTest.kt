@@ -57,4 +57,9 @@ class LabelRepositoryTest {
     fun closeDb() {
         db.close()
     }
+
+    @Test
+    fun test_case(){
+
+    }
 }
