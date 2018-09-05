@@ -10,6 +10,7 @@ import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.`should equal`
+import org.amshove.kluent.`should not be`
 import org.amshove.kluent.shouldContain
 import org.hamcrest.core.Is.*
 import org.junit.*
@@ -57,14 +58,14 @@ class MemoRepositoryTest {
 
     @Test
     fun `insert memos to db`() {
-        val memos = listOf(Memo("1"),
-                Memo("12", MemoAttribute(false)))
+        val memos = listOf(Memo("1"))
         repository.insertMemos(memos)
 
         repository.searchMemos("").observeForever(observer)
 
         verify(observer).onChanged(captor.capture())
-        assertEquals(captor.value.map { it.memo }, memos)
+
+        captor.value.assertMemos(memos)
     }
 
     @Test
@@ -79,10 +80,7 @@ class MemoRepositoryTest {
     @Test
     fun `ko search text memo`() {
         val expect = Memo("하하")
-        assertSearch(listOf(
-                expect,
-                Memo("asd")
-        ), listOf(expect), "하하")
+        assertSearch(listOf(expect, Memo("asd")), listOf(expect), "하하")
     }
 
     private fun assertSearch(memos: List<Memo>, expect: List<Memo>, keyword: String) {
@@ -90,8 +88,8 @@ class MemoRepositoryTest {
         repository.searchMemos(keyword).observeForever(observer)
 
         verify(observer).onChanged(captor.capture())
-        Assert.assertThat(captor.value.map { it.memo }, `is`(expect))
         Assert.assertThat(captor.value.size, `is`(expect.size))
+        captor.value.assertMemos(expect)
     }
 
     @Test
@@ -112,7 +110,7 @@ class MemoRepositoryTest {
 //      두번째 observer 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
-        captor.value.map { it.memo } `should equal` memos
+        captor.value.assertMemos(memos)
 
 //        Insert a check item
         repository.insertCheckItems(listOf(checkItem))
@@ -153,7 +151,7 @@ class MemoRepositoryTest {
 
         repository.searchMemos("").observeForever(observer)
         verify(observer).onChanged(captor.capture())
-        Assert.assertThat(captor.value.first().memo, `is`(expect))
+        captor.value.first().assertMemo(expect)
 
         // Pin true 메모 추가
         val expect2 = Memo("Pin true2", MemoAttribute(true))
@@ -162,7 +160,20 @@ class MemoRepositoryTest {
         verify(observer, times(2)).onChanged(captor.capture())
 
         // 첫 번째는 마지막 추가한 메모
-        Assert.assertThat(captor.value.first().memo, `is`(expect2))
+        captor.value.first().assertMemo(expect2)
     }
 
+    private fun List<MemoView>.assertMemos(memos: List<Memo>) {
+        this.size `should equal` memos.size
+
+        this.forEachIndexed { index, memoView ->
+            memoView.assertMemo(memos[index])
+        }
+    }
+
+    private fun MemoView.assertMemo(other: Memo) {
+        this.memo.id `should not be` other.id
+
+        this.memo `should equal` other.copy(id = this.memo.id)
+    }
 }

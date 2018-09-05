@@ -5,7 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.cancelAndJoin
 
-abstract class ConcurrencyViewModel : ViewModel() {
+abstract class DispoableViewModel : ViewModel() {
 
     protected val parentJob = Job()
     protected val compositeDisposable = CompositeDisposable()

@@ -83,6 +83,8 @@ dependencies {
     implementation deps.timber
 
     implementation deps.mosby3
+    implementation 'com.hannesdorfmann.mosby3:mvp:3.1.0'
+    implementation 'com.hannesdorfmann.mosby3:viewstate:3.1.0'
     implementation deps.rxbinding
     implementation deps.flexbox
 

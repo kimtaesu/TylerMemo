@@ -18,15 +18,13 @@ data class Memo(
         val text: String,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
-        val createAt: Long = System.currentTimeMillis()
+        val createAt: Long = System.currentTimeMillis(),
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = MEMO_ID)
+        var id: Long = 0,
+        @Embedded
+        var colorTheme: ColorTheme = ColorTheme.default.colorTheme
 ) : Parcelable {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = MEMO_ID)
-    var id: Long = 0
-
-    @Embedded
-    var colorTheme: ColorTheme = ColorTheme.default.colorTheme
-
     companion object {
         const val MEMO_TABLE = "memos"
         const val MEMO_ID = "memo_id"
@@ -43,5 +41,4 @@ fun Memo.toBundle(): Bundle {
         putParcelable(ArgKeys.KEY_MEMO.name, this@toBundle)
         putLong(ArgKeys.KEY_MEMO_ID.name, this@toBundle.id)
     }
-
 }

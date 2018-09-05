@@ -14,6 +14,7 @@ import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
+import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import kotlinx.android.synthetic.main.fragment_add_memo.*
@@ -23,10 +24,10 @@ import javax.inject.Inject
 
 class AddMemoFragment : Fragment(), Injectable {
     companion object {
-        fun newInstance(memoId: Long): AddMemoFragment {
+        fun newInstance(memo: Memo): AddMemoFragment {
             return AddMemoFragment().apply {
                 arguments = Bundle().apply {
-                    putLong(ArgKeys.KEY_MEMO_ID.name, memoId)
+                    putParcelable(ArgKeys.KEY_MEMO.name, memo)
                 }
             }
         }
@@ -52,7 +53,9 @@ class AddMemoFragment : Fragment(), Injectable {
         viewModelProvider.create(AddMemoViewModel::class.java)
     }
 
-    private val memoId by lazy { arguments?.getLong(ArgKeys.KEY_MEMO_ID.name) ?: UNKNOWN_ID }
+    private val memo: Memo by lazy {
+        arguments?.getLong(ArgKeys.KEY_MEMO.name) as? Memo ?: Memo.empty()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentAddMemoBinding>(
@@ -69,13 +72,15 @@ class AddMemoFragment : Fragment(), Injectable {
         initViews()
     }
 
-    private fun initViews() {
-        if (memoId == UNKNOWN_ID)
-            TODO()
+    override fun onPause() {
+        super.onPause()
+        viewModel.saveMemo(memo)
+    }
 
+    private fun initViews() {
         add_memo_text.hint = RandomGreetingHintGenerator.generate()
 
-        viewModel.findMemoViewById(memoId).observe(this, Observer {
+        viewModel.findMemoViewById(memo.id).observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
                     "labels: ${it}")
             adapter.submitList(it)

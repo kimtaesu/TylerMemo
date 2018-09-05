@@ -57,7 +57,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.content, AddMemoFragment.newInstance(memo.id))
+                    .replace(R.id.content, AddMemoFragment.newInstance(memo))
                     .commit()
 
         add_memo_toolbox.label.setOnClickListener {
