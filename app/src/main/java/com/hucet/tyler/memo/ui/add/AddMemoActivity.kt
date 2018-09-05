@@ -21,6 +21,7 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_add_memo.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
+import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
 interface ColorThemeView {

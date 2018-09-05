@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.common.ConcurrencyViewModel
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
 import com.hucet.tyler.memo.repository.LabelRepository
@@ -14,6 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +25,7 @@ import javax.inject.Singleton
 class MakeLabelViewModel @Inject constructor(
         private val memoLabelRepository: MemoLabelRepository,
         private val labelRepository: LabelRepository
-) : ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
+) : ConcurrencyViewModel() {
     private val labelSearch = MutableLiveData<LabelSearch>()
 
     private val labelResult = Transformations.map(labelSearch) {
@@ -48,53 +50,34 @@ class MakeLabelViewModel @Inject constructor(
 
     fun bindSearch(searchView: Observable<CharSequence>, memoId: Long) {
         searchView
-                .observeOn(Schedulers.io())
                 .map { it.toString() }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if (labelSearch.value?.keyword != it) {
-                        labelSearch.postValue(LabelSearch(it, memoId))
+                        labelSearch.value = LabelSearch(it, memoId)
                     }
                 }
                 .also { compositeDisposable.add(it) }
     }
 
     fun createLabel(keyword: String, memoId: Long) {
-        Observable
-                .fromCallable {
-                    val labelId = labelRepository.insertLabel(Label(keyword))
-                    labelId?.run {
-                        memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
-                    }
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-                .also { compositeDisposable.add(it) }
+        launch(CommonPool, parent = parentJob) {
+            val labelId = labelRepository.insertLabel(Label(keyword))
+            labelId?.run {
+                memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+            }
+        }
     }
 
     fun createMemoLabel(memoId: Long, labelId: Long) {
-        Observable
-                .fromCallable {
-                    memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-                .also { compositeDisposable.add(it) }
+        launch(CommonPool, parent = parentJob) {
+            memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+        }
     }
 
     fun deleteMemoLabel(memoId: Long, labelId: Long) {
-        Observable
-                .fromCallable { memoLabelRepository.deleteById(memoId, labelId) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-                .also { compositeDisposable.add(it) }
+        launch(CommonPool, parent = parentJob) {
+            memoLabelRepository.deleteById(memoId, labelId)
+        }
     }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
-
 }
