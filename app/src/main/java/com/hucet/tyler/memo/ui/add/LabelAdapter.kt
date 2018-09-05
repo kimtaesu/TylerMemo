@@ -35,8 +35,6 @@ class LabelAdapter constructor(appExecutors: AppExecutors,
                 parent,
                 false
         ).apply {
-            this.chip.isClickable = false
-            this.chip.isChecked = false
             this.root.setOnClickListener {
                 val position = getItemPosition(it)
                 onClickListener(getItem(position))
@@ -45,6 +43,6 @@ class LabelAdapter constructor(appExecutors: AppExecutors,
     }
 
     override fun bind(binding: LabelItemsBinding, label: ITEM) {
-        binding.chip.text = label.label
+        binding.label = label
     }
 }
