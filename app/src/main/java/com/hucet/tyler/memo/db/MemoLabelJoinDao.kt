@@ -23,6 +23,7 @@ import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.dto.MemoView2
 
 /**
  * Interface for database access on Repo related operations.
@@ -65,4 +66,12 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
     @Query("delete from memo_label_join where memo_id = :memoId and label_id = :labelId")
     abstract fun deleteById(memoId: Long, labelId: Long)
 
+    @Query("""
+        SELECT memos.memo_id, labels.label_id, memos.text
+        FROM memos
+        LEFT JOIN memo_label_join ON memos.memo_id = memo_label_join.memo_id and memos.text like :keyword
+        LEFT JOIN labels ON labels.label_id = memo_label_join.label_id
+        GROUP BY memos.memo_id
+    """)
+    abstract fun searchMemoLabels(keyword: String): LiveData<List<MemoView2>>
 }
