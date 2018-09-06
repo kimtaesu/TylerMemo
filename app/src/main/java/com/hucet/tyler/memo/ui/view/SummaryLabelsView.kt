@@ -34,10 +34,15 @@ class SummaryLabelsView : LinearLayout {
     }
 
     fun setLabels(labels: List<Label>?) {
+        removeAllViews()
         labels?.forEach {
             val binding = DataBindingUtil.inflate<LabelItemsBinding>(inflater, R.layout.label_items, this, false)
             binding.label = it
             addView(binding.root)
         }
+    }
+
+    fun isInflate(): Boolean {
+        return childCount > 1
     }
 }
