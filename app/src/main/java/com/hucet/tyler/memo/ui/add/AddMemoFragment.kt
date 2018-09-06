@@ -12,7 +12,6 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
@@ -75,7 +74,8 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
 
     override fun onPause() {
         super.onPause()
-        viewModel.saveMemo(memo)
+        Timber.d("saved memo: ${memo}")
+        viewModel.updateMemo(memo)
     }
 
     private fun initViews() {
@@ -83,7 +83,7 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
 
         viewModel.findMemoViewById(memo.id).observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
-                    "labels: ${it}")
+                    "labels: $it")
             adapter.submitList(it)
         })
 

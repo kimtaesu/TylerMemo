@@ -22,7 +22,7 @@ class AddMemoViewModel @Inject constructor(
     fun findMemoViewById(memoId: Long): LiveData<List<Label>> =
             memoLabelRepository.getLabelByMemo(memoId)
 
-    fun saveMemo(memo: Memo) {
+    fun updateMemo(memo: Memo) {
         launch {
             memoRepository.updateMemos(listOf(memo))
         }
