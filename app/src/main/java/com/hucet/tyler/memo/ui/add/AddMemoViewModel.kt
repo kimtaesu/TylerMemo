@@ -9,6 +9,7 @@ import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.repository.MemoLabelRepository
 import com.hucet.tyler.memo.repository.MemoRepository
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +23,8 @@ class AddMemoViewModel @Inject constructor(
             memoLabelRepository.getLabelByMemo(memoId)
 
     fun saveMemo(memo: Memo) {
-        memoRepository.updateMemos(listOf(memo))
+        launch {
+            memoRepository.updateMemos(listOf(memo))
+        }
     }
 }

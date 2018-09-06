@@ -54,7 +54,7 @@ class AddMemoFragment : Fragment(), Injectable {
     }
 
     private val memo: Memo by lazy {
-        arguments?.getLong(ArgKeys.KEY_MEMO.name) as? Memo ?: Memo.empty()
+        arguments?.getParcelable(ArgKeys.KEY_MEMO.name) as? Memo ?: Memo.empty()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,6 +80,7 @@ class AddMemoFragment : Fragment(), Injectable {
     private fun initViews() {
         add_memo_text.hint = RandomGreetingHintGenerator.generate()
 
+        println("!!!!!!!!! ${memo}")
         viewModel.findMemoViewById(memo.id).observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
                     "labels: ${it}")

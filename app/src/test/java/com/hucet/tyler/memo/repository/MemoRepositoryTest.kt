@@ -99,7 +99,7 @@ class MemoRepositoryTest {
                 Memo("2", MemoAttribute(false))
         )
 
-        val checkItem = CheckItem("ddd", true, 2)
+        val checkItem = CheckItem("ddd", true, 2, 1)
 
         // search memo observer 등록
         repository.searchMemos("").observeForever(observer)

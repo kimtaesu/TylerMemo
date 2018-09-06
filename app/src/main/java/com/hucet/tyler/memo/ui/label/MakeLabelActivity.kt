@@ -6,11 +6,10 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.common.toMemo
 import com.hucet.tyler.memo.databinding.ActivityMakeLabelBinding
 import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.db.model.toBundle
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -27,7 +26,7 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
     companion object {
         fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, MakeLabelActivity::class.java).apply {
-                putExtras(memo.toBundle())
+                putExtra(ArgKeys.KEY_MEMO.name, memo)
             }
         }
     }
@@ -38,7 +37,7 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     private val memo by lazy {
-        intent.toMemo()
+        intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

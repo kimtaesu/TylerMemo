@@ -19,13 +19,11 @@ data class CheckItem(
         val name: String,
         val done: Boolean,
         @ColumnInfo(name = Memo.MEMO_ID)
-        val memoId: Long
-) {
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = CHECK_ITEM_ID)
-    var id: Int = 0
-
+        val memoId: Long,
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = CHECK_ITEM_ID)
+        override var id: Long = 0
+) : HasId {
     companion object {
         const val CHECK_ITEM_TABLE = "check_items"
         const val CHECK_ITEM_ID = "check_item_id"

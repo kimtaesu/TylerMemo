@@ -12,11 +12,12 @@ import kotlinx.android.parcel.Parcelize
         tableName = LABEL_TABLE
 )
 data class Label(
-        val label: String
-) : Parcelable {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = LABEL_ID)
-    var id: Int = 0
+        val label: String,
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = LABEL_ID)
+        override var id: Long = 0
+) : Parcelable, HasId {
+
 
     companion object {
         const val LABEL_TABLE = "labels"
