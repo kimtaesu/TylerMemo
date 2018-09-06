@@ -21,7 +21,9 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <application
     android:name=".DebugApplication"
-    tools:ignore="GoogleAppIndexingWarning"
+    android:allowBackup="true"
+    android:debuggable="true"
+    tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode"
     tools:replace="android:name">
     <activity android:name=".SingleFragmentActivity"></activity>
   </application>

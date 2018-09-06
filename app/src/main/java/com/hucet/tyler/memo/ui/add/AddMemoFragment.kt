@@ -18,6 +18,7 @@ import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import kotlinx.android.synthetic.main.fragment_add_memo.*
+import kotlinx.android.synthetic.main.memo_item.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -75,7 +76,7 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
     override fun onPause() {
         super.onPause()
         Timber.d("saved memo: ${memo}")
-        viewModel.updateMemo(memo)
+        viewModel.updateMemo(memo.copy(text = add_memo_text.text.toString()))
     }
 
     private fun initViews() {

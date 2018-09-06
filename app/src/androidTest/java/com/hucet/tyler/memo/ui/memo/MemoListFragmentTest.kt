@@ -52,10 +52,9 @@ class MemoListFragmentTest {
 
     @Test
     fun memo_load() {
-        val memoView = MemoView().apply { memo = Memo("foo", "bar") }
+        val memoView = MemoView().apply { memo = Memo("foo") }
         MemosLiveData.postValue(listOf(memoView))
         onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("foo"))))
-        onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("bar"))))
     }
 
     private fun listMatcher(): RecyclerViewMatcher {

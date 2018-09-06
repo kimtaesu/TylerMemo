@@ -31,21 +31,6 @@ import com.hucet.tyler.memo.db.model.MemoLabelJoin
 @Dao
 @OpenForTesting
 abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
-    @Transaction
-//    @Query("""
-//        select label_id, label,
-//        (
-//           SELECT count(memo_id)
-//             FROM memos
-//            WHERE memo_id = :memoId
-//            limit 1
-//       ) as isChecked
-//            from labels
-//            where label LIKE  :keyword
-//        """
-//    )
-//    abstract fun searchCheckedLabels(keyword: String, memoId: Long): LiveData<List<CheckableLabelView>>
-
     @Query("""
         select l.label_id, l.label, (
             SELECT count(m.label_id)
