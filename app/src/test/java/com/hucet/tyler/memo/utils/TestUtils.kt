@@ -7,8 +7,8 @@ import com.hucet.tyler.memo.repository.LabelRepository
 import com.hucet.tyler.memo.repository.MemoRepository
 
 object TestUtils {
-    fun generateMemo(db: MemoDb, count: Int = 5): MemoRepository {
-        return MemoRepository(db).apply {
+    fun generateMemoLabel(db: MemoDb, count: Int = 5) {
+        MemoRepository(db).apply {
             val memos = listOf(0 until count)
                     .flatten()
                     .mapIndexed { index, i ->
@@ -16,14 +16,11 @@ object TestUtils {
                     }
             insertMemos(memos)
         }
-    }
-
-    fun generateLabels(db: MemoDb, count: Int = 5): LabelRepository {
-        return LabelRepository(db).apply {
+        LabelRepository(db).apply {
             val labels = listOf(0 until count)
                     .flatten()
                     .mapIndexed { index, i ->
-                        Label("label_${i + 1}")
+                        Label("label_${i + 1}", (index + 1).toLong())
                     }
             insertLabels(labels)
         }

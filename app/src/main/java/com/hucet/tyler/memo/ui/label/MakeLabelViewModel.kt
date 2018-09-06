@@ -57,7 +57,7 @@ class MakeLabelViewModel @Inject constructor(
 
     fun createLabel(keyword: String, memoId: Long) {
         launch(CommonPool, parent = parentJob) {
-            val labelId = labelRepository.insertLabel(Label(keyword))
+            val labelId = labelRepository.insertLabel(Label(keyword, memoId))
             labelId?.run {
                 memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
             }

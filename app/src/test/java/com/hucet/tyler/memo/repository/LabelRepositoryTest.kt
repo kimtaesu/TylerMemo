@@ -8,11 +8,14 @@ import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.utils.TestUtils
+import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.`should equal`
+import org.amshove.kluent.mock
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -59,7 +62,7 @@ class LabelRepositoryTest {
     }
 
     @Test
-    fun test_case(){
+    fun test_case() {
 
     }
 }

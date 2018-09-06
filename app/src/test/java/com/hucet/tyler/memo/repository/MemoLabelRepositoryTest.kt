@@ -2,17 +2,13 @@ package com.hucet.tyler.memo.repository
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.hucet.tyler.memo.AppPref
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
-import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.dto.MemoView2
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.utils.TestUtils
 import com.hucet.tyler.memo.vo.CheckableLabelView
-import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -69,8 +65,7 @@ class MemoLabelRepositoryTest {
     fun `CheckableLabelView checked true associate with memo id`() {
         val chechedMemoId = 1L
         val observer = mock<Observer<List<CheckableLabelView>>>()
-        val labelRepository = TestUtils.generateLabels(db, 2)
-        TestUtils.generateMemo(db, 2)
+        TestUtils.generateMemoLabel(db, 2)
         reset(observer)
 
         repository.searchCheckedLabels(chechedMemoId).observeForever(observer)
@@ -83,7 +78,7 @@ class MemoLabelRepositoryTest {
         checkLabelCaptor.value[1].isChecked shouldEqual false
 
 
-        val labelId = labelRepository.insertLabel(Label("label_3"))
+        val labelId = LabelRepository(db).insertLabel(Label("label_3", 1))
         verify(observer, times(3)).onChanged(checkLabelCaptor.capture())
 
         labelId?.run {
@@ -101,8 +96,7 @@ class MemoLabelRepositoryTest {
     @Test
     fun `get labels by memo id`() {
         val observer = mock<Observer<List<Label>>>()
-        TestUtils.generateLabels(db)
-        TestUtils.generateMemo(db)
+        TestUtils.generateMemoLabel(db)
         reset(observer)
 
 
@@ -124,8 +118,7 @@ class MemoLabelRepositoryTest {
     @Test
     fun `get memos by label id`() {
         val observer = mock<Observer<List<Memo>>>()
-        TestUtils.generateLabels(db)
-        TestUtils.generateMemo(db)
+        TestUtils.generateMemoLabel(db)
         reset(observer)
 
 
@@ -142,29 +135,5 @@ class MemoLabelRepositoryTest {
         memoCaptor.value.size shouldEqual 2
         memoCaptor.value[0].id shouldEqual 1
         memoCaptor.value[1].id shouldEqual 3
-    }
-
-    @Test
-    fun `asd`() {
-        val observer = mock<Observer<List<MemoView2>>>()
-        val captor = argumentCaptor<List<MemoView2>>()
-        TestUtils.generateLabels(db)
-        TestUtils.generateMemo(db)
-        reset(observer)
-
-
-        repository.searchMemoLabels("").observeForever(observer)
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 2))
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 4))
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 5))
-
-        repository.insertMemoLabelJoin(MemoLabelJoin(4, 5))
-        repository.insertMemoLabelJoin(MemoLabelJoin(4, 2))
-
-//        repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
-        verify(observer, times(7)).onChanged(captor.capture())
-
-        println(captor.lastValue)
     }
 }

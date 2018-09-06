@@ -21,8 +21,6 @@ class MemoRepository @Inject constructor(
     private val checkItemDao by lazy { db.checkItemDao() }
 
     fun searchMemos(keyword: String): LiveData<List<MemoView>> {
-        if (keyword.isEmpty())
-            return memoDao.allMemo()
         return memoDao.searchMemo(keyword.fullTextSql())
     }
 

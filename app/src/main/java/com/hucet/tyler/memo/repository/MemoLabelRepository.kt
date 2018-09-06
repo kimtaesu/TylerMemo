@@ -7,7 +7,6 @@ import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
-import com.hucet.tyler.memo.dto.MemoView2
 import com.hucet.tyler.memo.vo.CheckableLabelView
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,9 +37,5 @@ class MemoLabelRepository @Inject constructor(
 
     fun deleteById(memoId: Long, labelId: Long) {
         memoLabelJoinDao.deleteById(memoId, labelId)
-    }
-
-    fun searchMemoLabels(keyword: String): LiveData<List<MemoView2>> {
-        return memoLabelJoinDao.searchMemoLabels(keyword.fullTextSql())
     }
 }

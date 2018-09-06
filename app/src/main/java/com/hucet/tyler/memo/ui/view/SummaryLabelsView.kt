@@ -33,8 +33,8 @@ class SummaryLabelsView : LinearLayout {
         a.recycle()
     }
 
-    fun setLabels(labels: List<Label>) {
-        labels.forEach {
+    fun setLabels(labels: List<Label>?) {
+        labels?.forEach {
             val binding = DataBindingUtil.inflate<LabelItemsBinding>(inflater, R.layout.label_items, this, false)
             binding.label = it
             addView(binding.root)

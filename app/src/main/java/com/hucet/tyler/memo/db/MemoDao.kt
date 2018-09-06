@@ -28,12 +28,6 @@ import com.hucet.tyler.memo.db.model.Memo
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
-    @Query("""select *
-        from memos
-        order by isPin desc, createAt desc
-        """)
-    abstract fun allMemo(): LiveData<List<MemoView>>
-
     @Transaction
     @Query("""select *
         from memos
@@ -48,9 +42,11 @@ abstract class MemoDao : BaseDao<Memo> {
         """)
     abstract fun findMemo(id: Long): LiveData<MemoView>
 
-    @Query("""update memos
+    @Query("""
+        update memos
         set label = :label,
         color = :color, textColor = :textColor
-        where memo_id = :memoId""")
+        where memo_id = :memoId
+        """)
     abstract fun updateColorTheme(label: String, color: Int, textColor: Int, memoId: Long)
 }

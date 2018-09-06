@@ -34,5 +34,6 @@ class MemoAdapter constructor(appExecutors: AppExecutors)
 
     override fun bind(binding: MemoItemBinding, memoView: MemoView) {
         binding.memo = memoView.memo
+        binding.summaryLabels.setLabels(memoView.labels)
     }
 }

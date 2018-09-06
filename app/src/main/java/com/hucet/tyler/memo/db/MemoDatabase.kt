@@ -77,7 +77,7 @@ abstract class MemoDb : RoomDatabase() {
 
         private fun buildDatabase(context: Context): MemoDb {
             return Room.databaseBuilder(context,
-                    MemoDb::class.java, "memo_db")
+                    MemoDb::class.java, "memo_db1")
                     .populate(context)
                     .build()
         }

@@ -6,15 +6,10 @@ import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.*
 import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import org.amshove.kluent.`should equal`
-import org.amshove.kluent.`should not be`
-import org.amshove.kluent.shouldContain
+import com.nhaarman.mockito_kotlin.*
+import org.amshove.kluent.*
 import org.hamcrest.core.Is.*
 import org.junit.*
-import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
@@ -34,7 +29,7 @@ class MemoRepositoryTest {
     @get:Rule
     val rxImmediateSchedulerRule = RxImmediateSchedulerRule()
 
-    private lateinit var repository: MemoRepository
+    private lateinit var memoRepository: MemoRepository
 
     private lateinit var db: MemoDb
 
@@ -47,7 +42,7 @@ class MemoRepositoryTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         db = MemoDb.getInstanceInMemory(RuntimeEnvironment.application)
-        repository = MemoRepository(db)
+        memoRepository = MemoRepository(db)
         reset(observer)
     }
 
@@ -57,63 +52,51 @@ class MemoRepositoryTest {
     }
 
     @Test
-    fun `insert memos to db`() {
-        val memos = listOf(Memo("1"))
-        repository.insertMemos(memos)
-
-        repository.searchMemos("").observeForever(observer)
-
-        verify(observer).onChanged(captor.capture())
-
-        captor.value.assertMemos(memos)
-    }
-
-    @Test
     fun `en search text memo`() {
-        val expect = Memo("abc")
-        assertSearch(listOf(
-                expect,
-                Memo("asd")
-        ), listOf(expect), "bc")
+        val expect = Memo("abc", id = 3)
+        memoRepository.searchMemos("bc").observeForever(observer)
+        memoRepository.insertMemos(listOf(expect, Memo("asd", id = 1)))
+
+        verify(observer, times(2)).onChanged(captor.capture())
+
+        captor.value.size shouldEqual 1
+        captor.value.first().memo shouldEqual expect
     }
 
     @Test
     fun `ko search text memo`() {
-        val expect = Memo("하하")
-        assertSearch(listOf(expect, Memo("asd")), listOf(expect), "하하")
-    }
+        val expect = Memo("하하", id = 3)
+        memoRepository.searchMemos("하").observeForever(observer)
+        memoRepository.insertMemos(listOf(expect, Memo("ㅁㄴㅇㄴㅇ", id = 1)))
 
-    private fun assertSearch(memos: List<Memo>, expect: List<Memo>, keyword: String) {
-        repository.insertMemos(memos)
-        repository.searchMemos(keyword).observeForever(observer)
+        verify(observer, times(2)).onChanged(captor.capture())
 
-        verify(observer).onChanged(captor.capture())
-        Assert.assertThat(captor.value.size, `is`(expect.size))
-        captor.value.assertMemos(expect)
+        captor.value.size shouldEqual 1
+        captor.value.first().memo shouldEqual expect
     }
 
     @Test
     fun `insert integration obsever`() {
         val memos = listOf(
-                Memo("1", MemoAttribute(false)),
-                Memo("2", MemoAttribute(false))
+                Memo("1", MemoAttribute(false), id = 1),
+                Memo("2", MemoAttribute(false), id = 2)
         )
 
         val checkItem = CheckItem("ddd", true, 2, 1)
 
         // search memo observer 등록
-        repository.searchMemos("").observeForever(observer)
+        memoRepository.searchMemos("").observeForever(observer)
         verify(observer).onChanged(captor.capture())
 
 //        Insert a memo
-        repository.insertMemos(memos)
+        memoRepository.insertMemos(memos)
 //      두번째 observer 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
-        captor.value.assertMemos(memos)
+        captor.value.map { it.memo } shouldContainAll memos
 
 //        Insert a check item
-        repository.insertCheckItems(listOf(checkItem))
+        memoRepository.insertCheckItems(listOf(checkItem))
 
 //      세번째 observer 호출
         verify(observer, times(3)).onChanged(captor.capture())
@@ -123,9 +106,9 @@ class MemoRepositoryTest {
 
     @Test
     fun `change color theme`() {
-        repository.insertMemos(listOf(Memo("1", MemoAttribute(false))))
+        memoRepository.insertMemos(listOf(Memo("1", MemoAttribute(false))))
 
-        repository.searchMemos("").observeForever(observer)
+        memoRepository.searchMemos("").observeForever(observer)
         verify(observer).onChanged(captor.capture())
 
         Assert.assertThat(captor.value.first().memo.colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
@@ -133,7 +116,7 @@ class MemoRepositoryTest {
 
         result.memo.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
         // 메모 Theme 변경 White -> Blue
-        repository.updateMemos(listOf(result.memo))
+        memoRepository.updateMemos(listOf(result.memo))
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
@@ -142,38 +125,45 @@ class MemoRepositoryTest {
 
     @Test
     fun `pin true 정렬 순위`() {
-        val expect = Memo("Pin true1", MemoAttribute(true))
+        val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
         val memos = listOf(
-                Memo("1", MemoAttribute(false)),
+                Memo("1", MemoAttribute(false), id = 1),
                 expect
         )
-        repository.insertMemos(memos)
 
-        repository.searchMemos("").observeForever(observer)
-        verify(observer).onChanged(captor.capture())
-        captor.value.first().assertMemo(expect)
+        memoRepository.searchMemos("").observeForever(observer)
+        memoRepository.insertMemos(memos)
 
         // Pin true 메모 추가
-        val expect2 = Memo("Pin true2", MemoAttribute(true))
-        repository.insertMemos(listOf(expect2))
-        // observer 두번째 호출
-        verify(observer, times(2)).onChanged(captor.capture())
+        val expect2 = Memo("Pin true2", MemoAttribute(true), id = 31)
+        memoRepository.insertMemos(listOf(expect2))
 
-        // 첫 번째는 마지막 추가한 메모
-        captor.value.first().assertMemo(expect2)
+        verify(observer, times(3)).onChanged(captor.capture())
+        captor.secondValue.first().memo `should equal` expect
+        captor.thirdValue.first().memo `should equal` expect2
     }
 
-    private fun List<MemoView>.assertMemos(memos: List<Memo>) {
-        this.size `should equal` memos.size
+    @Test
+    fun `1 vs N memoview with labels`() {
+        val observer = mock<Observer<List<MemoView>>>()
+        val captor = argumentCaptor<List<MemoView>>()
+        memoRepository.searchMemos("").observeForever(observer)
 
-        this.forEachIndexed { index, memoView ->
-            memoView.assertMemo(memos[index])
-        }
-    }
+        memoRepository.insertMemos(listOf(
+                Memo("1"),
+                Memo("2")
+        ))
 
-    private fun MemoView.assertMemo(other: Memo) {
-        this.memo.id `should not be` other.id
+        val expectLabels = listOf(Label("1", 1), Label("2", 1))
+        val labelRepository = LabelRepository(db)
 
-        this.memo `should equal` other.copy(id = this.memo.id)
+        labelRepository.insertLabels(expectLabels)
+        labelRepository.insertLabel(Label("3", 2))
+
+        verify(observer, times(4)).onChanged(captor.capture())
+
+        captor.lastValue.size `should equal` 2
+        captor.lastValue.first().labels?.map { it.label } `should equal` listOf("3")
+        captor.lastValue[1].labels?.map { it.label } `should equal` listOf("1", "2")
     }
 }
