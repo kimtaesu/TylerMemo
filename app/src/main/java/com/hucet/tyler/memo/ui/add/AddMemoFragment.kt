@@ -14,6 +14,7 @@ import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.databinding.FragmentAddMemoBinding
+import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
@@ -22,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AddMemoFragment : Fragment(), Injectable {
+class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
     companion object {
         fun newInstance(memo: Memo): AddMemoFragment {
             return AddMemoFragment().apply {
@@ -80,7 +81,6 @@ class AddMemoFragment : Fragment(), Injectable {
     private fun initViews() {
         add_memo_text.hint = RandomGreetingHintGenerator.generate()
 
-        println("!!!!!!!!! ${memo}")
         viewModel.findMemoViewById(memo.id).observe(this, Observer {
             Timber.d("========== Observer ==========\n" +
                     "labels: ${it}")
@@ -93,6 +93,10 @@ class AddMemoFragment : Fragment(), Injectable {
                 flexWrap = FlexWrap.WRAP
             }
         }
+    }
+
+    override fun onColorChanged(colorTheme: ColorTheme) {
+        memo.colorTheme = colorTheme
     }
 }
 

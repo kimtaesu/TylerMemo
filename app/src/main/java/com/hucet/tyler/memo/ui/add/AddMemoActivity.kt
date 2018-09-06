@@ -14,6 +14,7 @@ import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
@@ -25,7 +26,6 @@ import javax.inject.Inject
 
 interface ColorThemeView {
     fun onColorChanged(colorTheme: ColorTheme)
-    fun onColorClose()
 }
 
 class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView, AddMemoNavigation {
@@ -78,22 +78,14 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun onColorChanged(colorTheme: ColorTheme) {
-        Observable
-                .defer {
-                    repository.updateColorTheme(colorTheme, memo.id)
-                    Observable.just(true)
-                }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
-    }
-
-    override fun onColorClose() {
-        supportFragmentManager.popBackStack(TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        setToolbarColor(colorTheme)
+        (supportFragmentManager.findFragmentById(R.id.content) as? ColorThemeView)?.onColorChanged(colorTheme)
     }
 
     private fun setToolbarColor(colorTheme: ColorTheme) {
         toolbar.setBackgroundColor(colorTheme.color)
         toolbar.setTitleTextColor(colorTheme.textColor)
+        RevealAnimationUtils.animateRevealShow(toolbar)
     }
 
     override fun navigateMakeLabel() {

@@ -16,7 +16,7 @@ data class ColorTheme(
         val default = Theme.WHITE
 
         enum class Theme(val colorTheme: ColorTheme) {
-            WHITE(ColorTheme("White", Color.WHITE, Color.BLACK)),
+            WHITE(ColorTheme("WHITE", Color.WHITE, Color.BLACK)),
             RED(ColorTheme("RED", Color.parseColor("#F44336"), Color.WHITE)),
             PINK(ColorTheme("PINK", Color.parseColor("#E91E63"), Color.WHITE)),
             PURPLE(ColorTheme("PURPLE", Color.parseColor("#673AB7"), Color.WHITE)),

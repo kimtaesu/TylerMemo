@@ -7,6 +7,7 @@ import android.view.animation.Interpolator
 
 object RevealAnimationUtils {
     fun animateRevealShow(viewRoot: View, interpolator: Interpolator = AccelerateInterpolator(), duration: Long = 500) {
+        if (!viewRoot.isShown) return
         val cx = (viewRoot.left + viewRoot.right) / 2
         val cy = (viewRoot.top + viewRoot.bottom) / 2
         val finalRadius = Math.max(viewRoot.width, viewRoot.height)

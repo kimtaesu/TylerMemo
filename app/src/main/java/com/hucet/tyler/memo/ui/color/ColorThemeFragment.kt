@@ -3,6 +3,7 @@ package com.hucet.tyler.memo.ui.color
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.ui.add.ColorThemeView
 import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.db.model.ColorTheme
+import com.hucet.tyler.memo.ui.add.AddMemoActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_color_theme.*
 import javax.inject.Inject
@@ -59,7 +61,7 @@ class ColorThemeFragment : Fragment(), Injectable {
             adapter = this@ColorThemeFragment.adapter
         }
         close.setOnClickListener {
-            (activity as? ColorThemeView)?.onColorClose()
+            activity?.supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         adapter.submitList(ColorTheme.generate())
     }
