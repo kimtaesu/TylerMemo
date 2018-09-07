@@ -5,9 +5,6 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.common.SpacesItemDecoration
-import com.hucet.tyler.memo.utils.Util
-import kotlinx.android.synthetic.main.fragment_color_theme.*
 
 class AddMemoToolbox : ConstraintLayout {
     private val layoutInflater by lazy {

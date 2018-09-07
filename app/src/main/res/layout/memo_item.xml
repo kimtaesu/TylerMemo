@@ -6,8 +6,8 @@
   <data>
 
     <variable
-      name="memo"
-      type="com.hucet.tyler.memo.db.model.Memo" />
+      name="memoView"
+      type="com.hucet.tyler.memo.dto.MemoView" />
   </data>
 
   <android.support.v7.widget.CardView
@@ -24,20 +24,16 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@{memo.text}"
+        android:text="@{memoView.memo.text}"
         tools:text="text" />
 
-      <com.hucet.tyler.memo.ui.view.SummaryLabelsView
-        android:id="@+id/summaryLabels"
+      <TextView
+        android:id="@+id/summayLabels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text"
         app:layout_constraintTop_toBottomOf="@+id/text"
-        tools:layout_height="100dp"
-        tools:layout_width="100dp"></com.hucet.tyler.memo.ui.view.SummaryLabelsView>
+        app:spanLabels="@{memoView.labels}"
+        tools:text="summayLabels" />
     </android.support.constraint.ConstraintLayout>
   </android.support.v7.widget.CardView>
 </layout>
