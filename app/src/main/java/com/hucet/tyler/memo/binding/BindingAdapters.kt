@@ -18,14 +18,9 @@ import timber.log.Timber
 
 @BindingAdapter("bind:spanLabels")
 fun spanLabels(view: TextView, labels: List<Label>) {
-    val joinString = labels.joinToString(separator = ",") { it.label }
     view.text = SpannableStringBuilder(" ").apply {
-        runBlocking {
-            for (span in SpanTokenizer.generateToken(joinString)) {
-                Timber.d("span ${span}")
-                append(span.s, RoundedBackgroundSpan(view.context, Color.RED, Color.WHITE, 100f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
+        labels.forEach {
+            append(it.label, RoundedBackgroundSpan(view.context, Color.RED, Color.WHITE, 12f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
-    println("!!!!!!!! span")
 }
