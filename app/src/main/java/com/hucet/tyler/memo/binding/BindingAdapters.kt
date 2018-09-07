@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.widget.TextView
-import com.hucet.tyler.memo.common.SpanTokenizer
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.ui.view.RoundedBackgroundSpan
 import kotlinx.coroutines.experimental.async
