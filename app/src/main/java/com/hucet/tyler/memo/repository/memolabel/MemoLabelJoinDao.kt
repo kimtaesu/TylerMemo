@@ -73,6 +73,7 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
     abstract fun deleteById(memoId: Long, labelId: Long)
 
     @Transaction
+    @TypeConverters(LabelIdGroupSplitConverter::class)
     @Query("""
         SELECT *, (SELECT GROUP_CONCAT(labels.label_id)
         FROM memo_label_join
