@@ -22,7 +22,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [RoomModule::class, ViewModelModule::class])
+@Module(includes = [RoomModule::class, ViewModelModule::class, RepositoryModule::class])
 class AppModule {
     @Singleton
     @Provides

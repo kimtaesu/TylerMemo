@@ -5,8 +5,8 @@ import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import com.hannesdorfmann.mosby3.mvp.MvpView
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.repository.MemoRepository
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.memo.MemoRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

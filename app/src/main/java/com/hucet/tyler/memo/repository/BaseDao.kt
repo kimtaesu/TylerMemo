@@ -1,4 +1,4 @@
-package com.hucet.tyler.memo.db
+package com.hucet.tyler.memo.repository
 
 import android.arch.persistence.room.*
 

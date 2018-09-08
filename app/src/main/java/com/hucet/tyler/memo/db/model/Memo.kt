@@ -1,12 +1,10 @@
 package com.hucet.tyler.memo.db.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.os.Bundle
 import android.os.Parcelable
 import com.hucet.tyler.memo.ArgKeys
+import com.hucet.tyler.memo.db.converter.ArrayCheckItemConverter
 import com.hucet.tyler.memo.db.model.Memo.Companion.MEMO_TABLE
 import kotlinx.android.parcel.Parcelize
 
@@ -19,6 +17,9 @@ data class Memo(
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         val createAt: Long = System.currentTimeMillis(),
+//        @Embedded
+//        @TypeConverters(ArrayCheckItemConverter::class)
+//        var checkItems: List<CheckItem> = emptyList(),
         @Embedded
         var colorTheme: ColorTheme = ColorTheme.default.colorTheme,
         @PrimaryKey(autoGenerate = true)
@@ -34,3 +35,9 @@ data class Memo(
 
 @Parcelize
 data class MemoAttribute(val isPin: Boolean) : Parcelable
+
+@Parcelize
+data class CheckItem(
+        val name: String,
+        val done: Boolean
+) : Parcelable

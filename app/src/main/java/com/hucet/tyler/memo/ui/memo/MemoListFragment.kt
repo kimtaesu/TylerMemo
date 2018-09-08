@@ -65,15 +65,10 @@ class MemoListFragment : Fragment(), Injectable {
                 flexDirection = FlexDirection.ROW
             }
         }
-
-        viewModel.fetchMemos.observe(this, Observer {
-            Timber.d("========== Observer ==========")
-            it?.forEach {
-                Timber.d("memo: ${it.memo}")
-                Timber.d("checkItems: ${it.checkItems}")
-            }
-            adapter.submitList(it)
-        })
+//
+//        viewModel.fetchMemos.observe(this, Observer {
+//            Timber.d("========== Observer ==========")
+//        })
 
         viewModel.showMemos("")
     }

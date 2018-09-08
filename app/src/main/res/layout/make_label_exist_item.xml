@@ -6,7 +6,7 @@
   <data>
     <variable
       name="checkedLabel"
-      type="com.hucet.tyler.memo.vo.CheckableLabelView" />
+      type="com.hucet.tyler.memo.dto.CheckableLabelView" />
   </data>
 
   <android.support.constraint.ConstraintLayout

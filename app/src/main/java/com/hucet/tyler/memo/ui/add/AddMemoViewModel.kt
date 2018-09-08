@@ -1,14 +1,12 @@
 package com.hucet.tyler.memo.ui.add
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.common.DispoableViewModel
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.repository.MemoLabelRepository
-import com.hucet.tyler.memo.repository.MemoRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
+import com.hucet.tyler.memo.repository.memo.MemoRepository
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,8 +21,8 @@ class AddMemoViewModel @Inject constructor(
             memoLabelRepository.getLabelByMemo(memoId)
 
     fun updateMemo(memo: Memo) {
-        launch {
-            memoRepository.updateMemos(listOf(memo))
+        launch(parentJob) {
+            //            memoRepository.updateMemos(listOf(memo))
         }
     }
 }

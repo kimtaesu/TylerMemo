@@ -3,15 +3,16 @@ package com.hucet.tyler.memo.repository
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
-import com.hucet.tyler.memo.db.model.Label
-import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.db.model.*
+import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.utils.TestUtils
-import com.hucet.tyler.memo.vo.CheckableLabelView
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
+import com.hucet.tyler.memo.dto.CheckableLabelView
+import com.hucet.tyler.memo.repository.label.LabelRepository
+import com.hucet.tyler.memo.repository.memo.MemoRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
+import com.nhaarman.mockito_kotlin.*
+import org.amshove.kluent.`should equal`
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.junit.After
@@ -19,8 +20,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -40,20 +39,15 @@ class MemoLabelRepositoryTest {
 
     private lateinit var db: MemoDb
 
-    @Captor
-    private lateinit var labelCaptor: ArgumentCaptor<List<Label>>
-
-    @Captor
-    private lateinit var memoCaptor: ArgumentCaptor<List<Memo>>
-
-    @Captor
-    private lateinit var checkLabelCaptor: ArgumentCaptor<List<CheckableLabelView>>
-
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         db = MemoDb.getInstanceInMemory(RuntimeEnvironment.application)
-        repository = MemoLabelRepository(db)
+        repository = MemoLabelRepository(
+                db.memoLabelJoinDao(),
+                LabelRepository.LabelRepositoryImpl(db.labelDao()),
+                MemoRepository.MemoRepositoryImpl(db.memoDao())
+        )
     }
 
     @After
@@ -65,37 +59,39 @@ class MemoLabelRepositoryTest {
     fun `CheckableLabelView checked true associate with memo id`() {
         val chechedMemoId = 1L
         val observer = mock<Observer<List<CheckableLabelView>>>()
+        val captor = argumentCaptor<List<CheckableLabelView>>()
         TestUtils.generateMemoLabel(db, 2)
         reset(observer)
 
         repository.searchCheckedLabels(chechedMemoId).observeForever(observer)
         repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, 1))
 
-        verify(observer, times(2)).onChanged(checkLabelCaptor.capture())
+        verify(observer, times(2)).onChanged(captor.capture())
 
-        checkLabelCaptor.value.size shouldEqual 2
-        checkLabelCaptor.value[0].isChecked shouldEqual true
-        checkLabelCaptor.value[1].isChecked shouldEqual false
+        captor.lastValue.size shouldEqual 2
+        captor.lastValue[0].isChecked shouldEqual true
+        captor.lastValue[1].isChecked shouldEqual false
 
 
-        val labelId = LabelRepository(db).insertLabel(Label("label_3"))
-        verify(observer, times(3)).onChanged(checkLabelCaptor.capture())
+        val labelId = repository.insertLabel(Label("label_3"))
+        verify(observer, times(3)).onChanged(captor.capture())
 
         labelId?.run {
             repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, labelId))
         }
 
-        verify(observer, times(4)).onChanged(checkLabelCaptor.capture())
+        verify(observer, times(4)).onChanged(captor.capture())
 
-        checkLabelCaptor.value.size shouldEqual 3
-        checkLabelCaptor.value[0].isChecked shouldEqual true
-        checkLabelCaptor.value[1].isChecked shouldEqual false
-        checkLabelCaptor.value[2].isChecked shouldEqual true
+        captor.lastValue.size shouldEqual 3
+        captor.lastValue[0].isChecked shouldEqual true
+        captor.lastValue[1].isChecked shouldEqual false
+        captor.lastValue[2].isChecked shouldEqual true
     }
 
     @Test
     fun `get labels by memo id`() {
         val observer = mock<Observer<List<Label>>>()
+        val captor = argumentCaptor<List<Label>>()
         TestUtils.generateMemoLabel(db)
         reset(observer)
 
@@ -108,16 +104,17 @@ class MemoLabelRepositoryTest {
         repository.insertMemoLabelJoin(MemoLabelJoin(2, 2))
         repository.insertMemoLabelJoin(MemoLabelJoin(3, 2))
 
-        verify(observer, times(5)).onChanged(labelCaptor.capture())
+        verify(observer, times(5)).onChanged(captor.capture())
 
-        labelCaptor.value.size shouldEqual 2
-        labelCaptor.value[0].id shouldEqual 1
-        labelCaptor.value[1].id shouldEqual 2
+        captor.lastValue.size shouldEqual 2
+        captor.lastValue[0].id shouldEqual 1
+        captor.lastValue[1].id shouldEqual 2
     }
 
     @Test
     fun `get memos by label id`() {
         val observer = mock<Observer<List<Memo>>>()
+        val captor = argumentCaptor<List<Memo>>()
         TestUtils.generateMemoLabel(db)
         reset(observer)
 
@@ -130,10 +127,80 @@ class MemoLabelRepositoryTest {
         repository.insertMemoLabelJoin(MemoLabelJoin(2, 2))
         repository.insertMemoLabelJoin(MemoLabelJoin(3, 1))
 
-        verify(observer, times(5)).onChanged(memoCaptor.capture())
+        verify(observer, times(5)).onChanged(captor.capture())
 
-        memoCaptor.value.size shouldEqual 2
-        memoCaptor.value[0].id shouldEqual 1
-        memoCaptor.value[1].id shouldEqual 3
+        captor.lastValue.size shouldEqual 2
+        captor.lastValue[0].id shouldEqual 1
+        captor.lastValue[1].id shouldEqual 3
+    }
+
+    @Test
+    fun `search memo with labels`() {
+        val observer = mock<Observer<List<MemoView>>>()
+        val captor = argumentCaptor<List<MemoView>>()
+        val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
+        reset(observer)
+
+        repository.searchMemoView(memos[0].text).observeForever(observer)
+        verify(observer, times(1)).onChanged(captor.capture())
+
+        captor.lastValue.size shouldEqual 1
+        captor.lastValue[0].memo shouldEqual memos[0]
+    }
+
+    @Test
+    fun `memo with labels`() {
+        val observer = mock<Observer<List<MemoView>>>()
+        val captor = argumentCaptor<List<MemoView>>()
+
+        val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
+        reset(observer)
+
+        repository.searchMemoView("").observeForever(observer)
+
+        repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
+        repository.insertMemoLabelJoin(MemoLabelJoin(1, 2))
+
+        repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
+
+        verify(observer, times(4)).onChanged(captor.capture())
+
+        captor.lastValue.size shouldEqual 3
+
+        captor.lastValue[0].memo shouldEqual memos[0]
+        captor.lastValue[0].labels shouldEqual labels.filterId(arrayOf(1L, 2L))
+
+        captor.lastValue[1].labels shouldEqual labels.filterId(arrayOf(3L))
+        captor.lastValue[1].memo shouldEqual memos[1]
+
+        captor.lastValue[2].labels shouldEqual emptyList()
+        captor.lastValue[2].memo shouldEqual memos[2]
+    }
+
+    @Test
+    fun `pin true 정렬 순위`() {
+        val observer = mock<Observer<List<MemoView>>>()
+        val captor = argumentCaptor<List<MemoView>>()
+
+        val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
+        val memos = listOf(Memo("1", MemoAttribute(false), id = 1), expect)
+
+        repository.searchMemoView("").observeForever(observer)
+        repository.insertMemos(memos)
+
+        // Pin true 메모 추가
+        val expect2 = Memo("Pin true2", MemoAttribute(true), id = 31)
+        repository.insertMemos(listOf(expect2))
+
+        verify(observer, times(3)).onChanged(captor.capture())
+        captor.secondValue.first() `should equal` expect
+        captor.thirdValue.first() `should equal` expect2
+    }
+
+}
+
+private fun <E : HasId> List<E>.filterId(ids: Array<Long>): List<E> {
+    return this.filter {
+        it.id in ids
     }
 }

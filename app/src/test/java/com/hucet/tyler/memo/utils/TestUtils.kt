@@ -3,26 +3,29 @@ package com.hucet.tyler.memo.utils
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.repository.LabelRepository
-import com.hucet.tyler.memo.repository.MemoRepository
+import com.hucet.tyler.memo.repository.label.LabelRepository
+import com.hucet.tyler.memo.repository.memo.MemoRepository
 
 object TestUtils {
-    fun generateMemoLabel(db: MemoDb, count: Int = 5) {
-        MemoRepository(db).apply {
-            val memos = listOf(0 until count)
-                    .flatten()
-                    .mapIndexed { index, i ->
-                        Memo("memo_${i + 1}")
-                    }
+    fun generateMemoLabel(db: MemoDb, count: Int = 5): Pair<List<Memo>, List<Label>> {
+        val memos = listOf(0 until count)
+                .flatten()
+                .mapIndexed { index, i ->
+                    Memo("memo_${i + 1}", id = (i + 1).toLong())
+                }
+
+        val labels = listOf(0 until count)
+                .flatten()
+                .mapIndexed { index, i ->
+                    Label("label_${i + 1}", id = (i + 1).toLong())
+                }
+
+        MemoRepository.MemoRepositoryImpl(db.memoDao()).apply {
             insertMemos(memos)
         }
-        LabelRepository(db).apply {
-            val labels = listOf(0 until count)
-                    .flatten()
-                    .mapIndexed { index, i ->
-                        Label("label_${i + 1}")
-                    }
+        LabelRepository.LabelRepositoryImpl(db.labelDao()).apply {
             insertLabels(labels)
         }
+        return memos to labels
     }
 }

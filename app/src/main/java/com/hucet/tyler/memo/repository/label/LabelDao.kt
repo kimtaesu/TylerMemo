@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.hucet.tyler.memo.db
+package com.hucet.tyler.memo.repository.label
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Query
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.utils.SqlQuery
-import com.hucet.tyler.memo.vo.CheckableLabelView
 import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.repository.BaseDao
 
 /**
  * Interface for database access on Repo related operations.
@@ -32,19 +32,19 @@ import com.hucet.tyler.memo.db.model.Label
 abstract class LabelDao : BaseDao<Label> {
     @Query("""
         select *
-        from labels
-         ${SqlQuery.ORDER_BY_DESC}
-         """)
-    abstract fun all(): LiveData<List<Label>>
-
-    @Transaction
-    @Query("""
-        select *
             from labels
             where label LIKE  :keyword
-            ${SqlQuery.ORDER_BY_DESC}
         """
     )
     abstract fun searchLabels(keyword: String): LiveData<List<Label>>
+
+    @Query("""
+        select *
+            from labels
+            where labels.label_id LIKE  :labelId
+            limit 1
+        """
+    )
+    abstract fun getLabelById(labelId: Long): Label
 
 }

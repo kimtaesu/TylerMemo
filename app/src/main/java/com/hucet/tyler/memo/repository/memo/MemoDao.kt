@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.hucet.tyler.memo.db
+package com.hucet.tyler.memo.repository.memo
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.BaseDao
 
 /**
  * Interface for database access on Repo related operations.
@@ -28,20 +28,18 @@ import com.hucet.tyler.memo.db.model.Memo
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
-    @Transaction
     @Query("""select *
         from memos
         where text LIKE :keyword
         order by isPin desc, createAt desc
         """)
-    abstract fun searchMemo(keyword: String): LiveData<List<MemoView>>
+    abstract fun searchMemo(keyword: String): LiveData<List<Memo>>
 
-    @Transaction
     @Query("""select *
         from memos
         where memo_id = :id
         """)
-    abstract fun findMemoById(id: Long): LiveData<MemoView>
+    abstract fun findMemoById(id: Long): LiveData<Memo>
 
     @Query("""
         update memos
@@ -50,4 +48,6 @@ abstract class MemoDao : BaseDao<Memo> {
         where memo_id = :memoId
         """)
     abstract fun updateColorTheme(label: String, color: Int, textColor: Int, memoId: Long)
+
+
 }

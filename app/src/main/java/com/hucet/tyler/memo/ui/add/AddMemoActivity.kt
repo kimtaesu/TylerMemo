@@ -5,23 +5,19 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.repository.MemoRepository
-import com.hucet.tyler.memo.ui.color.ColorThemeFragment
-import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.memo.MemoRepository
+import com.hucet.tyler.memo.ui.color.ColorThemeFragment
+import com.hucet.tyler.memo.ui.label.MakeLabelActivity
 import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_add_memo.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
-import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
 interface ColorThemeView {

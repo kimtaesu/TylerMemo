@@ -52,10 +52,10 @@ class MakeLabelFragment : Fragment(), Injectable {
                     label_list.getChildAdapterPosition(it)
                 },
                 {
-                    if (it.isChecked)
-                        viewModel.deleteMemoLabel(memo.id, it.label_id)
-                    else
-                        viewModel.createMemoLabel(memo.id, it.label_id)
+//                    if (it.isChecked)
+//                        viewModel.deleteMemoLabel(memo.id, it.label_id)
+//                    else
+//                        viewModel.createMemoLabel(memo.id, it.label_id)
                 },
                 {
                     viewModel.createLabel(it, memo.id)

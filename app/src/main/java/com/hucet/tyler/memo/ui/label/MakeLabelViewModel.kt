@@ -6,11 +6,10 @@ import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.common.DispoableViewModel
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
-import com.hucet.tyler.memo.repository.LabelRepository
-import com.hucet.tyler.memo.repository.MemoLabelRepository
+import com.hucet.tyler.memo.repository.label.LabelRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +55,7 @@ class MakeLabelViewModel @Inject constructor(
     }
 
     fun createLabel(keyword: String, memoId: Long) {
-        launch(CommonPool, parent = parentJob) {
+        launch(parent = parentJob) {
             val labelId = labelRepository.insertLabel(Label(keyword))
             labelId?.run {
                 memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
@@ -65,14 +64,8 @@ class MakeLabelViewModel @Inject constructor(
     }
 
     fun createMemoLabel(memoId: Long, labelId: Long) {
-        launch(CommonPool, parent = parentJob) {
+        launch(parent = parentJob) {
             memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
-        }
-    }
-
-    fun deleteMemoLabel(memoId: Long, labelId: Long) {
-        launch(CommonPool, parent = parentJob) {
-            memoLabelRepository.deleteById(memoId, labelId)
         }
     }
 }
