@@ -20,7 +20,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
+import android.arch.persistence.room.TypeConverters
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.db.converter.LabelIdGroupSplitConverter
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin

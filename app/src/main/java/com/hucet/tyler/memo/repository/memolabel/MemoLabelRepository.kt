@@ -43,15 +43,8 @@ class MemoLabelRepository @Inject constructor(
         return Transformations.map(dao.searchMemoView(keyword.fullTextSql())) {
             it.map {
                 val label = it.labelIds?.map {
-                    val id = try {
-                        it.toLong()
-                    } catch (e: NumberFormatException) {
-                        null
-                    }
-                    id?.run {
-                        labelRepository.getLabelById(id)
-                    }
-                }?.filterNotNull()
+                    labelRepository.getLabelById(it)
+                }
                 MemoView(it.memo, label ?: emptyList())
             }
         }
