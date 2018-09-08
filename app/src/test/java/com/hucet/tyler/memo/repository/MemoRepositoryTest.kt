@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.verification.VerificationMode
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
@@ -150,20 +151,30 @@ class MemoRepositoryTest {
         memoRepository.searchMemos("").observeForever(observer)
 
         memoRepository.insertMemos(listOf(
-                Memo("1"),
-                Memo("2")
+                Memo("1", id = 1),
+                Memo("2", id = 2),
+                Memo("5", id = 5)
+
         ))
 
-        val expectLabels = listOf(Label("1", 1), Label("2", 1))
+        val expectLabels = listOf(
+                Label("1", 1),
+                Label("2", 2),
+                Label("3", 3)
+                )
         val labelRepository = LabelRepository(db)
 
         labelRepository.insertLabels(expectLabels)
-        labelRepository.insertLabel(Label("3", 2))
-
+//        labelRepository.insertLabel(Label("3", 2))
+        MemoLabelRepository(db).apply {
+            insertMemoLabelJoin(MemoLabelJoin(1, 1))
+            insertMemoLabelJoin(MemoLabelJoin(1, 2))
+        }
         verify(observer, times(4)).onChanged(captor.capture())
 
         captor.lastValue.size `should equal` 2
-        captor.lastValue.first().labels?.map { it.label } `should equal` listOf("3")
-        captor.lastValue[1].labels?.map { it.label } `should equal` listOf("1", "2")
+        captor.lastValue.forEach {
+            println(it)
+        }
     }
 }

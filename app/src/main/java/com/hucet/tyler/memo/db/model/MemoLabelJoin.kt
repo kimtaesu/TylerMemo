@@ -9,7 +9,6 @@ import com.hucet.tyler.memo.db.model.MemoLabelJoin.Companion.FOREIGN_MEMO_ID
 import com.hucet.tyler.memo.db.model.MemoLabelJoin.Companion.MEMO_LABEL_JOIN_TABLE
 
 @Entity(tableName = MEMO_LABEL_JOIN_TABLE,
-        primaryKeys = [FOREIGN_MEMO_ID, FOREIGN_LABEL_ID],
         foreignKeys = [
             (ForeignKey(
                     entity = Memo::class,
@@ -25,10 +24,15 @@ data class MemoLabelJoin(
         val memoId: Long,
 
         @ColumnInfo(name = FOREIGN_LABEL_ID)
-        val labelId: Long
+        val labelId: Long,
+
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = MEMO_LABEL_JOIN_ID)
+        var id: Long = 0
 ) {
     companion object {
         const val MEMO_LABEL_JOIN_TABLE = "memo_label_join"
+        const val MEMO_LABEL_JOIN_ID = "memo_label_join_id"
         const val FOREIGN_MEMO_ID = "memo_id"
         const val FOREIGN_LABEL_ID = "label_id"
     }
