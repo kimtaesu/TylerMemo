@@ -29,7 +29,6 @@ data class Memo(
         const val MEMO_TABLE = "memos"
         const val MEMO_ID = "memo_id"
         fun empty(): Memo = Memo("")
-
     }
 }
 

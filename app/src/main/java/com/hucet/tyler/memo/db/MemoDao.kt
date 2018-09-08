@@ -36,11 +36,12 @@ abstract class MemoDao : BaseDao<Memo> {
         """)
     abstract fun searchMemo(keyword: String): LiveData<List<MemoView>>
 
+    @Transaction
     @Query("""select *
         from memos
         where memo_id = :id
         """)
-    abstract fun findMemo(id: Long): LiveData<MemoView>
+    abstract fun findMemoById(id: Long): LiveData<MemoView>
 
     @Query("""
         update memos

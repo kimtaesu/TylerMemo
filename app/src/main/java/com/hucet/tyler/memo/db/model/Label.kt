@@ -13,9 +13,6 @@ import kotlinx.android.parcel.Parcelize
 )
 data class Label(
         val label: String,
-        @ColumnInfo(name = Memo.MEMO_ID)
-        val memoId: Long,
-
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = LABEL_ID)
         override var id: Long = 0

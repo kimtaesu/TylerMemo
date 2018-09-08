@@ -32,8 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/text"
-        app:spanLabels="@{memoView.labels}"
         tools:text="summayLabels" />
+      <!--app:spanLabels="@{memoView.labels}"-->
     </android.support.constraint.ConstraintLayout>
   </android.support.v7.widget.CardView>
 </layout>

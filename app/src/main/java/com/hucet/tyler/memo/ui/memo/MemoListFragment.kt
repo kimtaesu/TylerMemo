@@ -70,7 +70,6 @@ class MemoListFragment : Fragment(), Injectable {
             Timber.d("========== Observer ==========")
             it?.forEach {
                 Timber.d("memo: ${it.memo}")
-                Timber.d("labels: ${it.labels}")
                 Timber.d("checkItems: ${it.checkItems}")
             }
             adapter.submitList(it)

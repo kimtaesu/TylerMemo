@@ -20,7 +20,7 @@ object TestUtils {
             val labels = listOf(0 until count)
                     .flatten()
                     .mapIndexed { index, i ->
-                        Label("label_${i + 1}", (index + 1).toLong())
+                        Label("label_${i + 1}")
                     }
             insertLabels(labels)
         }

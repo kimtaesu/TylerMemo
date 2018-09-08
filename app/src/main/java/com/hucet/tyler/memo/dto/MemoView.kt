@@ -11,8 +11,19 @@ class MemoView {
     @Embedded
     var memo: Memo = Memo.empty()
 
-    @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = Label::class)
-    var labels: List<Label>? = null
+//    @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = Label::class)
+//    var labels: List<Label>? = null
+
+    @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = CheckItem::class)
+    var checkItems: List<CheckItem>? = null
+}
+
+class MemoView2 {
+    @Embedded
+    var memo: Memo = Memo.empty()
+
+//    @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = Label::class)
+//    var labels: List<Label>? = null
 
     @Relation(parentColumn = MEMO_ID, entityColumn = MEMO_ID, entity = CheckItem::class)
     var checkItems: List<CheckItem>? = null

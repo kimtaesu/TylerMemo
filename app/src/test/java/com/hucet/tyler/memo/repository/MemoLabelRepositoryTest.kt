@@ -78,7 +78,7 @@ class MemoLabelRepositoryTest {
         checkLabelCaptor.value[1].isChecked shouldEqual false
 
 
-        val labelId = LabelRepository(db).insertLabel(Label("label_3", 1))
+        val labelId = LabelRepository(db).insertLabel(Label("label_3"))
         verify(observer, times(3)).onChanged(checkLabelCaptor.capture())
 
         labelId?.run {

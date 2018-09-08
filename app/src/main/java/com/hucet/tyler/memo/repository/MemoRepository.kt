@@ -40,10 +40,6 @@ class MemoRepository @Inject constructor(
         memoDao.update(memos)
     }
 
-    fun findMemoById(id: Long): LiveData<MemoView> {
-        return memoDao.findMemo(id)
-    }
-
     fun updateColorTheme(colorTheme: ColorTheme, memoId: Long) {
         val (label, color, textColor) = colorTheme
         return memoDao.updateColorTheme(label, color, textColor, memoId)
