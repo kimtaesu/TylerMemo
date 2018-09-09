@@ -3,6 +3,7 @@ package com.hucet.tyler.memo.utils
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.checkitem.CheckItemRepository
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 
@@ -20,7 +21,7 @@ object TestUtils {
                     Label("label_${i + 1}", id = (i + 1).toLong())
                 }
 
-        MemoRepository.MemoRepositoryImpl(db.memoDao()).apply {
+        MemoRepository.MemoRepositoryImpl(db.memoDao(), CheckItemRepository.CheckItemRepositoryImpl(db.checkItemDao())).apply {
             insertMemos(memos)
         }
         LabelRepository.LabelRepositoryImpl(db.labelDao()).apply {

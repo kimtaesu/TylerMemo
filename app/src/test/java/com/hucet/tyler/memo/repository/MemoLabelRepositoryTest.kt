@@ -4,10 +4,11 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.db.model.*
-import com.hucet.tyler.memo.dto.MemoView
+import com.hucet.tyler.memo.repository.checkitem.CheckItemRepository
+import com.hucet.tyler.memo.ui.memo.MemoPreviewView
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.utils.TestUtils
-import com.hucet.tyler.memo.dto.CheckableLabelView
+import com.hucet.tyler.memo.ui.label.CheckableLabelView
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
@@ -46,7 +47,7 @@ class MemoLabelRepositoryTest {
         repository = MemoLabelRepository(
                 db.memoLabelJoinDao(),
                 LabelRepository.LabelRepositoryImpl(db.labelDao()),
-                MemoRepository.MemoRepositoryImpl(db.memoDao())
+                MemoRepository.MemoRepositoryImpl(db.memoDao(), CheckItemRepository.CheckItemRepositoryImpl(db.checkItemDao()))
         )
     }
 
@@ -136,8 +137,8 @@ class MemoLabelRepositoryTest {
 
     @Test
     fun `search memo with labels`() {
-        val observer = mock<Observer<List<MemoView>>>()
-        val captor = argumentCaptor<List<MemoView>>()
+        val observer = mock<Observer<List<MemoPreviewView>>>()
+        val captor = argumentCaptor<List<MemoPreviewView>>()
         val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
         reset(observer)
 
@@ -150,8 +151,8 @@ class MemoLabelRepositoryTest {
 
     @Test
     fun `memo with labels`() {
-        val observer = mock<Observer<List<MemoView>>>()
-        val captor = argumentCaptor<List<MemoView>>()
+        val observer = mock<Observer<List<MemoPreviewView>>>()
+        val captor = argumentCaptor<List<MemoPreviewView>>()
 
         val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
         reset(observer)
@@ -179,8 +180,8 @@ class MemoLabelRepositoryTest {
 
     @Test
     fun `pin true 정렬 순위`() {
-        val observer = mock<Observer<List<MemoView>>>()
-        val captor = argumentCaptor<List<MemoView>>()
+        val observer = mock<Observer<List<MemoPreviewView>>>()
+        val captor = argumentCaptor<List<MemoPreviewView>>()
 
         val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
         val memos = listOf(Memo("1", MemoAttribute(false), id = 1), expect)
@@ -199,8 +200,8 @@ class MemoLabelRepositoryTest {
 
     @Test
     fun `memo with check items`() {
-        val observer = mock<Observer<List<MemoView>>>()
-        val captor = argumentCaptor<List<MemoView>>()
+        val observer = mock<Observer<List<MemoPreviewView>>>()
+        val captor = argumentCaptor<List<MemoPreviewView>>()
 
         val memos = listOf(Memo("1", id = 1), Memo("2", id = 2))
 

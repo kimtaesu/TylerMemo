@@ -7,8 +7,8 @@ import com.hucet.tyler.memo.common.fullTextSql
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
-import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.dto.CheckableLabelView
+import com.hucet.tyler.memo.ui.memo.MemoPreviewView
+import com.hucet.tyler.memo.ui.label.CheckableLabelView
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import javax.inject.Inject
@@ -39,13 +39,13 @@ class MemoLabelRepository @Inject constructor(
         return dao.getMemoByLabel(labelId)
     }
 
-    fun searchMemoView(keyword: String): LiveData<List<MemoView>> {
+    fun searchMemoView(keyword: String): LiveData<List<MemoPreviewView>> {
         return Transformations.map(dao.searchMemoView(keyword.fullTextSql())) {
             it.map {
                 val label = it.labelIds?.map {
                     labelRepository.getLabelById(it)
                 }
-                MemoView(it.memo, label ?: emptyList())
+                MemoPreviewView(it.memo, label ?: emptyList())
             }
         }
     }

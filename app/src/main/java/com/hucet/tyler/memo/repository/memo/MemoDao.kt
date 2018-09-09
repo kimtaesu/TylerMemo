@@ -19,8 +19,11 @@ package com.hucet.tyler.memo.repository.memo
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.db.model.CheckItem
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.MemoAttribute
 import com.hucet.tyler.memo.repository.BaseDao
+import com.hucet.tyler.memo.ui.add.EditMemoView
 
 /**
  * Interface for database access on Repo related operations.
@@ -28,18 +31,12 @@ import com.hucet.tyler.memo.repository.BaseDao
 @Dao
 @OpenForTesting
 abstract class MemoDao : BaseDao<Memo> {
-    @Query("""select *
-        from memos
-        where text LIKE :keyword
-        order by isPin desc, createAt desc
-        """)
-    abstract fun searchMemo(keyword: String): LiveData<List<Memo>>
-
+    @Transaction
     @Query("""select *
         from memos
         where memo_id = :id
         """)
-    abstract fun findMemoById(id: Long): LiveData<Memo>
+    abstract fun findMemoById(id: Long): LiveData<EditMemoView>
 
     @Query("""
         update memos
@@ -49,5 +46,17 @@ abstract class MemoDao : BaseDao<Memo> {
         """)
     abstract fun updateColorTheme(label: String, color: Int, textColor: Int, memoId: Long)
 
+    @Query("""
+        update memos
+        set text = :text
+        where memo_id = :memoId
+        """)
+    abstract fun updateMemoText(memoId: Long, text: String)
 
+    @Query("""
+        update memos
+        set text = :isPin
+        where memo_id = :memoId
+        """)
+    abstract fun updateMemoAttr(memoId: Long, isPin: Boolean)
 }

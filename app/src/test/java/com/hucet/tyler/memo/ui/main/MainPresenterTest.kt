@@ -5,6 +5,7 @@ import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import com.hucet.tyler.memo.util.rx.RxImmediateSchedulerRule
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.checkitem.CheckItemRepository
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.*
@@ -32,7 +33,7 @@ class MainPresenterTest {
     @Before
     fun setUp() {
         db = MemoDb.getInstanceInMemory(RuntimeEnvironment.application)
-        repository = MemoRepository.MemoRepositoryImpl(db.memoDao())
+        repository = MemoRepository.MemoRepositoryImpl(db.memoDao(), CheckItemRepository.CheckItemRepositoryImpl(db.checkItemDao()))
         presenter = MainPresenter(context, repository)
         robot = MainPresenterRobot(presenter)
     }

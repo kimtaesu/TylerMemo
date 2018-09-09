@@ -13,6 +13,7 @@ data class ColorTheme(
 ) : Parcelable {
 
     companion object {
+        @JvmStatic
         val default = Theme.WHITE
 
         enum class Theme(val colorTheme: ColorTheme) {

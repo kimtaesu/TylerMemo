@@ -6,6 +6,7 @@ import javax.inject.Singleton
 import com.hucet.tyler.memo.repository.label.LabelDao
 import com.hucet.tyler.memo.repository.memo.MemoDao
 import com.hucet.tyler.memo.db.MemoDb
+import com.hucet.tyler.memo.repository.checkitem.CheckItemDao
 import com.hucet.tyler.memo.repository.memolabel.MemoLabelJoinDao
 import dagger.Module
 
@@ -28,6 +29,12 @@ class RoomModule {
     @Provides
     internal fun providesLabelDao(dataBase: MemoDb): LabelDao {
         return dataBase.labelDao()
+    }
+
+    @Singleton
+    @Provides
+    internal fun providesCheckItemDao(dataBase: MemoDb): CheckItemDao {
+        return dataBase.checkItemDao()
     }
 
     @Singleton

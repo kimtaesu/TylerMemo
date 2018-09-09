@@ -26,7 +26,7 @@ import com.hucet.tyler.memo.db.converter.LabelIdGroupSplitConverter
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
-import com.hucet.tyler.memo.dto.CheckableLabelView
+import com.hucet.tyler.memo.ui.label.CheckableLabelView
 import com.hucet.tyler.memo.repository.BaseDao
 import com.hucet.tyler.memo.repository.memo.MemoViewDto
 
