@@ -193,10 +193,20 @@ class MemoLabelRepositoryTest {
         repository.insertMemos(listOf(expect2))
 
         verify(observer, times(3)).onChanged(captor.capture())
-        captor.secondValue.first() `should equal` expect
-        captor.thirdValue.first() `should equal` expect2
+        captor.secondValue.first().memo `should equal` expect
+        captor.thirdValue.first().memo `should equal` expect2
     }
 
+    @Test
+    fun `memo with check items`() {
+        val observer = mock<Observer<List<MemoView>>>()
+        val captor = argumentCaptor<List<MemoView>>()
+
+        val memos = listOf(Memo("1", id = 1), Memo("2", id = 2))
+
+        repository.searchMemoView("").observeForever(observer)
+        repository.insertMemos(memos)
+    }
 }
 
 private fun <E : HasId> List<E>.filterId(ids: Array<Long>): List<E> {

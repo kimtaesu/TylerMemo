@@ -1,5 +1,6 @@
 package com.hucet.tyler.memo.repository.memo
 
+import android.arch.lifecycle.LiveData
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
@@ -11,7 +12,7 @@ interface MemoRepository {
     fun insertMemo(memo: Memo): Long?
     fun insertMemos(memos: List<Memo>): List<Long>
     fun updateColorTheme(colorTheme: ColorTheme, memoId: Long)
-
+    fun searchMemos(keyword: String): LiveData<Memo>
     @Singleton
     @OpenForTesting
     class MemoRepositoryImpl @Inject constructor(private val dao: MemoDao) : MemoRepository {

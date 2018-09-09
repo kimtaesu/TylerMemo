@@ -27,7 +27,7 @@ class MemoRepositoryTest {
     @get:Rule
     val rxImmediateSchedulerRule = RxImmediateSchedulerRule()
 
-    private lateinit var memoRepository: MemoRepository
+    private lateinit var repository: MemoRepository
 
     private lateinit var db: MemoDb
 
@@ -40,7 +40,7 @@ class MemoRepositoryTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         db = MemoDb.getInstanceInMemory(RuntimeEnvironment.application)
-//        memoRepository = MemoRepository(db)
+//        repository = MemoRepository(db)
         reset(observer)
     }
 
@@ -53,8 +53,8 @@ class MemoRepositoryTest {
 //    @Test
 //    fun `ko search text memo`() {
 //        val expect = Memo("하하", id = 3)
-//        memoRepository.searchMemos("하").observeForever(observer)
-//        memoRepository.insertMemos(listOf(expect, Memo("ㅁㄴㅇㄴㅇ", id = 1)))
+//        repository.searchMemos("하").observeForever(observer)
+//        repository.insertMemos(listOf(expect, Memo("ㅁㄴㅇㄴㅇ", id = 1)))
 //
 //        verify(observer, times(2)).onChanged(captor.capture())
 //
@@ -72,18 +72,18 @@ class MemoRepositoryTest {
 //        val checkItem = CheckItem("ddd", true, 2, 1)
 //
 //        // search memo observer 등록
-//        memoRepository.searchMemos("").observeForever(observer)
+//        repository.searchMemos("").observeForever(observer)
 //        verify(observer).onChanged(captor.capture())
 //
 ////        Insert a memo
-//        memoRepository.insertMemos(memos)
+//        repository.insertMemos(memos)
 ////      두번째 observer 호출
 //        verify(observer, times(2)).onChanged(captor.capture())
 //
 //        captor.value shouldContainAll memos
 //
 ////        Insert a check item
-//        memoRepository.insertCheckItems(listOf(checkItem))
+//        repository.insertCheckItems(listOf(checkItem))
 //
 ////      세번째 observer 호출
 //        verify(observer, times(3)).onChanged(captor.capture())
@@ -93,9 +93,9 @@ class MemoRepositoryTest {
 //
 //    @Test
 //    fun `change color theme`() {
-//        memoRepository.insertMemos(listOf(Memo("1", MemoAttribute(false))))
+//        repository.insertMemos(listOf(Memo("1", MemoAttribute(false))))
 //
-//        memoRepository.searchMemos("").observeForever(observer)
+//        repository.searchMemos("").observeForever(observer)
 //        verify(observer).onChanged(captor.capture())
 //
 //        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.WHITE.colorTheme))
@@ -103,30 +103,16 @@ class MemoRepositoryTest {
 //
 //        result.colorTheme = ColorTheme.Companion.Theme.BLUE.colorTheme
 //        // 메모 Theme 변경 White -> Blue
-//        memoRepository.updateMemos(listOf(result))
+//        repository.updateColorTheme(listOf(result))
 //        // observer 두번째 호출
 //        verify(observer, times(2)).onChanged(captor.capture())
 //
 //        Assert.assertThat(captor.value.first().colorTheme, `is`(ColorTheme.Companion.Theme.BLUE.colorTheme))
 //    }
-//
-//    @Test
-//    fun `pin true 정렬 순위`() {
-//        val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
-//        val memos = listOf(
-//                Memo("1", MemoAttribute(false), id = 1),
-//                expect
-//        )
-//
-//        memoRepository.searchMemos("").observeForever(observer)
-//        memoRepository.insertMemos(memos)
-//
-//        // Pin true 메모 추가
-//        val expect2 = Memo("Pin true2", MemoAttribute(true), id = 31)
-//        memoRepository.insertMemos(listOf(expect2))
-//
-//        verify(observer, times(3)).onChanged(captor.capture())
-//        captor.secondValue.first() `should equal` expect
-//        captor.thirdValue.first() `should equal` expect2
-//    }
+
+    @Test
+    fun `update checkitems`() {
+        repository.insertMemos(listOf(Memo("1", id = 1), Memo("2", id = 2)))
+        repository.
+    }
 }

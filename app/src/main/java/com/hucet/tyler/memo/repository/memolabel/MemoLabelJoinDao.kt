@@ -82,6 +82,7 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
         WHERE memo_label_join.memo_id = memos.memo_id) as labelIds
           FROM memos
         where memos.text LIKE  :keyword
+        order by isPin desc, createAt desc
     """)
     internal abstract fun searchMemoView(keyword: String): LiveData<List<MemoViewDto>>
 }
