@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ColorTheme(
-        val label: String,
+        val colorTitle: String,
         @ColorInt val color: Int,
         @ColorInt val textColor: Int
 ) : Parcelable {

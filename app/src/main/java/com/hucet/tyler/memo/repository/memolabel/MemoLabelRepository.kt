@@ -2,6 +2,7 @@ package com.hucet.tyler.memo.repository.memolabel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
+import android.arch.persistence.db.SimpleSQLiteQuery
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.common.fullTextSql
 import com.hucet.tyler.memo.db.model.Label
@@ -39,10 +40,10 @@ class MemoLabelRepository @Inject constructor(
         return dao.getMemoByLabel(labelId)
     }
 
-    fun searchMemoView(keyword: String): LiveData<List<MemoPreviewView>> {
-        return Transformations.map(dao.searchMemoView(keyword.fullTextSql())) {
+    fun searchMemoView(keyword: String, isPinSort: Boolean = true): LiveData<List<MemoPreviewView>> {
+        return Transformations.map(dao.searchMemoView(keyword.fullTextSql(), true)) {
             it.map {
-                val label = it.labelIds?.map {
+                val label = it.listLabelIds?.map {
                     labelRepository.getLabelById(it)
                 }
                 MemoPreviewView(it.memo, label ?: emptyList())

@@ -22,7 +22,6 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
 import android.arch.persistence.room.TypeConverters
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.db.converter.LabelIdGroupSplitConverter
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.db.model.MemoLabelJoin
@@ -73,7 +72,6 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
     abstract fun deleteById(memoId: Long, labelId: Long)
 
     @Transaction
-    @TypeConverters(LabelIdGroupSplitConverter::class)
     @Query("""
         SELECT *, (SELECT GROUP_CONCAT(labels.label_id)
         FROM memo_label_join
@@ -82,8 +80,9 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
         WHERE memo_label_join.memo_id = memos.memo_id) as labelIds
           FROM memos
         where memos.text LIKE  :keyword
-        order by isPin desc, createAt desc
+        order by
+        case :isPinDesc when 1 then memos.isPin end desc, createAt desc
     """)
-    internal abstract fun searchMemoView(keyword: String): LiveData<List<MemoViewDto>>
+    internal abstract fun searchMemoView(keyword: String, isPinDesc: Boolean): LiveData<List<MemoViewDto>>
 }
 

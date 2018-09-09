@@ -40,7 +40,7 @@ abstract class MemoDao : BaseDao<Memo> {
 
     @Query("""
         update memos
-        set label = :label,
+        set colorTitle = :label,
         color = :color, textColor = :textColor
         where memo_id = :memoId
         """)

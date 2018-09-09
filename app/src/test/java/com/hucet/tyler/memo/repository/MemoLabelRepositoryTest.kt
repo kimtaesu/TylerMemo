@@ -58,28 +58,17 @@ class MemoLabelRepositoryTest {
 
     @Test
     fun `CheckableLabelView checked true associate with memo id`() {
-        val chechedMemoId = 1L
+        val checkedMemoId = 1L
         val observer = mock<Observer<List<CheckableLabelView>>>()
         val captor = argumentCaptor<List<CheckableLabelView>>()
         TestUtils.generateMemoLabel(db, 2)
-        reset(observer)
 
-        repository.searchCheckedLabels(chechedMemoId).observeForever(observer)
-        repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, 1))
-
-        verify(observer, times(2)).onChanged(captor.capture())
-
-        captor.lastValue.size shouldEqual 2
-        captor.lastValue[0].isChecked shouldEqual true
-        captor.lastValue[1].isChecked shouldEqual false
+        repository.searchCheckedLabels(checkedMemoId).observeForever(observer)
+        repository.insertMemoLabelJoin(MemoLabelJoin(checkedMemoId, 1))
 
 
-        val labelId = repository.insertLabel(Label("label_3"))
-        verify(observer, times(3)).onChanged(captor.capture())
-
-        labelId?.run {
-            repository.insertMemoLabelJoin(MemoLabelJoin(chechedMemoId, labelId))
-        }
+        repository.insertLabel(Label("label_3", id = 3))
+        repository.insertMemoLabelJoin(MemoLabelJoin(checkedMemoId, 3))
 
         verify(observer, times(4)).onChanged(captor.capture())
 
@@ -157,25 +146,21 @@ class MemoLabelRepositoryTest {
         val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
         reset(observer)
 
-        repository.searchMemoView("").observeForever(observer)
+        repository.searchMemoView("", false).observeForever(observer)
 
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 2))
 
-        repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
 
+
+        repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
         verify(observer, times(4)).onChanged(captor.capture())
 
         captor.lastValue.size shouldEqual 3
 
-        captor.lastValue[0].memo shouldEqual memos[0]
-        captor.lastValue[0].labels shouldEqual labels.filterId(arrayOf(1L, 2L))
-
-        captor.lastValue[1].labels shouldEqual labels.filterId(arrayOf(3L))
-        captor.lastValue[1].memo shouldEqual memos[1]
-
-        captor.lastValue[2].labels shouldEqual emptyList()
-        captor.lastValue[2].memo shouldEqual memos[2]
+        captor.lastValue.find { it.memo.id == 1L }!!.labels shouldEqual labels.filterId(arrayOf(1L, 2L))
+        captor.lastValue.find { it.memo.id == 2L }!!.labels shouldEqual labels.filterId(arrayOf(3L))
+        captor.lastValue.find { it.memo.id == 3L }!!.labels shouldEqual emptyList()
     }
 
     @Test
@@ -186,7 +171,7 @@ class MemoLabelRepositoryTest {
         val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
         val memos = listOf(Memo("1", MemoAttribute(false), id = 1), expect)
 
-        repository.searchMemoView("").observeForever(observer)
+        repository.searchMemoView("", true).observeForever(observer)
         repository.insertMemos(memos)
 
         // Pin true 메모 추가
@@ -196,17 +181,6 @@ class MemoLabelRepositoryTest {
         verify(observer, times(3)).onChanged(captor.capture())
         captor.secondValue.first().memo `should equal` expect
         captor.thirdValue.first().memo `should equal` expect2
-    }
-
-    @Test
-    fun `memo with check items`() {
-        val observer = mock<Observer<List<MemoPreviewView>>>()
-        val captor = argumentCaptor<List<MemoPreviewView>>()
-
-        val memos = listOf(Memo("1", id = 1), Memo("2", id = 2))
-
-        repository.searchMemoView("").observeForever(observer)
-        repository.insertMemos(memos)
     }
 }
 
