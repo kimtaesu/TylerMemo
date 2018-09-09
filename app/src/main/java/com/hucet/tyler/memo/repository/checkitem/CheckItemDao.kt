@@ -31,5 +31,10 @@ import com.hucet.tyler.memo.repository.BaseDao
 @Dao
 @OpenForTesting
 abstract class CheckItemDao : BaseDao<CheckItem> {
+    @Query("""
+        delete from check_items where check_item_id = :checkItemId
+        """
+    )
+    abstract fun deleteById(checkItemId: Int)
 
 }

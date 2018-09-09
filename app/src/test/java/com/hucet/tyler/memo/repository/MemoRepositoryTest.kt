@@ -15,6 +15,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldNotBeIn
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -70,7 +71,7 @@ class MemoRepositoryTest {
     }
 
     @Test
-    fun `insert or upate checkitems`() {
+    fun `Create Update Delete checkitems`() {
         val observer = mock<Observer<EditMemoView>>()
         val captor = argumentCaptor<EditMemoView>()
 
@@ -93,5 +94,10 @@ class MemoRepositoryTest {
         repository.updateCheckItem(updateExpect)
         verify(observer, times(4)).onChanged(captor.capture())
         captor.lastValue.checkItems!!.find { it.name == "cca" }!!.done shouldEqual false
+
+//      verify delete
+        repository.deleteCheckItem(1)
+        verify(observer, times(5)).onChanged(captor.capture())
+        captor.lastValue.checkItems?.any { it.id == 1L } shouldEqual false
     }
 }

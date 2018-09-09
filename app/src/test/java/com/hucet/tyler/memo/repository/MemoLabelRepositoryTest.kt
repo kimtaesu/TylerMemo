@@ -158,9 +158,9 @@ class MemoLabelRepositoryTest {
 
         captor.lastValue.size shouldEqual 3
 
-        captor.lastValue.find { it.memo.id == 1L }!!.labels shouldEqual labels.filterId(arrayOf(1L, 2L))
-        captor.lastValue.find { it.memo.id == 2L }!!.labels shouldEqual labels.filterId(arrayOf(3L))
-        captor.lastValue.find { it.memo.id == 3L }!!.labels shouldEqual emptyList()
+        captor.lastValue.find { it.memo.id == 1L }!!.displayLabels shouldEqual labels.filterId(arrayOf(1L, 2L))
+        captor.lastValue.find { it.memo.id == 2L }!!.displayLabels shouldEqual labels.filterId(arrayOf(3L))
+        captor.lastValue.find { it.memo.id == 3L }!!.displayLabels shouldEqual emptyList()
     }
 
     @Test

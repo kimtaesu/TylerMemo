@@ -9,10 +9,12 @@ interface CheckItemRepository {
     fun insertCheckItem(checkItem: CheckItem): Long?
     fun insertCheckItems(checkItems: List<CheckItem>): List<Long>
     fun updateCheckItem(checkItem: CheckItem)
+    fun deleteCheckItem(checkItemId: Int)
 
     @Singleton
     @OpenForTesting
     class CheckItemRepositoryImpl @Inject constructor(private val dao: CheckItemDao) : CheckItemRepository {
+        override fun deleteCheckItem(checkItemId: Int) = dao.deleteById(checkItemId)
         override fun updateCheckItem(checkItem: CheckItem) = dao.update(checkItem)
         override fun insertCheckItems(checkItems: List<CheckItem>) = dao.insert(checkItems)
         override fun insertCheckItem(checkItem: CheckItem): Long? = dao.insert(checkItem).first()
