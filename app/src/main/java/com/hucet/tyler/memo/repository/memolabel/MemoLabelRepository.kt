@@ -45,7 +45,7 @@ class MemoLabelRepository @Inject constructor(
     fun searchMemoView(keyword: String, isPinSort: Boolean = true): LiveData<List<MemoPreviewView>> {
         return Transformations.map(dao.searchMemoView(keyword.fullTextSql(), true)) {
             it.map {
-                MemoPreviewView(it.memo, it.labels ?: emptyList())
+                MemoPreviewView(it.memo, it.labels ?: emptyList(), it.checkItemCount)
             }
         }
     }

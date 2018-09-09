@@ -77,8 +77,12 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
         FROM memo_label_join
         LEFT JOIN labels
         ON labels.label_id = memo_label_join.label_id
-        WHERE memo_label_join.memo_id = memos.memo_id) as concatLabels
-          FROM memos
+        WHERE memo_label_join.memo_id = memos.memo_id) as concatLabels,
+        (SELECT count(check_items.check_item_id)
+        FROM check_items
+        WHERE memos.memo_id = check_items.memo_id) as checkItemCount
+
+        FROM memos
         where memos.text LIKE  :keyword
         order by
         case :isPinDesc when 1 then memos.isPin end desc, createAt desc

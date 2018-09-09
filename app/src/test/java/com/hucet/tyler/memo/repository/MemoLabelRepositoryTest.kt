@@ -148,11 +148,12 @@ class MemoLabelRepositoryTest {
 
         repository.searchMemoView("", false).observeForever(observer)
 
+//      memo id : [1] label id : [1]
+//      memo id : [1] label id : [2]
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 2))
 
-
-
+//      memo id : [2] label id : [3]
         repository.insertMemoLabelJoin(MemoLabelJoin(2, 3))
         verify(observer, times(4)).onChanged(captor.capture())
 
@@ -182,10 +183,33 @@ class MemoLabelRepositoryTest {
         captor.secondValue.first().memo `should equal` expect
         captor.thirdValue.first().memo `should equal` expect2
     }
+
+    @Test
+    fun `memo with check items count`() {
+        val observer = mock<Observer<List<MemoPreviewView>>>()
+        val captor = argumentCaptor<List<MemoPreviewView>>()
+        val (memos, labels) = TestUtils.generateMemoLabel(db, 3)
+        reset(observer)
+
+        val checkItems = listOf(
+                CheckItem("1", false, 1, id = 1),
+                CheckItem("2", false, 1, id = 2),
+                CheckItem("3", false, 1, id = 3),
+                CheckItem("4", false, 1, id = 4),
+                CheckItem("5", false, 2, id = 5)
+        )
+        repository.insertCheckItems(checkItems)
+        repository.searchMemoView("", true).observeForever(observer)
+        verify(observer, times(1)).onChanged(captor.capture())
+        captor.lastValue.find { it.memo.id == 1L }?.checkItemCount shouldEqual 4
+        captor.lastValue.find { it.memo.id == 2L }?.checkItemCount shouldEqual 1
+    }
 }
 
-private fun <E : HasId> List<E>.filterId(ids: Array<Long>): List<E> {
+private fun <E : Label> List<E>.filterId(ids: Array<Long>): List<String> {
     return this.filter {
         it.id in ids
+    }.map {
+        it.label
     }
 }
