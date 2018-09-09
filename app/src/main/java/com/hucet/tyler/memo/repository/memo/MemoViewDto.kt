@@ -7,15 +7,9 @@ import com.hucet.tyler.memo.db.model.Memo
 internal data class MemoViewDto(
         @Embedded
         var memo: Memo = Memo.empty(),
-        var labelIds: String?
+        var concatLabels: String?
 ) {
     @Ignore
-    val listLabelIds = labelIds?.split(",")?.map {
-        try {
-            it.toLong()
-        } catch (e: NumberFormatException) {
-            null
-        }
-    }?.filterNotNull()
+    val labels = concatLabels?.split(",")
 }
 

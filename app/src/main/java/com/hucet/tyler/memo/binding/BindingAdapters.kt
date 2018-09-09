@@ -16,10 +16,10 @@ import timber.log.Timber
 
 
 @BindingAdapter("bind:spanLabels")
-fun spanLabels(view: TextView, labels: List<Label>) {
+fun spanLabels(view: TextView, displayLabels: List<String>) {
     view.text = SpannableStringBuilder(" ").apply {
-        labels.forEach {
-            append(it.label, RoundedBackgroundSpan(view.context, Color.RED, Color.WHITE, 12f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        displayLabels.forEach {
+            append(it, RoundedBackgroundSpan(view.context, Color.RED, Color.WHITE, 12f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 }

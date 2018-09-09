@@ -12,6 +12,8 @@ import com.hucet.tyler.memo.ui.memo.MemoPreviewView
 import com.hucet.tyler.memo.ui.label.CheckableLabelView
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
+import io.reactivex.Observable
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,11 +45,10 @@ class MemoLabelRepository @Inject constructor(
     fun searchMemoView(keyword: String, isPinSort: Boolean = true): LiveData<List<MemoPreviewView>> {
         return Transformations.map(dao.searchMemoView(keyword.fullTextSql(), true)) {
             it.map {
-                val label = it.listLabelIds?.map {
-                    labelRepository.getLabelById(it)
-                }
-                MemoPreviewView(it.memo, label ?: emptyList())
+                MemoPreviewView(it.memo, it.labels ?: emptyList())
             }
         }
     }
+
+    fun deleteById(memoId: Long, labelId: Long)  = dao.deleteById(memoId, labelId)
 }

@@ -1,6 +1,8 @@
 package com.hucet.tyler.memo.ui.memo
 
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations.map
+import android.arch.lifecycle.Transformations.switchMap
 import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
 import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
@@ -15,11 +17,11 @@ class MemoViewModel @Inject constructor(
 
     private val keywordName = MutableLiveData<String>()
 
-//    private val memoResult = map(keywordName) {
-//        repository.searchMemos(it)
-//    }
+    private val memoResult = map(keywordName) {
+        repository.searchMemoView(it)
+    }
 
-//    val fetchMemos = switchMap(memoResult) { it }
+    val fetchMemos = switchMap(memoResult) { it }
 
     fun showMemos(keyword: String) {
         if (keywordName.value == keyword) {

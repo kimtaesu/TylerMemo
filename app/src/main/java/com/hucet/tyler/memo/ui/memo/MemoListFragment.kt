@@ -65,9 +65,11 @@ class MemoListFragment : Fragment(), Injectable {
                 flexDirection = FlexDirection.ROW
             }
         }
-//        viewModel.fetchMemos.observe(this, Observer {
-//            Timber.d("========== Observer ==========")
-//        })
+        viewModel.fetchMemos.observe(this, Observer {
+            Timber.d("========== Observer ==========" +
+                    "$it")
+            adapter.submitList(it)
+        })
 
         viewModel.showMemos("")
     }

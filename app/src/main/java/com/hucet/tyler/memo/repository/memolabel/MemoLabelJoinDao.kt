@@ -73,11 +73,11 @@ abstract class MemoLabelJoinDao : BaseDao<MemoLabelJoin> {
 
     @Transaction
     @Query("""
-        SELECT *, (SELECT GROUP_CONCAT(labels.label_id)
+        SELECT *, (SELECT GROUP_CONCAT(labels.label)
         FROM memo_label_join
         LEFT JOIN labels
         ON labels.label_id = memo_label_join.label_id
-        WHERE memo_label_join.memo_id = memos.memo_id) as labelIds
+        WHERE memo_label_join.memo_id = memos.memo_id) as concatLabels
           FROM memos
         where memos.text LIKE  :keyword
         order by

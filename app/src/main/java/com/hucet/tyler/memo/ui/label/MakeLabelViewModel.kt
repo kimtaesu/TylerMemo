@@ -10,6 +10,7 @@ import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,6 +67,12 @@ class MakeLabelViewModel @Inject constructor(
     fun createMemoLabel(memoId: Long, labelId: Long) {
         launch(parent = parentJob) {
             memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+        }
+    }
+
+    fun deleteMemoLabel(memoId: Long, labelId: Long) {
+        launch(parent = parentJob) {
+            memoLabelRepository.deleteById(memoId, labelId)
         }
     }
 }
