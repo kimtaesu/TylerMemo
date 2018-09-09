@@ -12,7 +12,7 @@ import com.hucet.tyler.memo.databinding.LabelItemsBinding
 import com.hucet.tyler.memo.db.model.Label
 import com.hucet.tyler.memo.utils.AppExecutors
 
-typealias ITEM = Label
+private typealias ITEM = Label
 
 class LabelAdapter constructor(appExecutors: AppExecutors,
                                private val getItemPosition: (View) -> Int,

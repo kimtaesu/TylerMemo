@@ -16,7 +16,7 @@ import com.hucet.tyler.memo.databinding.MakeLabelExistItemBinding
 import com.hucet.tyler.memo.databinding.MakeLabelNewItemBinding
 import timber.log.Timber
 
-typealias ITEM = CheckableLabelView
+private typealias ITEM = CheckableLabelView
 
 class MakeLabelAdapter constructor(appExecutors: AppExecutors,
                                    private val getItemPosition: (View) -> Int,

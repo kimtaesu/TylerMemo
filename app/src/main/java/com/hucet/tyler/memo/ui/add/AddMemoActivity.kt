@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
@@ -17,6 +18,7 @@ import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_add_memo.*
+import kotlinx.android.synthetic.main.view_add_memo_tools.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
 
@@ -59,7 +61,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
             navigateMakeLabel()
         }
 
-        add_memo_toolbox.color_theme.setOnClickListener {
+        color_theme.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
             if (fragment !is ColorThemeFragment) {
                 supportFragmentManager.beginTransaction()
@@ -69,7 +71,13 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                         .commit()
             }
         }
+        check_items.setOnClickListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools) as? AddMemoFragment
+            fragment?.onClickedCheckItems()
+            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
+
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 

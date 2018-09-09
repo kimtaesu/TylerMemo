@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,9 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
     @Inject
     lateinit var appExecutors: AppExecutors
 
+    private val checkAdapter by lazy {
+        CheckItemAdapter(appExecutors)
+    }
     private val adapter by lazy {
         LabelAdapter(appExecutors,
                 {
@@ -88,6 +92,10 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
                     "labels: $it")
             adapter.submitList(it)
         })
+        add_memo_check_list.apply {
+            adapter = checkAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
 
         add_memo_label_list.apply {
             adapter = this@AddMemoFragment.adapter
@@ -95,6 +103,10 @@ class AddMemoFragment : Fragment(), Injectable, ColorThemeView {
                 flexWrap = FlexWrap.WRAP
             }
         }
+    }
+
+    fun onClickedCheckItems() {
+
     }
 
     override fun onColorChanged(colorTheme: ColorTheme) {
