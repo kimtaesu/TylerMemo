@@ -6,8 +6,17 @@ import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.repository.checkitem.CheckItemRepository
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
 
 object TestUtils {
+    fun createMemoLabelRepository(db: MemoDb): MemoLabelRepository {
+        return MemoLabelRepository(
+                db.memoLabelJoinDao(),
+                LabelRepository.LabelRepositoryImpl(db.labelDao()),
+                MemoRepository.MemoRepositoryImpl(db.memoDao(), CheckItemRepository.CheckItemRepositoryImpl(db.checkItemDao()))
+        )
+    }
+
     fun generateMemoLabel(db: MemoDb, count: Int = 5): Pair<List<Memo>, List<Label>> {
         val memos = listOf(0 until count)
                 .flatten()

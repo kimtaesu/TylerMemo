@@ -16,7 +16,7 @@ import kotlinx.android.parcel.Parcelize
         indices = [Index(value = MEMO_TEXT_COLUMN)]
 )
 data class Memo(
-        val text: String,
+        var text: String,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         val createAt: Long = System.currentTimeMillis(),

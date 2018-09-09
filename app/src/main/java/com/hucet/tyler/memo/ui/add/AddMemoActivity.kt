@@ -30,9 +30,6 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    @Inject
-    lateinit var repository: MemoRepository
-
     companion object {
         val TOOL_BOX_BACK_STACK_TAG = AddMemoActivity.javaClass.simpleName
         fun createIntent(c: Context?, memo: Memo): Intent {
@@ -72,8 +69,9 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
             }
         }
         check_items.setOnClickListener {
+
             val fragment = supportFragmentManager.findFragmentById(R.id.container_tools) as? AddMemoFragment
-            fragment?.onClickedCheckItems()
+            fragment?.onClickedCheckItems(!fragment?.isVisible)
             supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }

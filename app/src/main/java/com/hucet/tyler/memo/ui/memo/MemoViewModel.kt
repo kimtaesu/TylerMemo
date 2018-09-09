@@ -18,6 +18,7 @@ class MemoViewModel @Inject constructor(
     private val keywordName = MutableLiveData<String>()
 
     private val memoResult = map(keywordName) {
+
         repository.searchMemoView(it)
     }
 

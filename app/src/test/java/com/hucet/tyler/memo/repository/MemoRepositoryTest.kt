@@ -15,7 +15,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldNotBeIn
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -60,7 +59,7 @@ class MemoRepositoryTest {
         val captor = argumentCaptor<EditMemoView>()
 
         repository.insertMemos(listOf(Memo("1", id = 1)))
-        repository.findMemoById(1).observeForever(observer)
+        repository.getEditMemoById(1).observeForever(observer)
 
         // 메모 Theme 변경 White -> Blue
         repository.updateColorTheme(1, ColorTheme.Companion.Theme.BLUE.colorTheme)
@@ -81,7 +80,7 @@ class MemoRepositoryTest {
                 CheckItem("bbb", false, 1, id = 2),
                 CheckItem("ccc", true, 1, id = 3)
         )
-        repository.findMemoById(1).observeForever(observer)
+        repository.getEditMemoById(1).observeForever(observer)
         repository.insertMemo(memo)
         repository.insertCheckItems(checkItems)
 

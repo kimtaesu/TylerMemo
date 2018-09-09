@@ -59,4 +59,11 @@ abstract class MemoDao : BaseDao<Memo> {
         where memo_id = :memoId
         """)
     abstract fun updateMemoAttr(memoId: Long, isPin: Boolean)
+
+    @Query("""
+        update memos
+        set text = :text, color = :color, textColor = :textColor, isPin = :pin
+        where memo_id = :id
+        """)
+    abstract fun updateMemo(id: Long, text: String, color: Int, textColor: Int, pin: Boolean)
 }
