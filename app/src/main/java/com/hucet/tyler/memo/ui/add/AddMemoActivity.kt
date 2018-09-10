@@ -77,7 +77,7 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         check_items.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
             fragment?.onClickedCheckItems(true)
-            primaryActionModeCallback.startActionMode(check_items, R.menu.action_check_item, getString(R.string.check_list_action_title),
+            primaryActionModeCallback.startActionMode(this, R.menu.action_check_item, getString(R.string.check_list_action_title),
                     listener = {
                         when (it.itemId) {
                             R.id.add -> {

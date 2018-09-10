@@ -2,7 +2,8 @@ package com.hucet.tyler.memo.common
 
 
 import android.support.annotation.MenuRes
-import android.view.ActionMode
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -40,7 +41,7 @@ class PrimaryActionModeCallback : ActionMode.Callback {
         return true
     }
 
-    fun startActionMode(view: View,
+    fun startActionMode(activity: AppCompatActivity,
                         @MenuRes menuResId: Int,
                         title: String? = null,
                         subtitle: String? = null,
@@ -49,7 +50,7 @@ class PrimaryActionModeCallback : ActionMode.Callback {
         this.title = title
         this.subtitle = subtitle
         onActionItemClickListener = listener
-        view.startActionMode(this)
+        activity.startSupportActionMode(this)
     }
 
     fun finishActionMode() {
