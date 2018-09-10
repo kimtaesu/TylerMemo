@@ -72,7 +72,7 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate<FragmentAddMemoBinding>(
+        binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_add_memo,
                 container,
@@ -121,16 +121,23 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
         })
     }
 
-
+    fun onAddCheckItem() = createCheckItemEmit.onNext(CheckItem.empty(memo.id))
     fun onClickedCheckItems(isShown: Boolean) = viewCheckItemsEmit.onNext(isShown)
 
     override fun onColorChanged(colorTheme: ColorTheme) = colorThemeChangedEmit.onNext(colorTheme)
 
     override fun render(state: AddMemoState) {
         when {
+            state.isShowCheckItems -> {
+                val items = if (state.editMemoView?.checkItems?.isEmpty() == true)
+                    listOf(CheckItem.empty(memo.id))
+                else
+                    state.editMemoView?.checkItems
+
+                checkAdapter.submitList(items)
+            }
             state.editMemoView != null -> {
                 binding.memo = state.editMemoView.memo
-                checkAdapter.submitList(state.editMemoView.checkItems)
             }
         }
     }
@@ -140,11 +147,11 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
      */
     override fun createPresenter(): AddMemoPresenter = presenter
 
-    val colorThemeChangedEmit = PublishSubject.create<ColorTheme>()
-    val saveMemoEmit = PublishSubject.create<Any>()
-    val createCheckItemEmit = PublishSubject.create<CheckItem>()
-    val viewCheckItemsEmit = PublishSubject.create<Boolean>()
-    val fetchEditMemoEmit = PublishSubject.create<EditMemoView>()
+    private val colorThemeChangedEmit = PublishSubject.create<ColorTheme>()
+    private val saveMemoEmit = PublishSubject.create<Any>()
+    private val createCheckItemEmit = PublishSubject.create<CheckItem>()
+    private val viewCheckItemsEmit = PublishSubject.create<Boolean>()
+    private val fetchEditMemoEmit = PublishSubject.create<EditMemoView>()
 
     override fun saveMemo(): Observable<Any> = saveMemoEmit
 

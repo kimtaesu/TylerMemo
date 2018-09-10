@@ -79,6 +79,7 @@ class AddMemoPresenter @Inject constructor(
 
         val viewCheckItems = intent(AddMemoView::viewCheckItems)
                 .observeOn(Schedulers.io())
+                .doOnNext { Timber.d("intent: view check item ${it}") }
                 .map {
                     AddMemoPartState.ViewCheckItems(it)
                 }
@@ -95,12 +96,12 @@ class AddMemoPresenter @Inject constructor(
     private fun viewStateReducer(previousState: AddMemoState, partialChanges: AddMemoPartState): AddMemoState {
         return when (partialChanges) {
             is AddMemoPresenter.AddMemoPartState.ViewCheckItems -> {
-                AddMemoState(isShowCheckItems = partialChanges.isShow)
+                previousState.copy(isShowCheckItems = true)
             }
             is AddMemoPresenter.AddMemoPartState.FetchEditMemo -> {
                 AddMemoState(editMemoView = partialChanges.editMemoView)
             }
-            AddMemoPresenter.AddMemoPartState.Nothing -> AddMemoState()
+            AddMemoPresenter.AddMemoPartState.Nothing -> previousState
         }
     }
 

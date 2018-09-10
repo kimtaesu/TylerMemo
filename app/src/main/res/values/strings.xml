@@ -5,4 +5,8 @@
     <string name="make_label_new_label">"%1$s" 만들기 </string>
     <string name="fail_create_memo_msg">메모를 생성하는데 실패하였습니다.</string>
     <string name="add_memo_check_hint">조금은 돌아가도 괜찮아요.</string>
+  <string name="check_list_action_title">Check list</string>
+  <string name="menu_check_list_add">Add</string>
+  <string name="menu_check_list_delete">Delete</string>
+  <string name="menu_check_list_select_all">Select All</string>
 </resources>

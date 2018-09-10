@@ -27,5 +27,9 @@ data class CheckItem(
     companion object {
         const val CHECK_ITEM_TABLE = "check_items"
         const val CHECK_ITEM_ID = "check_item_id"
+
+        fun empty(memoId: Long): CheckItem {
+            return CheckItem("", false, memoId)
+        }
     }
 }

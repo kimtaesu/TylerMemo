@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
+import com.hucet.tyler.memo.common.PrimaryActionModeCallback
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.repository.memo.MemoRepository
@@ -38,6 +42,8 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
             }
         }
     }
+
+    private val primaryActionModeCallback by lazy { PrimaryActionModeCallback() }
 
     private val memo by lazy {
         intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
@@ -69,9 +75,16 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
             }
         }
         check_items.setOnClickListener {
-
-            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools) as? AddMemoFragment
-            fragment?.onClickedCheckItems(!fragment?.isVisible)
+            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
+            fragment?.onClickedCheckItems(true)
+            primaryActionModeCallback.startActionMode(check_items, R.menu.action_check_item, getString(R.string.check_list_action_title),
+                    listener = {
+                        when (it.itemId) {
+                            R.id.add -> {
+                                fragment?.onAddCheckItem()
+                            }
+                        }
+                    })
             supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
