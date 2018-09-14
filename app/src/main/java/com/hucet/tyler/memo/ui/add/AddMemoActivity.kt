@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ScrollView
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.PrimaryActionModeCallback
@@ -18,10 +22,12 @@ import com.hucet.tyler.memo.db.model.Memo
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
+import com.hucet.tyler.memo.utils.AppExecutors
 import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_add_memo.*
+import kotlinx.android.synthetic.main.bottom_sheet_toolbox.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
@@ -43,11 +49,22 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         }
     }
 
+    @Inject
+    lateinit var appExecutors: AppExecutors
+
     private val primaryActionModeCallback by lazy { PrimaryActionModeCallback() }
 
+    private val toolboxAdapter by lazy {
+        ToolboxAdapter(appExecutors)
+    }
     private val memo by lazy {
         intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
+
+    private val bottomSheetBehavior by lazy {
+        BottomSheetBehavior.from(bottom_sheet_container)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,33 +77,33 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
                     .replace(R.id.content, AddMemoFragment.newInstance(memo))
                     .commit()
 
-        add_memo_toolbox.label.setOnClickListener {
-            navigateMakeLabel()
-        }
+//        add_memo_toolbox.label.setOnClickListener {
+//            navigateMakeLabel()
+//        }
 
-        color_theme.setOnClickListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
-            if (fragment !is ColorThemeFragment) {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                        .replace(R.id.container_tools, ColorThemeFragment.newInstance())
-                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
-                        .commit()
-            }
-        }
-        check_items.setOnClickListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
-            fragment?.onClickedCheckItems(true)
-            primaryActionModeCallback.startActionMode(this, R.menu.action_check_item, getString(R.string.check_list_action_title),
-                    listener = {
-                        when (it.itemId) {
-                            R.id.add -> {
-                                fragment?.onAddCheckItem()
-                            }
-                        }
-                    })
-            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
+//        color_theme.setOnClickListener {
+//            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
+//            if (fragment !is ColorThemeFragment) {
+//                supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
+//                        .replace(R.id.container_tools, ColorThemeFragment.newInstance())
+//                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
+//                        .commit()
+//            }
+//        }
+//        check_items.setOnClickListener {
+//            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
+//            fragment?.onClickedCheckItems(true)
+//            primaryActionModeCallback.startActionMode(this, R.menu.action_check_item, getString(R.string.check_list_action_title),
+//                    listener = {
+//                        when (it.itemId) {
+//                            R.id.add -> {
+//                                fragment?.onAddCheckItem()
+//                            }
+//                        }
+//                    })
+//            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//        }
     }
 
 
