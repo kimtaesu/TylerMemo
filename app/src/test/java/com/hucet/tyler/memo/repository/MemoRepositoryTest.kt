@@ -62,11 +62,11 @@ class MemoRepositoryTest {
         repository.getEditMemoById(1).observeForever(observer)
 
         // 메모 Theme 변경 White -> Blue
-        repository.updateColorTheme(1, ColorTheme.Companion.Theme.BLUE.colorTheme)
+       repository.updateColorTheme(1, ColorTheme.Companion.Theme.BLUE.colorTheme.id)
         // observer 두번째 호출
         verify(observer, times(2)).onChanged(captor.capture())
 
-        captor.lastValue.memo.colorTheme shouldEqual ColorTheme.Companion.Theme.BLUE.colorTheme
+        captor.lastValue.memo.colorThemeId shouldEqual ColorTheme.Companion.Theme.BLUE.colorTheme.id
     }
 
     @Test

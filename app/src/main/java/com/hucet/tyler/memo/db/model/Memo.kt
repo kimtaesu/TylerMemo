@@ -17,11 +17,11 @@ import kotlinx.android.parcel.Parcelize
 )
 data class Memo(
         var text: String,
+        @ColumnInfo(name = ColorTheme.COLOR_THEME_ID)
+        var colorThemeId: Long = ColorTheme.defaultId,
         @Embedded
         val attr: MemoAttribute = MemoAttribute(false),
         val createAt: Long = System.currentTimeMillis(),
-        @Embedded
-        var colorTheme: ColorTheme = ColorTheme.default.colorTheme,
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = MEMO_ID)
         override var id: Long = 0

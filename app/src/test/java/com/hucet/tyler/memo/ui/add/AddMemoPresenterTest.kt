@@ -86,7 +86,7 @@ class AddMemoPresenterTest {
 
             verify(observer, times(4)).onChanged(captor.capture())
             captor.lastValue.memo.text `should equal` expectText
-            captor.lastValue.memo.colorTheme = changedColorTheme
+            captor.lastValue.memo.colorThemeId = changedColorTheme.id
         })
         @Test
         fun `create check item`() {

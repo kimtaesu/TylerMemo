@@ -110,7 +110,7 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
                     "edit memo: $it")
             it?.run {
                 fetchEditMemoEmit.onNext(this)
-                colorThemeChangedEmit.onNext(this.memo.colorTheme)
+                colorThemeChangedEmit.onNext(this.memo.colorThemeId)
             }
         })
 
@@ -124,7 +124,7 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
     fun onAddCheckItem() = createCheckItemEmit.onNext(CheckItem.empty(memo.id))
     fun onClickedCheckItems(isShown: Boolean) = viewCheckItemsEmit.onNext(isShown)
 
-    override fun onColorChanged(colorTheme: ColorTheme) = colorThemeChangedEmit.onNext(colorTheme)
+    override fun onColorChanged(colorTheme: ColorTheme) = colorThemeChangedEmit.onNext(colorTheme.id)
 
     override fun render(state: AddMemoState) {
         when {
@@ -147,7 +147,7 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
      */
     override fun createPresenter(): AddMemoPresenter = presenter
 
-    private val colorThemeChangedEmit = PublishSubject.create<ColorTheme>()
+    private val colorThemeChangedEmit = PublishSubject.create<Long>()
     private val saveMemoEmit = PublishSubject.create<Any>()
     private val createCheckItemEmit = PublishSubject.create<CheckItem>()
     private val viewCheckItemsEmit = PublishSubject.create<Boolean>()
@@ -163,5 +163,5 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
 
     override fun typingText(): Observable<CharSequence> = RxTextView.textChanges(add_memo_text).throttleLast(500, TimeUnit.MILLISECONDS)
 
-    override fun colorThemeChanged(): Observable<ColorTheme> = colorThemeChangedEmit
+    override fun colorThemeChanged(): Observable<Long> = colorThemeChangedEmit
 }

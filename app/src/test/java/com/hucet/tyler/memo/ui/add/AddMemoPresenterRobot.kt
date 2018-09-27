@@ -22,7 +22,7 @@ class AddMemoPresenterRobot constructor(
     private val typingText = PublishSubject.create<CharSequence>()
     private val createCheckItem = PublishSubject.create<CheckItem>()
     private val viewCheckItems = PublishSubject.create<Boolean>()
-    private val colorThemeChanged = PublishSubject.create<ColorTheme>()
+    private val colorThemeChanged = PublishSubject.create<Long>()
 
     init {
         presenter.attachView(object : AddMemoView {
@@ -36,7 +36,7 @@ class AddMemoPresenterRobot constructor(
 
             override fun typingText(): Observable<CharSequence> = typingText
 
-            override fun colorThemeChanged(): Observable<ColorTheme> = colorThemeChanged
+            override fun colorThemeChanged(): Observable<Long> = colorThemeChanged
 
             override fun render(state: AddMemoState) {
                 renderEvents.add(state)
@@ -46,7 +46,7 @@ class AddMemoPresenterRobot constructor(
 
     fun fetchEditMemo(editMemoView: EditMemoView) = fetchEditMemo.onNext(editMemoView)
 
-    fun colorThemeChangedIntent(colorTheme: ColorTheme) = colorThemeChanged.onNext(colorTheme)
+    fun colorThemeChangedIntent(colorTheme: ColorTheme) = colorThemeChanged.onNext(colorTheme.id)
 
     fun saveMemoIntent() = saveMemo.onNext(Unit)
 

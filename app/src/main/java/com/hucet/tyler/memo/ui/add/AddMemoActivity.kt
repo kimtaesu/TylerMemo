@@ -1,5 +1,6 @@
 package com.hucet.tyler.memo.ui.add
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -19,6 +20,7 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.PrimaryActionModeCallback
 import com.hucet.tyler.memo.db.model.ColorTheme
 import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.colortheme.ColorThemeRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
@@ -52,8 +54,6 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val primaryActionModeCallback by lazy { PrimaryActionModeCallback() }
-
     private val toolboxAdapter by lazy {
         ToolboxAdapter(appExecutors)
     }
@@ -70,7 +70,8 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_memo)
         setSupportActionBar(toolbar)
-        setToolbarColor(memo.colorTheme)
+        setToolbarColor(ColorTheme.default.colorTheme)
+//
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
@@ -124,6 +125,3 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memo))
     }
 }
-
-private val Int.whiteInverseColor: Int
-    get() = if (this == Color.WHITE) Color.BLACK else this

@@ -1,6 +1,7 @@
 package com.hucet.tyler.memo.di
 
 import com.hucet.tyler.memo.repository.checkitem.CheckItemRepository
+import com.hucet.tyler.memo.repository.colortheme.ColorThemeRepository
 import com.hucet.tyler.memo.repository.label.LabelRepository
 import com.hucet.tyler.memo.repository.memo.MemoRepository
 import dagger.Binds
@@ -20,4 +21,8 @@ public abstract class RepositoryModule {
     @Binds
     @Singleton
     internal abstract fun bindCheckItemRepository(repository: CheckItemRepository.CheckItemRepositoryImpl): CheckItemRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun bindColorThemeRepository(repository: ColorThemeRepository.ColorThemeRepositoryImpl): ColorThemeRepository
 }

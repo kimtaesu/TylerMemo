@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.hucet.tyler.memo.util
+package com.hucet.tyler.memo.vo
 
-import android.arch.lifecycle.MutableLiveData
-import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.db.model.MemoAttribute
-
-object TestUtil {
-    fun createMemosLiveData(): MutableLiveData<List<Memo>> {
-        return MutableLiveData<List<Memo>>().apply {
-            val items = (0..10).toList().map { Memo(it.toString()) }
-            postValue(items)
-        }
-    }
+/**
+ * Status of a resource that is provided to the UI.
+ *
+ *
+ * These are usually created by the Repository classes where they return
+ * `LiveData<Resource<T>>` to pass back the latest data to the UI with its fetch status.
+ */
+enum class Status {
+    SUCCESS,
+    ERROR,
+    LOADING
 }

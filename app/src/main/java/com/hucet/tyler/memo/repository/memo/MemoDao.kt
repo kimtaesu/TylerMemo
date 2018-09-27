@@ -40,11 +40,10 @@ abstract class MemoDao : BaseDao<Memo> {
 
     @Query("""
         update memos
-        set colorTitle = :label,
-        color = :color, textColor = :textColor
+        set color_theme_id = :colorThemeId
         where memo_id = :memoId
         """)
-    abstract fun updateColorTheme(label: String, color: Int, textColor: Int, memoId: Long)
+    abstract fun updateColorTheme(memoId: Long, colorThemeId: Long)
 
     @Query("""
         update memos
@@ -62,8 +61,8 @@ abstract class MemoDao : BaseDao<Memo> {
 
     @Query("""
         update memos
-        set text = :text, color = :color, textColor = :textColor, isPin = :pin
+        set text = :text, isPin = :pin, color_theme_id = :colorThemeId
         where memo_id = :id
         """)
-    abstract fun updateMemo(id: Long, text: String, color: Int, textColor: Int, pin: Boolean)
+    abstract fun updateMemo(id: Long, text: String, colorThemeId: Long?, pin: Boolean)
 }

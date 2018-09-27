@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.hucet.tyler.memo.util
+package com.hucet.tyler.memo.vo
 
-import android.arch.lifecycle.MutableLiveData
-import com.hucet.tyler.memo.db.model.Memo
-import com.hucet.tyler.memo.db.model.MemoAttribute
+import com.hucet.tyler.memo.vo.Status.*
 
-object TestUtil {
-    fun createMemosLiveData(): MutableLiveData<List<Memo>> {
-        return MutableLiveData<List<Memo>>().apply {
-            val items = (0..10).toList().map { Memo(it.toString()) }
-            postValue(items)
+/**
+ * A generic class that holds a value with its loading status.
+ * @param <T>
+</T> */
+data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
+    companion object {
+        fun <T> success(data: T?): Resource<T> {
+            return Resource(SUCCESS, data, null)
+        }
+
+        fun <T> error(msg: String, data: T?): Resource<T> {
+            return Resource(ERROR, data, msg)
+        }
+
+        fun <T> loading(data: T?): Resource<T> {
+            return Resource(LOADING, data, null)
         }
     }
 }

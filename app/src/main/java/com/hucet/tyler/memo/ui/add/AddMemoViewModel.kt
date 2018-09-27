@@ -29,10 +29,5 @@ class AddMemoViewModel @Inject constructor(
     fun getEditMemoById(memoId: Long) = repository.getEditMemoById(memoId)
 
     fun bind(intent: AddMemoViewIntent) {
-        val a = Observable.combineLatest(intent.typingText, intent.changeColorTheme, BiFunction { t1: String, t2: ColorTheme ->
-            ""
-        })
-
-        intent.saveMemo
     }
 }

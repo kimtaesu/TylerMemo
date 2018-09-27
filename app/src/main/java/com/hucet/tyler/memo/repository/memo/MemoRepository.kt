@@ -17,7 +17,7 @@ import javax.inject.Singleton
 interface MemoRepository : CheckItemRepository {
     fun insertMemo(memo: Memo): Long?
     fun insertMemos(memos: List<Memo>): List<Long>
-    fun updateColorTheme(memoId: Long, colorTheme: ColorTheme)
+    fun updateColorTheme(memoId: Long, colorThemeId: Long)
     fun getEditMemoById(memoid: Long): LiveData<EditMemoView>
     fun updateMemoText(memoid: Long, text: String)
     fun updateMemoAttr(memoid: Long, attribute: MemoAttribute)
@@ -30,15 +30,14 @@ interface MemoRepository : CheckItemRepository {
 
         override fun updateMemoAttr(memoid: Long, attribute: MemoAttribute) = dao.updateMemoAttr(memoid, attribute.isPin)
         override fun updateMemo(memo: Memo) =
-                dao.updateMemo(memo.id, memo.text, memo.colorTheme.color, memo.colorTheme.textColor, memo.attr.isPin)
+                dao.updateMemo(memo.id, memo.text, memo.colorThemeId, memo.attr.isPin)
 
         override fun updateMemoText(memoid: Long, text: String) = dao.updateMemoText(memoid, text)
         override fun getEditMemoById(memoid: Long): LiveData<EditMemoView> = dao.findMemoById(memoid)
         override fun insertMemo(memo: Memo): Long? = dao.insert(memo).firstOrNull()
         override fun insertMemos(memos: List<Memo>): List<Long> = dao.insert(memos)
-        override fun updateColorTheme(memoId: Long, colorTheme: ColorTheme) {
-            val (label, color, textColor) = colorTheme
-            return dao.updateColorTheme(label, color, textColor, memoId)
+        override fun updateColorTheme(memoId: Long, colorThemeId: Long) {
+            return dao.updateColorTheme(memoId, colorThemeId)
         }
     }
 }

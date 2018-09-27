@@ -63,6 +63,6 @@ class ColorThemeFragment : Fragment(), Injectable {
         close.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
-        adapter.submitList(ColorTheme.generate())
+        adapter.submitList(ColorTheme.initialPopulate())
     }
 }

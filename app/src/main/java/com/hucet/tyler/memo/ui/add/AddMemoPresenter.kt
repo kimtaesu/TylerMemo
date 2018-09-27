@@ -29,7 +29,7 @@ interface AddMemoView : MvpView {
     fun createCheckItem(): Observable<CheckItem>
     fun fetchEditMemo(): Observable<EditMemoView>
     fun typingText(): Observable<CharSequence>
-    fun colorThemeChanged(): Observable<ColorTheme>
+    fun colorThemeChanged(): Observable<Long>
     fun render(state: AddMemoState)
 }
 
@@ -49,10 +49,10 @@ class AddMemoPresenter @Inject constructor(
         val combineMemoIntent = Observable.combineLatest(memoIntents) {
             val editMemo = it[0] as EditMemoView
             val typingText = it[1] as CharSequence
-            val colorTheme = it[2] as ColorTheme
+            val colorThemeId = it[2] as Long
 
             editMemo.memo.text = typingText.toString()
-            editMemo.memo.colorTheme = colorTheme
+            editMemo.memo.colorThemeId = colorThemeId
             editMemo.memo
         }
 

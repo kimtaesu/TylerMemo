@@ -7,6 +7,7 @@ import com.hucet.tyler.memo.repository.label.LabelDao
 import com.hucet.tyler.memo.repository.memo.MemoDao
 import com.hucet.tyler.memo.db.MemoDb
 import com.hucet.tyler.memo.repository.checkitem.CheckItemDao
+import com.hucet.tyler.memo.repository.colortheme.ColorThemeDao
 import com.hucet.tyler.memo.repository.memolabel.MemoLabelJoinDao
 import dagger.Module
 
@@ -41,5 +42,11 @@ class RoomModule {
     @Provides
     internal fun providesMemoLabelJoinDao(dataBase: MemoDb): MemoLabelJoinDao {
         return dataBase.memoLabelJoinDao()
+    }
+
+    @Singleton
+    @Provides
+    internal fun providesColorThemeDao(dataBase: MemoDb): ColorThemeDao {
+        return dataBase.colorThemeDao()
     }
 }

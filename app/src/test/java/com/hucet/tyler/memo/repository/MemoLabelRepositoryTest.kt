@@ -64,6 +64,7 @@ class MemoLabelRepositoryTest {
         TestUtils.generateMemoLabel(db, 2)
 
         repository.searchCheckedLabels(checkedMemoId).observeForever(observer)
+        verify(observer, times(1)).onChanged(captor.capture())
         repository.insertMemoLabelJoin(MemoLabelJoin(checkedMemoId, 1))
 
 
@@ -87,7 +88,7 @@ class MemoLabelRepositoryTest {
 
 
         repository.getLabelByMemo(1).observeForever(observer)
-
+        verify(observer, times(1)).onChanged(captor.capture())
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 1))
         repository.insertMemoLabelJoin(MemoLabelJoin(1, 2))
 
@@ -107,7 +108,6 @@ class MemoLabelRepositoryTest {
         val captor = argumentCaptor<List<Memo>>()
         TestUtils.generateMemoLabel(db)
         reset(observer)
-
 
         repository.getMemoByLabel(1).observeForever(observer)
 
@@ -169,14 +169,14 @@ class MemoLabelRepositoryTest {
         val observer = mock<Observer<List<MemoPreviewView>>>()
         val captor = argumentCaptor<List<MemoPreviewView>>()
 
-        val expect = Memo("Pin true1", MemoAttribute(true), id = 21)
-        val memos = listOf(Memo("1", MemoAttribute(false), id = 1), expect)
+        val expect = Memo("Pin true1", attr = MemoAttribute(true), id = 21)
+        val memos = listOf(Memo("1", attr = MemoAttribute(false), id = 1), expect)
 
         repository.searchMemoView("", true).observeForever(observer)
         repository.insertMemos(memos)
 
         // Pin true 메모 추가
-        val expect2 = Memo("Pin true2", MemoAttribute(true), id = 31)
+        val expect2 = Memo("Pin true2", attr = MemoAttribute(true), id = 31)
         repository.insertMemos(listOf(expect2))
 
         verify(observer, times(3)).onChanged(captor.capture())
