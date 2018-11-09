@@ -23,9 +23,12 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import android.support.annotation.VisibleForTesting
-import com.hucet.tyler.memo.vo.CheckItem
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.*
+import com.hucet.tyler.memo.repository.checkitem.CheckItemDao
+import com.hucet.tyler.memo.repository.colortheme.ColorThemeDao
+import com.hucet.tyler.memo.repository.label.LabelDao
+import com.hucet.tyler.memo.repository.memo.MemoDao
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelJoinDao
 import java.util.concurrent.Executors
 
 
@@ -36,7 +39,9 @@ import java.util.concurrent.Executors
         entities = [
             Memo::class,
             Label::class,
-            CheckItem::class
+            MemoLabelJoin::class,
+            CheckItem::class,
+            ColorTheme::class
         ],
         version = 1,
         exportSchema = false
@@ -48,6 +53,10 @@ abstract class MemoDb : RoomDatabase() {
     abstract fun labelDao(): LabelDao
 
     abstract fun checkItemDao(): CheckItemDao
+
+    abstract fun memoLabelJoinDao(): MemoLabelJoinDao
+
+    abstract fun colorThemeDao(): ColorThemeDao
 
     companion object {
 
@@ -73,7 +82,7 @@ abstract class MemoDb : RoomDatabase() {
 
         private fun buildDatabase(context: Context): MemoDb {
             return Room.databaseBuilder(context,
-                    MemoDb::class.java, "memo_db_4")
+                    MemoDb::class.java, "memo_db6")
                     .populate(context)
                     .build()
         }
@@ -85,6 +94,7 @@ private fun <T : RoomDatabase> RoomDatabase.Builder<T>.populate(context: Context
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             Executors.newSingleThreadScheduledExecutor().execute {
+                MemoDb.getInstance(context).colorThemeDao().insert(ColorTheme.initialPopulate())
             }
         }
     })

@@ -7,7 +7,7 @@
 
     <variable
       name="colorTheme"
-      type="com.hucet.tyler.memo.vo.ColorTheme" />
+      type="com.hucet.tyler.memo.db.model.ColorTheme" />
   </data>
 
   <android.support.constraint.ConstraintLayout

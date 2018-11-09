@@ -6,8 +6,8 @@
   <data>
 
     <variable
-      name="memo"
-      type="com.hucet.tyler.memo.vo.Memo" />
+      name="memoView"
+      type="com.hucet.tyler.memo.ui.memo.MemoPreviewView" />
   </data>
 
   <android.support.v7.widget.CardView
@@ -19,23 +19,22 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
-      <TextView
-        android:id="@+id/subject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@{memo.subject}"
-        tools:text="tyler" />
 
       <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@{memo.text}"
-        app:layout_constraintStart_toStartOf="@+id/subject"
-        app:layout_constraintTop_toBottomOf="@+id/subject"
+        android:text="@{memoView.memo.text}"
         tools:text="text" />
+
+      <TextView
+        android:id="@+id/summayLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:spanLabels="@{memoView.displayLabels}"
+        tools:text="summayLabels" />
+
     </android.support.constraint.ConstraintLayout>
   </android.support.v7.widget.CardView>
 </layout>

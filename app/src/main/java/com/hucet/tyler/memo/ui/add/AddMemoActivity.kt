@@ -1,109 +1,127 @@
 package com.hucet.tyler.memo.ui.add
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewAnimationUtils
-import android.view.animation.AccelerateInterpolator
+import android.widget.ScrollView
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
+import com.hucet.tyler.memo.common.PrimaryActionModeCallback
+import com.hucet.tyler.memo.db.model.ColorTheme
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.colortheme.ColorThemeRepository
+import com.hucet.tyler.memo.repository.memo.MemoRepository
 import com.hucet.tyler.memo.ui.color.ColorThemeFragment
 import com.hucet.tyler.memo.ui.label.MakeLabelActivity
-import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.utils.AppExecutors
+import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_add_memo.*
+import kotlinx.android.synthetic.main.bottom_sheet_toolbox.*
+import kotlinx.android.synthetic.main.view_add_memo_tools.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
 
-interface OnColorChangedListener {
+interface ColorThemeView {
     fun onColorChanged(colorTheme: ColorTheme)
 }
 
-class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, OnColorChangedListener {
+class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorThemeView, AddMemoNavigation {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
-        fun createIntent(c: Context?, memo: Memo? = null): Intent {
+        val TOOL_BOX_BACK_STACK_TAG = AddMemoActivity.javaClass.simpleName
+        fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, AddMemoActivity::class.java).apply {
                 putExtra(ArgKeys.KEY_MEMO.name, memo)
             }
         }
     }
 
-    private val memo by lazy {
-        intent?.getParcelableExtra(ArgKeys.KEY_MEMO.name) as? Memo
+    @Inject
+    lateinit var appExecutors: AppExecutors
+
+    private val toolboxAdapter by lazy {
+        ToolboxAdapter(appExecutors)
     }
+    private val memo by lazy {
+        intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
+    }
+
+    private val bottomSheetBehavior by lazy {
+        BottomSheetBehavior.from(bottom_sheet_container)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_memo)
         setSupportActionBar(toolbar)
-        setToolbarColor(memo?.colorTheme ?: ColorTheme.default.colorTheme)
+        setToolbarColor(ColorTheme.default.colorTheme)
+//
         if (savedInstanceState == null)
-
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content, AddMemoFragment.newInstance())
+                    .replace(R.id.content, AddMemoFragment.newInstance(memo))
                     .commit()
 
-        add_memo_toolbox.label.setOnClickListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
-            val memoId = fragment?.getMemoId()
-            if (memoId != null) {
-                startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memoId))
-            } else {
-                TODO("fragment?.getMemoId() == null")
-            }
-        }
+//        add_memo_toolbox.label.setOnClickListener {
+//            navigateMakeLabel()
+//        }
 
-        add_memo_toolbox.color_theme.setOnClickListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
-            if (fragment !is ColorThemeFragment) {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                        .replace(R.id.container_tools, ColorThemeFragment.newInstance {
-                            onColorChanged(it)
-                        })
-                        .addToBackStack(AddMemoFragment.TOOL_BOX_BACK_STACK_TAG)
-                        .commit()
-            }
-        }
+//        color_theme.setOnClickListener {
+//            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
+//            if (fragment !is ColorThemeFragment) {
+//                supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
+//                        .replace(R.id.container_tools, ColorThemeFragment.newInstance())
+//                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
+//                        .commit()
+//            }
+//        }
+//        check_items.setOnClickListener {
+//            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
+//            fragment?.onClickedCheckItems(true)
+//            primaryActionModeCallback.startActionMode(this, R.menu.action_check_item, getString(R.string.check_list_action_title),
+//                    listener = {
+//                        when (it.itemId) {
+//                            R.id.add -> {
+//                                fragment?.onAddCheckItem()
+//                            }
+//                        }
+//                    })
+//            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//        }
     }
+
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun onColorChanged(colorTheme: ColorTheme) {
         setToolbarColor(colorTheme)
-        add_memo_toolbox.color_theme.setColorFilter(colorTheme.color.whiteInverseColor)
-        animateRevealShow(toolbar)
+        (supportFragmentManager.findFragmentById(R.id.content) as? ColorThemeView)?.onColorChanged(colorTheme)
     }
 
     private fun setToolbarColor(colorTheme: ColorTheme) {
         toolbar.setBackgroundColor(colorTheme.color)
         toolbar.setTitleTextColor(colorTheme.textColor)
+        RevealAnimationUtils.animateRevealShow(toolbar)
     }
 
-    private fun animateRevealShow(viewRoot: View) {
-        val cx = (viewRoot.left + viewRoot.right) / 2
-        val cy = (viewRoot.top + viewRoot.bottom) / 2
-        val finalRadius = Math.max(viewRoot.width, viewRoot.height)
-
-        val anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0f, finalRadius.toFloat())
-        viewRoot.visibility = View.VISIBLE
-        anim.duration = 500
-        anim.interpolator = AccelerateInterpolator()
-        anim.start()
+    override fun navigateMakeLabel() {
+        startActivity(MakeLabelActivity.createIntent(this@AddMemoActivity, memo))
     }
 }
-
-private val Int.whiteInverseColor: Int
-    get() = if (this == Color.WHITE) Color.BLACK else this

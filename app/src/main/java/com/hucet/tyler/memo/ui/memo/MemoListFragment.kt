@@ -17,6 +17,7 @@ import com.hucet.tyler.memo.databinding.FragmentMemoListBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
 import kotlinx.android.synthetic.main.fragment_memo_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -64,8 +65,9 @@ class MemoListFragment : Fragment(), Injectable {
                 flexDirection = FlexDirection.ROW
             }
         }
-
         viewModel.fetchMemos.observe(this, Observer {
+            Timber.d("========== Observer ==========" +
+                    "$it")
             adapter.submitList(it)
         })
 

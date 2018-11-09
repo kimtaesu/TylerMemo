@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/bottom_sheet_container"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  app:behavior_hideable="false"
+  app:behavior_peekHeight="58dp"
+  app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/colorAccent"
+      android:orientation="horizontal">
+
+      <ImageButton
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:tint="@color/cardview_dark_background"
+        app:layout_constraintBottom_toBottomOf="@+id/color_theme"
+        app:layout_constraintEnd_toStartOf="@+id/color_theme"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/check_items"
+        app:layout_constraintTop_toTopOf="@+id/color_theme"
+        app:srcCompat="@drawable/ic_label_outline" />
+
+      <ImageButton
+        android:id="@+id/color_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:tint="@color/cardview_dark_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_color_lens" />
+
+      <ImageButton
+        android:id="@+id/check_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:tint="@color/cardview_dark_background"
+        app:layout_constraintEnd_toStartOf="@+id/label"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_check" />
+    </LinearLayout>
+
+
+    <TextView
+      android:id="@+id/first"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@color/colorAccent"
+      android:text="asdsapdkaspkfa
+      asdsapdkaspkfa
+aspfkasfasfkapsfk
+asdasd
+ad
+asd
+adasdsapdkaspkfa
+aspfkasfasfkapsfk
+asdasd
+ad
+asd
+adasdsapdkaspkfa
+aspfkasfasfkapsfk
+asdasd
+ad
+asd
+adasdsapdkaspkfa
+aspfkasfasfkapsfk
+asdasd
+ad
+asd
+ad
+aspfkasfasfkapsfk
+asdasd
+ad
+asd
+ad
+"
+      app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+      android:id="@+id/second"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="secondsecondsecondsecondsecondsecondsecondsecondsecond
+    secondsecondsecondsecondsecond
+    secondsecondsecond
+    second
+    secondsecondsecondsecondsecond
+    secondsecond
+    secondsecondsecondsecondsecondsecondsecondsecondsecond
+    secondsecondsecondsecondsecond
+    secondsecondsecond
+    second
+    secondsecondsecondsecondsecond
+    secondsecond
+    secondsecondsecondsecondsecondsecondsecondsecondsecond
+    secondsecondsecondsecondsecond
+    secondsecondsecond
+    second
+    secondsecondsecondsecondsecond
+    secondsecondsecondsecondsecondsecondsecondsecondsecondsecondsecond
+    secondsecondsecondsecondsecond
+    secondsecondsecond
+    second
+    secondsecondsecondsecondsecond
+    secondsecondsecondsecondsecondsecondsecondsecondsecondsecondsecond
+    secondsecondsecondsecondsecond
+    secondsecondsecond
+    second
+    secondsecondsecondsecondsecond
+    secondsecond
+"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/first" />
+  </android.support.constraint.ConstraintLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

@@ -16,8 +16,17 @@
 
 package com.hucet.tyler.memo.di
 
+import android.app.Application
+import android.content.Context
 import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-@Module(includes = [RoomModule::class, ViewModelModule::class])
+@Module(includes = [RoomModule::class, ViewModelModule::class, RepositoryModule::class])
 class AppModule {
+    @Singleton
+    @Provides
+    fun providesContext(application: Application): Context {
+        return application
+    }
 }

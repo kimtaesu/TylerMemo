@@ -8,11 +8,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.hucet.tyler.memo.ArgKeys
 import com.hucet.tyler.memo.R
-import com.hucet.tyler.memo.UNKNOWN_ID
 import com.hucet.tyler.memo.databinding.ActivityMakeLabelBinding
-import com.hucet.tyler.memo.repository.LabelRepository
-import com.hucet.tyler.memo.repository.MemoRepository
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.db.model.Memo
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -27,9 +24,9 @@ interface SearchView {
 
 class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, SearchView {
     companion object {
-        fun createIntent(c: Context?, memoId: Long): Intent {
+        fun createIntent(c: Context?, memo: Memo): Intent {
             return Intent(c, MakeLabelActivity::class.java).apply {
-                putExtra(ArgKeys.KEY_MEMO_ID.name, memoId)
+                putExtra(ArgKeys.KEY_MEMO.name, memo)
             }
         }
     }
@@ -37,11 +34,10 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    @Inject
-    lateinit var repository: MemoRepository
+    override fun supportFragmentInjector() = dispatchingAndroidInjector
 
-    private val memoId by lazy {
-        intent.getLongExtra(ArgKeys.KEY_MEMO_ID.name, UNKNOWN_ID)
+    private val memo by lazy {
+        intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,14 +45,9 @@ class MakeLabelActivity : AppCompatActivity(), HasSupportFragmentInjector, Searc
         setSupportActionBar(toolbar)
         DataBindingUtil.setContentView<ActivityMakeLabelBinding>(this, R.layout.activity_make_label)
         if (savedInstanceState == null) {
-            if (memoId != UNKNOWN_ID)
-                supportFragmentManager.beginTransaction().add(R.id.content, MakeLabelFragment.newInstance(memoId)).commit()
-            else
-                TODO("memoId != UNKNOWN_ID")
+            supportFragmentManager.beginTransaction().replace(R.id.content, MakeLabelFragment.newInstance(memo)).commit()
         }
     }
-
-    override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun searchView(): Observable<CharSequence> = RxTextView.textChanges(toolbar.search)
 }

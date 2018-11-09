@@ -1,24 +1,25 @@
 package com.hucet.tyler.memo.ui.memo
 
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import android.arch.lifecycle.Transformations.map
 import android.arch.lifecycle.Transformations.switchMap
+import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.repository.MemoRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
 class MemoViewModel @Inject constructor(
-        private val repository: MemoRepository
+        private val repository: MemoLabelRepository
 ) : ViewModel() {
+
     private val keywordName = MutableLiveData<String>()
 
     private val memoResult = map(keywordName) {
-        repository.searchMemos(it)
+
+        repository.searchMemoView(it)
     }
 
     val fetchMemos = switchMap(memoResult) { it }
@@ -28,5 +29,6 @@ class MemoViewModel @Inject constructor(
             return
         }
         keywordName.value = keyword
+
     }
 }

@@ -25,6 +25,7 @@ android {
     }
     buildTypes {
         debug {
+            aaptOptions.cruncherEnabled = false
             testCoverageEnabled !project.hasProperty('android.injected.invoked.from.ide')
         }
         release {
@@ -45,6 +46,9 @@ android {
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
         test.java.srcDirs += "src/test-common/java"
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -82,12 +86,18 @@ dependencies {
     implementation deps.timber
 
     implementation deps.mosby3
+    implementation 'com.hannesdorfmann.mosby3:mvp:3.1.0'
+    implementation 'com.hannesdorfmann.mosby3:viewstate:3.1.0'
     implementation deps.rxbinding
     implementation deps.flexbox
 
     implementation deps.firebase.remoteConfig
     implementation deps.firebase.core
+
+    implementation 'com.github.okdroid:checkablechipview:1.0.2'
+
     debugImplementation deps.stetho
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     implementation deps.kotlin.coroutines_core
     implementation deps.kotlin.coroutines_android
@@ -97,8 +107,11 @@ dependencies {
     kapt deps.room.compiler
     kapt deps.lifecycle.compiler
 
+    testImplementation('org.amshove.kluent:kluent:1.41') {
+        exclude group: 'org.mockito'
+    }
     testImplementation deps.junit
-    testImplementation deps.robolectric
+    testIm plementation deps.robolectric
     testImplementation deps.mock_web_server
     testImplementation(deps.arch_core.testing, {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -163,5 +176,9 @@ project.tasks.whenTaskAdded {
         it.enabled = false
     }
 }
-
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 apply plugin: 'com.google.gms.google-services'

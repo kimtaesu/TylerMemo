@@ -14,23 +14,26 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.databinding.FragmentMakeLabelBinding
 import com.hucet.tyler.memo.di.Injectable
 import com.hucet.tyler.memo.utils.AppExecutors
+import com.hucet.tyler.memo.db.model.Memo
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_make_label.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MakeLabelFragment : Fragment(), Injectable {
     companion object {
-        fun newInstance(memoId: Long): MakeLabelFragment {
+        fun newInstance(memo: Memo): MakeLabelFragment {
             return MakeLabelFragment().apply {
                 arguments = Bundle().apply {
-                    putLong(ArgKeys.KEY_MEMO_ID.name, memoId)
+                    putParcelable(ArgKeys.KEY_MEMO.name, memo)
                 }
             }
         }
     }
 
-    private val memoId by lazy {
-        arguments?.getLong(ArgKeys.KEY_MEMO_ID.name)
+    private val memo by lazy {
+        arguments?.getParcelable(ArgKeys.KEY_MEMO.name) as Memo
     }
     @Inject
     lateinit var viewModelProvider: ViewModelProvider.Factory
@@ -49,11 +52,13 @@ class MakeLabelFragment : Fragment(), Injectable {
                     label_list.getChildAdapterPosition(it)
                 },
                 {
+                    if (it.isChecked)
+                        viewModel.deleteMemoLabel(memo.id, it.label_id)
+                    else
+                        viewModel.createMemoLabel(memo.id, it.label_id)
                 },
                 {
-                    memoId?.run {
-                        viewModel.createLabel(it, this)
-                    }
+                    viewModel.createLabel(it, memo.id)
                 })
     }
 
@@ -78,18 +83,16 @@ class MakeLabelFragment : Fragment(), Injectable {
             adapter = this@MakeLabelFragment.adapter
         }
         (activity as? SearchView)?.run {
-            viewModel.bindSearch(this.searchView().throttleLast(500, TimeUnit.MILLISECONDS))
+            viewModel.bindSearch(this.searchView().throttleLast(500, TimeUnit.MILLISECONDS), memo.id)
         }
 
         viewModel.fetchLabels.observe(this, Observer {
-            val keyword = it?.first ?: ""
-            val items = it?.second ?: emptyList()
-            if (items.isEmpty() && !keyword.isEmpty())
-                adapter.setMakeLabelVisible(keyword)
-            else
-                adapter.setMakeLabelVisible(null)
-
-            adapter.submitList(items)
+            Timber.d("========== Observer ==========\n" +
+                    "labels: $it")
+            it?.run {
+                adapter.setMakeLabelVisible(second)
+                adapter.submitList(it.first)
+            }
         })
     }
 }

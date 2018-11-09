@@ -13,6 +13,8 @@
         android:tint="@color/cardview_dark_background"
         app:layout_constraintBottom_toBottomOf="@+id/color_theme"
         app:layout_constraintEnd_toStartOf="@+id/color_theme"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/check_items"
         app:layout_constraintTop_toTopOf="@+id/color_theme"
         app:srcCompat="@drawable/ic_label_outline" />
 
@@ -25,6 +27,22 @@
         android:tint="@color/cardview_dark_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_color_lens" />
+
+    <ImageButton
+        android:id="@+id/check_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:tint="@color/cardview_dark_background"
+        app:layout_constraintEnd_toStartOf="@+id/label"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_check" />
 </android.support.constraint.ConstraintLayout>

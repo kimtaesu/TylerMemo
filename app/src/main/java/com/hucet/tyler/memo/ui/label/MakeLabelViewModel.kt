@@ -2,28 +2,29 @@ package com.hucet.tyler.memo.ui.label
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
 import com.hucet.tyler.memo.OpenForTesting
-import com.hucet.tyler.memo.repository.LabelRepository
-import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.vo.Label
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.common.DispoableViewModel
+import com.hucet.tyler.memo.db.model.Label
+import com.hucet.tyler.memo.db.model.MemoLabelJoin
+import com.hucet.tyler.memo.repository.label.LabelRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 @OpenForTesting
 class MakeLabelViewModel @Inject constructor(
-        private val repository: LabelRepository,
-        private val appExecutors: AppExecutors
-) : ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
-    private val keywordName = MutableLiveData<String>()
+        private val memoLabelRepository: MemoLabelRepository,
+        private val labelRepository: LabelRepository
+) : DispoableViewModel() {
+    private val labelSearch = MutableLiveData<LabelSearch>()
 
-    private val labelResult = Transformations.map(keywordName) {
-        repository.searchLabels(it)
+    private val labelResult = Transformations.map(labelSearch) {
+        memoLabelRepository.searchCheckedLabels(it.memoId, it.keyword)
     }
 
     private val labels = Transformations.switchMap(labelResult) {
@@ -31,28 +32,47 @@ class MakeLabelViewModel @Inject constructor(
     }
 
     val fetchLabels = Transformations.map(labels) {
-        keywordName.value to it
+        val search = labelSearch.value
+
+        val keyword = search?.keyword
+        val items = it ?: emptyList()
+        val newKeyword = if (items.firstOrNull { it.label == keyword } == null && keyword?.isEmpty() == false)
+            keyword
+        else
+            null
+        it to newKeyword
     }
 
-    fun bindSearch(searchView: Observable<CharSequence>) {
+    fun bindSearch(searchView: Observable<CharSequence>, memoId: Long) {
         searchView
                 .map { it.toString() }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (keywordName.value != it) {
-                        keywordName.postValue(it)
+                    if (labelSearch.value?.keyword != it) {
+                        labelSearch.value = LabelSearch(it, memoId)
                     }
                 }
                 .also { compositeDisposable.add(it) }
     }
 
-    fun createLabel(keyword: String, id: Long) {
-        appExecutors.diskIO().execute {
-            repository.insertLabel(Label(keyword, id))
+    fun createLabel(keyword: String, memoId: Long) {
+        launch(parent = parentJob) {
+            val labelId = labelRepository.insertLabel(Label(keyword))
+            labelId?.run {
+                memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+            }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
+    fun createMemoLabel(memoId: Long, labelId: Long) {
+        launch(parent = parentJob) {
+            memoLabelRepository.insertMemoLabelJoin(MemoLabelJoin(memoId, labelId))
+        }
+    }
+
+    fun deleteMemoLabel(memoId: Long, labelId: Long) {
+        launch(parent = parentJob) {
+            memoLabelRepository.deleteById(memoId, labelId)
+        }
     }
 }

@@ -11,7 +11,7 @@ import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.DataBoundListAdapter
 import com.hucet.tyler.memo.databinding.ColorThemeItemBinding
 import com.hucet.tyler.memo.utils.AppExecutors
-import com.hucet.tyler.memo.vo.ColorTheme
+import com.hucet.tyler.memo.db.model.ColorTheme
 
 
 class ColorThemeAdapter constructor(appExecutors: AppExecutors,

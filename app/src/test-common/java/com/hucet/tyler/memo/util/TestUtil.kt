@@ -17,18 +17,14 @@
 package com.hucet.tyler.memo.util
 
 import android.arch.lifecycle.MutableLiveData
-import com.hucet.tyler.memo.vo.Memo
-import com.hucet.tyler.memo.vo.MemoAttribute
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.db.model.MemoAttribute
 
 object TestUtil {
     fun createMemosLiveData(): MutableLiveData<List<Memo>> {
         return MutableLiveData<List<Memo>>().apply {
-            val items = (0..10).toList().map { Memo(it.toString(), it.toString(), MemoAttribute(false)) }
+            val items = (0..10).toList().map { Memo(it.toString()) }
             postValue(items)
         }
-    }
-
-    fun createMemo(subject: String, text: String): Memo {
-        return Memo(subject, text)
     }
 }

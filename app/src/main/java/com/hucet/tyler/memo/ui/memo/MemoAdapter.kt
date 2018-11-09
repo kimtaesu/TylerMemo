@@ -7,18 +7,17 @@ import android.view.ViewGroup
 import com.hucet.tyler.memo.R
 import com.hucet.tyler.memo.common.DataBoundListAdapter
 import com.hucet.tyler.memo.databinding.MemoItemBinding
-import com.hucet.tyler.memo.dto.MemoView
 import com.hucet.tyler.memo.utils.AppExecutors
 
 class MemoAdapter constructor(appExecutors: AppExecutors)
-    : DataBoundListAdapter<MemoView, MemoItemBinding>(appExecutors, diff) {
+    : DataBoundListAdapter<MemoPreviewView, MemoItemBinding>(appExecutors, diff) {
     companion object {
 
-        val diff = object : DiffUtil.ItemCallback<MemoView>() {
-            override fun areItemsTheSame(oldItem: MemoView?, newItem: MemoView?): Boolean =
+        val diff = object : DiffUtil.ItemCallback<MemoPreviewView>() {
+            override fun areItemsTheSame(oldItem: MemoPreviewView?, newItem: MemoPreviewView?): Boolean =
                     oldItem?.memo?.id == newItem?.memo?.id
 
-            override fun areContentsTheSame(oldItem: MemoView?, newItem: MemoView?): Boolean =
+            override fun areContentsTheSame(oldItem: MemoPreviewView?, newItem: MemoPreviewView?): Boolean =
                     oldItem == newItem
         }
     }
@@ -32,7 +31,7 @@ class MemoAdapter constructor(appExecutors: AppExecutors)
         )
     }
 
-    override fun bind(binding: MemoItemBinding, memoView: MemoView) {
-        binding.memo = memoView.memo
+    override fun bind(binding: MemoItemBinding, memoView: MemoPreviewView) {
+        binding.memoView = memoView
     }
 }

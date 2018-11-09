@@ -1,73 +1,118 @@
 package com.hucet.tyler.memo.ui.add
 
+import android.content.Context
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import com.hannesdorfmann.mosby3.mvp.MvpView
-import com.hucet.tyler.memo.dto.MemoView
-import com.hucet.tyler.memo.repository.MemoRepository
-import com.hucet.tyler.memo.vo.ColorTheme
-import com.hucet.tyler.memo.vo.Memo
+import com.hucet.tyler.memo.OpenForTesting
+import com.hucet.tyler.memo.db.model.CheckItem
+import com.hucet.tyler.memo.db.model.ColorTheme
+import com.hucet.tyler.memo.db.model.Memo
+import com.hucet.tyler.memo.repository.memo.MemoRepository
+import com.hucet.tyler.memo.repository.memolabel.MemoLabelRepository
+import com.hucet.tyler.memo.ui.main.MainState
+import com.hucet.tyler.memo.ui.main.MainView
+import com.hucet.tyler.memo.utils.toFlowable
+import com.hucet.tyler.memo.utils.toObservable
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface AddMemoView : MvpView {
-    fun saveMemo(): Observable<Memo>
+    fun saveMemo(): Observable<Any>
+    fun viewCheckItems(): Observable<Boolean>
+    fun createCheckItem(): Observable<CheckItem>
+    fun fetchEditMemo(): Observable<EditMemoView>
     fun typingText(): Observable<CharSequence>
+    fun colorThemeChanged(): Observable<Long>
     fun render(state: AddMemoState)
 }
 
+
 @Singleton
+@OpenForTesting
 class AddMemoPresenter @Inject constructor(
-        private val repository: MemoRepository) : MviBasePresenter<AddMemoView, AddMemoState>() {
+        private val repository: MemoLabelRepository
+) : MviBasePresenter<AddMemoView, AddMemoState>() {
     override fun bindIntents() {
+        val fetchEditMemo = intent(AddMemoView::fetchEditMemo)
         val typingText = intent(AddMemoView::typingText)
-                .map {
-                    PartialStateChanges.TypingText(it.toString())
-                }
+        val changeColorTheme = intent(AddMemoView::colorThemeChanged)
+
+        val memoIntents = listOf(fetchEditMemo, typingText, changeColorTheme)
+
+        val combineMemoIntent = Observable.combineLatest(memoIntents) {
+            val editMemo = it[0] as EditMemoView
+            val typingText = it[1] as CharSequence
+            val colorThemeId = it[2] as Long
+
+            editMemo.memo.text = typingText.toString()
+            editMemo.memo.colorThemeId = colorThemeId
+            editMemo.memo
+        }
+
         val saveMemo = intent(AddMemoView::saveMemo)
                 .observeOn(Schedulers.io())
+                .withLatestFrom(combineMemoIntent, BiFunction { _: Any, t2: Memo -> t2 })
+                .doOnNext { Timber.d("intent: save memo ${it}") }
                 .map {
-                    repository.insertMemo(it)
+                    repository.updateMemo(it)
+                    AddMemoPartState.Nothing
                 }
-                .map {
-                    PartialStateChanges.SaveMemo(it)
-                }
-        val allIntentsObservable = Observable.merge(typingText, saveMemo).observeOn(AndroidSchedulers.mainThread())
 
+        val fetchEditMemoIntent = fetchEditMemo
+                .map {
+                    AddMemoPartState.FetchEditMemo(it)
+                }
+        val createCheckItem = intent(AddMemoView::createCheckItem)
+                .observeOn(Schedulers.io())
+                .map {
+                    repository.insertCheckItem(it)
+                    AddMemoPartState.Nothing
+                }
+
+
+        val viewCheckItems = intent(AddMemoView::viewCheckItems)
+                .observeOn(Schedulers.io())
+                .doOnNext { Timber.d("intent: view check item ${it}") }
+                .map {
+                    AddMemoPartState.ViewCheckItems(it)
+                }
+
+        val allIntentsObservable = Observable
+                .merge(listOf(saveMemo, viewCheckItems, createCheckItem, fetchEditMemoIntent))
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
 
         subscribeViewState(
-                allIntentsObservable.scan(AddMemoState(), this::viewStateReducer), AddMemoView::render)
+                allIntentsObservable.scan<AddMemoState>(AddMemoState(), this::viewStateReducer), AddMemoView::render)
     }
 
-    private fun viewStateReducer(previousState: AddMemoState,
-                                 partialChanges: PartialStateChanges): AddMemoState {
+    private fun viewStateReducer(previousState: AddMemoState, partialChanges: AddMemoPartState): AddMemoState {
         return when (partialChanges) {
-            is PartialStateChanges.SaveMemo -> {
-                previousState.memo?.id = partialChanges.memoId
-                previousState.copy(isInitSavedMemo = true)
+            is AddMemoPresenter.AddMemoPartState.ViewCheckItems -> {
+                previousState.copy(isShowCheckItems = true)
             }
-            is PartialStateChanges.ChangedColorTheme -> {
-                previousState.memo?.colorTheme = partialChanges.colorTheme
-                previousState
+            is AddMemoPresenter.AddMemoPartState.FetchEditMemo -> {
+                AddMemoState(editMemoView = partialChanges.editMemoView)
             }
-            is PartialStateChanges.TypingText -> {
-                previousState.memo?.text = partialChanges.text
-                previousState
-            }
+            AddMemoPresenter.AddMemoPartState.Nothing -> previousState
         }
     }
-}
 
-private sealed class PartialStateChanges {
-    class TypingText(val text: String) : PartialStateChanges()
-    class SaveMemo(val memoId: Long) : PartialStateChanges()
-    class ChangedColorTheme(val colorTheme: ColorTheme) : PartialStateChanges()
+    private sealed class AddMemoPartState {
+        class ViewCheckItems(val isShow: Boolean) : AddMemoPartState()
+        class FetchEditMemo(val editMemoView: EditMemoView) : AddMemoPartState()
+        object Nothing : AddMemoPartState()
+    }
 }
-
 
 data class AddMemoState(
-        var memo: Memo? = Memo.empty(),
-        val isInitSavedMemo: Boolean = false
+        val editMemoView: EditMemoView? = null,
+        val isShowCheckItems: Boolean = false
 )

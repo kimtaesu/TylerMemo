@@ -6,6 +6,7 @@ import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.hucet.tyler.memo.debug.OptionalTree
 import com.hucet.tyler.memo.di.AppInjector
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
@@ -13,6 +14,7 @@ import dagger.android.HasActivityInjector
 import timber.log.Timber
 import javax.inject.Inject
 
+@OpenForTesting
 class MyApplication : Application(), HasActivityInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
@@ -20,33 +22,9 @@ class MyApplication : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
-        initLeakCanary()
-        initStetho()
         fetchRemoteConfig()
-        initTimber()
     }
 
-    private fun initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
-        // Normal app init code...
-
-    }
-
-    private fun initTimber() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
-    }
-
-    private fun initStetho() {
-        if (BuildConfig.DEBUG)
-            Stetho.initializeWithDefaults(this);
-    }
 
     private fun fetchRemoteConfig() {
         FirebaseApp.initializeApp(this)
