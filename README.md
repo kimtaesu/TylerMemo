@@ -4,6 +4,7 @@
 
 * [Kotlin](https://kotlinlang.org/)
 * [RxKotlin](https://github.com/ReactiveX/RxKotlin)
+* [Databinding](https://developer.android.com/topic/libraries/data-binding/?hl=ko)
 * [Jetpack](https://developer.android.com/jetpack/)
 * [Dagger2](https://github.com/google/dagger)
 * [Retrofit](https://github.com/square/retrofit)
