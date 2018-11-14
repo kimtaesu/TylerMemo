@@ -29,7 +29,6 @@ import com.hucet.tyler.memo.utils.RevealAnimationUtils
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_add_memo.*
-import kotlinx.android.synthetic.main.bottom_sheet_toolbox.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.*
 import kotlinx.android.synthetic.main.view_add_memo_tools.view.*
 import javax.inject.Inject
@@ -61,40 +60,34 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
         intent.getParcelableExtra(ArgKeys.KEY_MEMO.name) as Memo
     }
 
-    private val bottomSheetBehavior by lazy {
-        BottomSheetBehavior.from(bottom_sheet_container)
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_memo)
         setSupportActionBar(toolbar)
         setToolbarColor(ColorTheme.default.colorTheme)
-//
         if (savedInstanceState == null)
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.content, AddMemoFragment.newInstance(memo))
                     .commit()
 
-//        add_memo_toolbox.label.setOnClickListener {
-//            navigateMakeLabel()
-//        }
+        add_memo_toolbox.label.setOnClickListener {
+            navigateMakeLabel()
+        }
 
-//        color_theme.setOnClickListener {
-//            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
-//            if (fragment !is ColorThemeFragment) {
-//                supportFragmentManager.beginTransaction()
-//                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-//                        .replace(R.id.container_tools, ColorThemeFragment.newInstance())
-//                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
-//                        .commit()
-//            }
-//        }
-//        check_items.setOnClickListener {
-//            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
-//            fragment?.onClickedCheckItems(true)
+        color_theme.setOnClickListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.container_tools)
+            if (fragment !is ColorThemeFragment) {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom, R.anim.slide_in_bottom, R.anim.slide_out_bottom)
+                        .replace(R.id.container_tools, ColorThemeFragment.newInstance())
+                        .addToBackStack(TOOL_BOX_BACK_STACK_TAG)
+                        .commit()
+            }
+        }
+        check_items.setOnClickListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.content) as? AddMemoFragment
+            fragment?.onClickedCheckItems(true)
 //            primaryActionModeCallback.startActionMode(this, R.menu.action_check_item, getString(R.string.check_list_action_title),
 //                    listener = {
 //                        when (it.itemId) {
@@ -103,8 +96,8 @@ class AddMemoActivity : AppCompatActivity(), HasSupportFragmentInjector, ColorTh
 //                            }
 //                        }
 //                    })
-//            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//        }
+            supportFragmentManager?.popBackStack(AddMemoActivity.TOOL_BOX_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
 

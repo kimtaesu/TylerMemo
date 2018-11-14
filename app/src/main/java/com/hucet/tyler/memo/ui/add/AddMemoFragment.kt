@@ -141,6 +141,7 @@ class AddMemoFragment : DaggerMviFragment<AddMemoView, AddMemoPresenter>(), Colo
             }
         }
     }
+
     /**
      * Mvi pattern
      */
