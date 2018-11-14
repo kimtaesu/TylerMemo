@@ -19,6 +19,11 @@
 
 #### MemoPreview
 ![](document/memo_preview.png)
+
+[MemoLabelJoinDao.kt](app/main/java/com/hucet/tyler/memo/repository/memolabel/MemoLabelJoinDao.kt)
+
+[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoLabelRepositoryTest.kt) line: 168
+
 ```kotlin
     fun searchMemoView(keyword: String, isPinSort: Boolean = true): LiveData<List<MemoPreviewView>> {
         return Transformations.map(dao.searchMemoView(keyword.fullTextSql(), true)) {
@@ -48,16 +53,13 @@ SQL
     """)
     internal abstract fun searchMemoView(keyword: String, isPinDesc: Boolean): LiveData<List<MemoViewDto>>
 ```
-[MemoLabelJoinDao.kt](app/main/java/com/hucet/tyler/memo/repository/memolabel/MemoLabelJoinDao.kt)
-
-[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoLabelRepositoryTest.kt) line: 168
 
 #### EditMemoView
+![](document/edit_memo.png)
+
 [MemoDao.kt](app/main/java/com/hucet/tyler/memo/repository/memo/MemoDao.kt)
 
 [TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoRepositoryTest.kt) line: 73
-
-![](document/edit_memo.png)
 ```kotlin
 @Transaction
     @Query("""select *
@@ -85,4 +87,19 @@ SQL
         """
     )
     abstract fun searchCheckedLabels(keyword: String, memoId: Long): LiveData<List<CheckableLabelView>>
+```
+#### ColorTheme
+![](document/color_theme.png)
+[ColorThemeDao.kt](app/main/java/com/hucet/tyler/memo/repository/colortheme/ColorThemeDao.kt)
+
+[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/colortheme/ColorThemeRepositoryTest.kt)
+```kotlin
+@Query("""
+    select *
+        from color_themes
+      INNER JOIN memos
+      ON memos.memo_id = :memoId
+    """
+)
+abstract fun getColorThemeByMemoId(memoId: Long): LiveData<ColorTheme>
 ```
