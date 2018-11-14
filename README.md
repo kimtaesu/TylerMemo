@@ -16,8 +16,62 @@
 ![](document/memo.png)
 
 ### Queries
+
+#### MemoPreview
+![](document/memo_preview.png)
+```kotlin
+    fun searchMemoView(keyword: String, isPinSort: Boolean = true): LiveData<List<MemoPreviewView>> {
+        return Transformations.map(dao.searchMemoView(keyword.fullTextSql(), true)) {
+            it.map {
+                MemoPreviewView(it.memo, it.labels ?: emptyList(), it.checkItemCount)
+            }
+        }
+    }
+```
+SQL
+```kotlin
+    @Transaction
+    @Query("""
+        SELECT *, (SELECT GROUP_CONCAT(labels.label)
+        FROM memo_label_join
+        LEFT JOIN labels
+        ON labels.label_id = memo_label_join.label_id
+        WHERE memo_label_join.memo_id = memos.memo_id) as concatLabels,
+        (SELECT count(check_items.check_item_id)
+        FROM check_items
+        WHERE memos.memo_id = check_items.memo_id) as checkItemCount
+
+        FROM memos
+        where memos.text LIKE  :keyword
+        order by
+        case :isPinDesc when 1 then memos.isPin end desc, createAt desc
+    """)
+    internal abstract fun searchMemoView(keyword: String, isPinDesc: Boolean): LiveData<List<MemoViewDto>>
+```
+[MemoLabelJoinDao.kt](app/main/java/com/hucet/tyler/memo/repository/memolabel/MemoLabelJoinDao.kt)
+
+[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoLabelRepositoryTest.kt) line: 168
+
+#### EditMemoView
+[MemoDao.kt](app/main/java/com/hucet/tyler/memo/repository/memo/MemoDao.kt)
+
+[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoRepositoryTest.kt) line: 73
+
+![](document/edit_memo.png)
+```kotlin
+@Transaction
+    @Query("""select *
+        from memos
+        where memo_id = :id
+        """)
+    abstract fun findMemoById(id: Long): LiveData<EditMemoView>
+```
 #### CheckableLabelView
 ![](document/checkedLabel.png)
+
+[MemoLabelJoinDao.kt](app/main/java/com/hucet/tyler/memo/repository/memolabel/MemoLabelJoinDao.kt)
+
+[TestCase](app/src/test/java/com/hucet/tyler/memo/repository/MemoLabelRepositoryTest.kt) line: 60
 ```kotlin
 @Query("""
         select l.label_id, l.label, (
